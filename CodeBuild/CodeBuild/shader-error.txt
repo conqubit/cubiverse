@@ -1,0 +1,1 @@
+C:\Users\Conrad\Documents\Visual Studio 2010\Projects\Test\Test\shaders.hlsl(52,2): error X3004: undeclared identifier 'heigt'
