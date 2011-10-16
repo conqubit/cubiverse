@@ -1,8 +1,8 @@
 #pragma once
 
 #include "stdafx.h"
-#include "graphics.h"
-#include "direct3d.h"
+#include "graphics/graphics.h"
+#include "graphics/direct3d.h"
 #include "input.h"
 
 class System {

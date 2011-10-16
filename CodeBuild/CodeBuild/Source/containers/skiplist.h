@@ -75,7 +75,8 @@ public:
 
 public:
 	Node* new_Node(int levels) {
-		return (Node*)calloc(sizeof(Node) + sizeof(Node*) * levels, 1);
+		int size = sizeof(Node) + sizeof(Node*) * levels;
+		return (Node*)calloc(size, 1);
 	}
 
 	void trimLevels() {
@@ -120,7 +121,7 @@ bool SkipList<T>::Insert(const T& value) {
 		if (next && next->Value == value) {
 			left->Next[i] = next->Next[i];
 			if (i == 0) {
-				delete next;
+				free(next);
 				existed = true;
 			}
 		}
@@ -148,7 +149,7 @@ bool SkipList<T>::Remove(const T& value) {
 		if (next && next->Value == value) {
 			left->Next[i] = next->Next[i];
 			if (i == 0) {
-				delete next;
+				free(next);
 				count--;
 				trimLevels();
 				return true;

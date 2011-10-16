@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "system.h"
 
-#include "binarytree.h"
-#include "skiplist.h"
+#include "containers/binarytree.h"
+#include "containers/skiplist.h"
 
 HINSTANCE System::hInstance = nullptr;
 HWND System::hWindow = nullptr;
@@ -29,6 +29,8 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 		return false;
 	}
 	ShowCursor(true);
+
+	BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
 	BinaryTree<int>* tree = new BinaryTree<int>();
 	SkipList<int>* skip = new SkipList<int>();
@@ -91,8 +93,8 @@ void System::Run() {
 	while(running) {
 		input->readInput();
 		if (input->keyPressed(DIK_ESCAPE)) {
-			running = false;
-			break;
+			//running = false;
+			//break;
 		}
 		graphics->render();
 		Sleep(5);

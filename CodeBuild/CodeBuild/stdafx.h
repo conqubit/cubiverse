@@ -20,7 +20,7 @@
 #include <tchar.h>
 
 // TODO: reference additional headers your program requires here
-#include "math.h"
+#include "math2.h"
 
 #define rand20() (rand() ^ (rand() << 5))
 #define rand30() (rand() ^ (rand() << 15))
