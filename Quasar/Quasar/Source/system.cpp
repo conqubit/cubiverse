@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "system.h"
 
-#include "containers/binarytree.h"
-#include "containers/skiplist.h"
-
 HINSTANCE System::hInstance = nullptr;
 HWND System::hWindow = nullptr;
 bool System::running = true;
@@ -31,62 +28,6 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 	ShowCursor(true);
 
 	BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
-
-	BinaryTree<int>* tree = new BinaryTree<int>();
-	SkipList<int>* skip = new SkipList<int>();
-	std::set<int> set;
-
-	MEASURE("BinaryTree insert",
-		for (int i = 0; i < 1000000; i++) {
-			tree->Insert(rand20());
-		}
-	);
-
-	MEASURE("BinaryTree iterate",
-		for (auto i = tree->Start(); !i.End(); i.Next()) {
-			i.Get();
-		}
-	);
-
-	MEASURE("BinaryTree contains",
-		for (int i = 0; i < 1000000; i++) {
-			tree->Contains(rand20());
-		}
-	);
-
-	MEASURE("BinaryTree remove",
-		for (int i = 0; i < 1000000; i++) {
-			tree->Remove(rand20());
-		}
-	);
-
-	printf("\n------\n\n");
-
-	MEASURE("SkipList insert",
-		for (int i = 0; i < 1000000; i++) {
-			skip->Insert(rand20());
-		}
-	);
-
-	MEASURE("SkipList iterate",
-		for (auto i = skip->Start(); !i.End(); i.Next()) {
-			i.Get();
-		}
-	);
-
-	MEASURE("SkipList contains",
-		for (int i = 0; i < 1000000; i++) {
-			skip->Contains(rand20());
-		}
-	);
-
-	MEASURE("SkipList remove",
-		for (int i = 0; i < 1000000; i++) {
-			skip->Remove(rand20());
-		}
-	);
-
-	printf("\n------\n\n");
 
 	return true;
 }

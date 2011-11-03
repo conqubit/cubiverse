@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "chunk.h"
+#include "level/chunk.h"
 
 Chunk::Chunk() {
 	cx = 0;

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "planet.h"
+#include "level/planet.h"
 
 Planet::Planet() {
 	csx = 0;

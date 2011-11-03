@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "system.h"
-#include "model.h"
-#include "shader.h"
+#include "graphics/model.h"
+#include "graphics/shader.h"
 
 Model::Model() {
 	shader = nullptr;
