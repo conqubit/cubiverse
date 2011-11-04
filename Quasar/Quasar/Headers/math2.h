@@ -8,46 +8,46 @@
 #define square(x) (x)*(x)
 
 struct Vertex {
-	XMFLOAT3 position;
-	XMFLOAT3 normal;
-	D3DXCOLOR color;
-	XMFLOAT2 texcoord;
+    XMFLOAT3 position;
+    XMFLOAT3 normal;
+    D3DXCOLOR color;
+    XMFLOAT2 texcoord;
 
-	Vertex() {
-	}
+    Vertex() {
+    }
 
-	Vertex(XMFLOAT3 pos, XMFLOAT3 norm, D3DXCOLOR col) : position(pos), normal(norm), color(col) {
-	}
+    Vertex(XMFLOAT3 pos, XMFLOAT3 norm, D3DXCOLOR col) : position(pos), normal(norm), color(col) {
+    }
 };
 
 class Vector3 {
 public:
-	Vector3() {
-		set(XMVectorZero());
-	}
+    Vector3() {
+        set(XMVectorZero());
+    }
 
-	XMFLOAT3 data;
+    XMFLOAT3 data;
 
-	XMVECTOR get() {
-		return XMLoadFloat3(&data);
-	}
-	void set(const XMVECTOR& vec) {
-		XMStoreFloat3(&data, vec);
-	}
+    XMVECTOR get() {
+        return XMLoadFloat3(&data);
+    }
+    void set(const XMVECTOR& vec) {
+        XMStoreFloat3(&data, vec);
+    }
 };
 
 class Matrix {
 public:
-	Matrix() {
-		set(XMMatrixIdentity());
-	}
+    Matrix() {
+        set(XMMatrixIdentity());
+    }
 
-	XMFLOAT4X4 data;
+    XMFLOAT4X4 data;
 
-	XMMATRIX get() {
-		return XMLoadFloat4x4(&data);
-	}
-	void set(const XMMATRIX& mat) {
-		XMStoreFloat4x4(&data, mat);
-	}
+    XMMATRIX get() {
+        return XMLoadFloat4x4(&data);
+    }
+    void set(const XMMATRIX& mat) {
+        XMStoreFloat4x4(&data, mat);
+    }
 };

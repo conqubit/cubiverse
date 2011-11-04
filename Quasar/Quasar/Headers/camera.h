@@ -3,13 +3,13 @@
 
 class FreeCamera {
 public:
-	FreeCamera();
-	void doInput();
-	XMMATRIX getMat();
-	Vector3 pos;
-	Vector3 dir;
-	float yaw;
-	float pitch;
+    FreeCamera();
+    void DoInput();
+    XMMATRIX GetMat();
+    Vector3 pos;
+    Vector3 dir;
+    float yaw;
+    float pitch;
 protected:
-	~FreeCamera();
+    ~FreeCamera();
 };

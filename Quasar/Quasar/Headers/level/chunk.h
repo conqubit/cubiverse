@@ -1,14 +1,27 @@
 #pragma once
 
-#define CHUNK_DIM 32
-#define CHUNK_SIZE (32 * 32 * 32)
+#include "level/block.h"
 
 class Chunk {
 public:
-	Chunk();
-	~Chunk();
-	void Init();
-	int cx, cy;
-	unsigned char data[CHUNK_SIZE];
-	void Fill(unsigned char type);
+    static const int DIM = 32;
+    static const int SIZE = DIM * DIM * DIM;
+    static const int MASK = DIM - 1;
+
+    Chunk();
+    ~Chunk();
+    void Init(int cx, int cy, int cz);
+    void Fill(Block type);
+
+    Block GetBlock(int x, int y, int z) {
+        return (Block)data[GetIndex(x, y, z)];
+    }
+
+    int GetIndex(int x, int y, int z) {
+        return (x & MASK) + (y & MASK) * DIM + (z & MASK) * DIM * DIM;
+    }
+
+    int x, y, z;
+
+    unsigned char data[SIZE];
 };

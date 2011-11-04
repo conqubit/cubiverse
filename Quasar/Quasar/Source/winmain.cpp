@@ -19,41 +19,41 @@ int main() {
 }
 
 int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
 
-	hInstance = hInst;
+    hInstance = hInst;
 
-	RegisterClass(hInstance);
+    RegisterClass(hInstance);
 
-	if (!InitInstance (hInstance, nCmdShow)) {
-		return 0;
-	}
+    if (!InitInstance (hInstance, nCmdShow)) {
+        return 0;
+    }
 
-	if (!System::Init(hInstance, hWindow)) {
-		return 0;
-	}
-	System::Run();
-	System::Shutdown();
+    if (!System::Init(hInstance, hWindow)) {
+        return 0;
+    }
+    System::Run();
+    System::Shutdown();
 
-	return 0;
+    return 0;
 }
 
 ATOM RegisterClass(HINSTANCE hInstance) {
-	WNDCLASSEX wc;
-	ZeroMemory(&wc, sizeof(WNDCLASSEX));
-	wc.cbSize = sizeof(WNDCLASSEX);
+    WNDCLASSEX wc;
+    ZeroMemory(&wc, sizeof(WNDCLASSEX));
+    wc.cbSize = sizeof(WNDCLASSEX);
 
-	wc.style			= CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc		= WindowProc;
-	wc.hInstance		= hInstance;
-	wc.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_TEST));
-	wc.hCursor			= LoadCursor(nullptr, IDC_ARROW);
-	wc.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
-	wc.lpszClassName	= L"TestWindowClass";
-	wc.hIconSm			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wc.style			= CS_HREDRAW | CS_VREDRAW;
+    wc.lpfnWndProc		= WindowProc;
+    wc.hInstance		= hInstance;
+    wc.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_TEST));
+    wc.hCursor			= LoadCursor(nullptr, IDC_ARROW);
+    wc.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
+    wc.lpszClassName	= L"TestWindowClass";
+    wc.hIconSm			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-	return RegisterClassEx(&wc);
+    return RegisterClassEx(&wc);
 }
 
 BOOL InitInstance(HINSTANCE hInst, int nCmdShow) {
@@ -74,13 +74,13 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow) {
 }
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (message) {
-		case WM_DESTROY:
-		case WM_CLOSE:
-			PostQuitMessage(0);
-			break;
-		default:
-			return System::HandleMsg(hWnd, message, wParam, lParam);
-	}
-	return 0;
+    switch (message) {
+        case WM_DESTROY:
+        case WM_CLOSE:
+            PostQuitMessage(0);
+            break;
+        default:
+            return System::HandleMsg(hWnd, message, wParam, lParam);
+    }
+    return 0;
 }

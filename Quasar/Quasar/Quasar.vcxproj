@@ -19,7 +19,7 @@
     <ClCompile Include="Source\graphics\shader.cpp" />
     <ClCompile Include="Source\input.cpp" />
     <ClCompile Include="Source\level\chunk.cpp" />
-    <ClCompile Include="Source\level\planet.cpp" />
+    <ClCompile Include="Source\level\world.cpp" />
     <ClCompile Include="Source\system.cpp" />
     <ClCompile Include="Source\winmain.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -45,12 +45,15 @@
     <ClInclude Include="headers\graphics\graphics.h" />
     <ClInclude Include="headers\graphics\model.h" />
     <ClInclude Include="Headers\graphics\shader.h" />
+    <ClInclude Include="Headers\graphics\visiblechunk.h" />
     <ClInclude Include="headers\input.h" />
+    <ClInclude Include="Headers\level\block.h" />
     <ClInclude Include="Headers\level\chunk.h" />
-    <ClInclude Include="Headers\level\planet.h" />
+    <ClInclude Include="Headers\level\world.h" />
     <ClInclude Include="Headers\math2.h" />
     <ClInclude Include="Headers\system.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Source\graphics\visiblechunk.cpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

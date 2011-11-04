@@ -3,9 +3,9 @@
 
 class Entity {
 public:
-	Entity() {
-	};
+    Entity() {
+    };
 protected:
-	~Entity() {
-	};
+    ~Entity() {
+    };
 };

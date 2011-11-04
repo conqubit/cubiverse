@@ -22,12 +22,11 @@
 // TODO: reference additional headers your program requires here
 #include "math2.h"
 
-#define rand20() (rand() ^ (rand() << 5))
 #define rand30() (rand() ^ (rand() << 15))
 
 #define MEASURE(tag, code) {		\
-	clock_t t = clock();			\
-	code							\
-	t = clock()-t;					\
-	printf("%s: %d ms\n", tag, t);	\
+    clock_t t = clock();			\
+    code							\
+    t = clock()-t;					\
+    printf("%s: %d ms\n", tag, t);	\
 }

@@ -10,49 +10,49 @@
 class Shader;
 
 struct ModelDesc {
-	Vertex* vertices;
-	int vertexCount;
+    Vertex* vertices;
+    int vertexCount;
 
-	int* indices;
-	int indexCount;
+    int* indices;
+    int indexCount;
 
-	Shader* shader;
+    Shader* shader;
 
-	ModelDesc() {
-		vertices = nullptr;
-		indices = nullptr;
-		shader = nullptr;
-		vertexCount = 0;
-		indexCount = 0;
-	}
+    ModelDesc() {
+        vertexCount = 0;
+        indexCount = 0;
+        vertices = nullptr;
+        indices = nullptr;
+        shader = nullptr;
+    }
 
-	void deleteBuffers() {
-		delete[] indices;
-		delete[] vertices;
-		indices = nullptr;
-		vertices = nullptr;
-	}
+    void DeleteBuffers() {
+        delete[] indices;
+        delete[] vertices;
+        indices = nullptr;
+        vertices = nullptr;
+    }
 };
 
 class Model {
 public:
-	Model();
-	~Model();
-	bool init(ModelDesc* modelDesc);
-	void render();
-	void shutdown();
+    Model();
+    ~Model();
+    bool Init(ModelDesc* modelDesc);
+    void Render();
+    void Shutdown();
 
-	Matrix mat;
-	Shader* shader;
-	int vertexCount;
-	int indexCount;
+    Matrix mat;
+    Shader* shader;
+    int vertexCount;
+    int indexCount;
 private:
-	ID3D11Buffer* vertexBuffer;
-	ID3D11Buffer* indexBuffer;
+    ID3D11Buffer* vertexBuffer;
+    ID3D11Buffer* indexBuffer;
 };
 
 class ModelFactory {
 public:
-	static ModelDesc CreateGlobe(double radius, int width, int height, bool clockwise);
-	static Model* CreateBox(Shader* shader);
+    static ModelDesc CreateGlobe(double radius, int width, int height, bool clockwise);
+    static Model* CreateBox(Shader* shader);
 };
