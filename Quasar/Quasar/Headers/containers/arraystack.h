@@ -11,7 +11,11 @@ public:
     }
 
     ~ArrayStack() {
+        for (int i = 0; i < count; i++) {
+            stack[i].~T();
+        }
         free(stack);
+        stack = nullptr;
     }
 
     int Count() {

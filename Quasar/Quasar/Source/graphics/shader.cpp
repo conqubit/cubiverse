@@ -14,7 +14,7 @@ void OutputShaderErrorMessage(ID3D10Blob* errorMessage, LPCWSTR shaderFile) {
     MessageBox(System::hWindow, L"Error compiling shader.", shaderFile, MB_OK);
 }
 
-bool Shader::init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShaderName) {
+bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShaderName) {
     HRESULT r;
     ID3D10Blob* errorMessage = nullptr;
     ID3D10Blob* vsBuffer = nullptr;
@@ -94,13 +94,13 @@ bool Shader::init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
 
     return true;
 }
-void Shader::shutdown() {
+void Shader::Shutdown() {
     matrixBuffer->Release();
     inputLayout->Release();
     pixelShader->Release();
     vertexShader->Release();
 }
-void Shader::updateConstants(XMMATRIX* mat) {
+void Shader::UpdateConstants(XMMATRIX* mat) {
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
     System::graphics->getDeviceContext()->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -112,9 +112,9 @@ void Shader::updateConstants(XMMATRIX* mat) {
     System::graphics->getDeviceContext()->VSSetConstantBuffers(0, 1, &matrixBuffer);
     System::graphics->getDeviceContext()->PSSetConstantBuffers(0, 1, &matrixBuffer);
 }
-void Shader::render(Model* model) {
+void Shader::Render(Model* model) {
     XMMATRIX m = System::graphics->viewMat.get() * System::graphics->projMat.get();
-    updateConstants(&m);
+    UpdateConstants(&m);
 
     System::graphics->getDeviceContext()->IASetInputLayout(inputLayout);
     System::graphics->getDeviceContext()->VSSetShader(vertexShader, nullptr, 0);

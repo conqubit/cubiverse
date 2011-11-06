@@ -29,6 +29,9 @@ public:
     }
 
     ~ArrayList() {
+        for (int i = 0; i < count; i++) {
+            data[i].~T();
+        }
         free(data);
         data = nullptr;
         capacity = 0;
@@ -42,6 +45,8 @@ public:
             if (newLocation == nullptr) {
                 return;
             }
+            int test = 5;
+            test.~int();
             data = newLocation;
             data[count++] = element;
             capacity *= 2;

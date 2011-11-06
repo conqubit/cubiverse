@@ -22,6 +22,7 @@ public:
     ~Queue() {
         while (head) {
             Node* next = head->Next;
+            head->Value.~T();
             delete head;
             head = next;
         }

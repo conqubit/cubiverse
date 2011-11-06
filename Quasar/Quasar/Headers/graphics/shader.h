@@ -15,10 +15,10 @@ class Shader {
 public:
     Shader();
     ~Shader();
-    bool init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShaderName);
-    void shutdown();
-    void updateConstants(XMMATRIX* mat);
-    void render(Model* model);
+    bool Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShaderName);
+    void Shutdown();
+    void UpdateConstants(XMMATRIX* mat);
+    void Render(Model* model);
 
     ID3D11VertexShader* vertexShader;
     ID3D11PixelShader* pixelShader;

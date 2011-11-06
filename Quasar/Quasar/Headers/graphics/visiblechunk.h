@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.h"
 #include "level/world.h"
 #include "level/block.h"
 #include "graphics/model.h"
@@ -8,10 +7,9 @@
 
 class VisibleChunk {
 public:
-    static bool Create(World* w, Chunk* c);
     VisibleChunk();
     ~VisibleChunk();
 
     Model model;
-    SkipList< vertices;
+    SkipList<int> visibleBlocks;
 };

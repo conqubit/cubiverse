@@ -23,22 +23,16 @@ void World::Init(int chunksX, int chunksY, int chunksZ) {
     widthZ = chunksZ * Chunk::DIM;
 
     numChunks = chunksX * chunksY * chunksZ;
-    chunks = new Chunk[numChunks];
+    chunks = new Chunk*[numChunks];
     ZeroMemory(chunks, numChunks);
 }
 
 void World::Shutdown() {
+    for (int i = 0; i < numChunks; i++) {
+        delete chunks[i];
+    }
     delete[] chunks;
     chunks = nullptr;
-}
-
-Block World::GetBlock(int x, int y, int z) {
-    if (!InBlockBounds(x, y, z)) return Block::Undefined;
-    GetChunk(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)->GetBlock(x, y, z);
-}
-
-Chunk* World::GetChunk(int cx, int cy, int cz) {
-    return chunks + (cx + cy * chunksX + cz * chunksX * chunksY);
 }
 
 void World::Generate() {

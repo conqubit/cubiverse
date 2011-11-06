@@ -49,9 +49,10 @@ public:
 
     ~SkipList() {
         while (head) {
-            Node* node = head;
-            head = head->Next[0];
-            free(node);
+            Node* next = head->Next[0];
+            head->Value.~T();
+            free(head);
+            head = next;
         }
     }
 
