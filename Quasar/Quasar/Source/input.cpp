@@ -2,89 +2,57 @@
 #include "system.h"
 
 Input::Input() {
-    directInput = NULL;
-    keyboard = NULL;
-    mouse = NULL;
-
-    mx = 0;
-    my = 0;
-    dmx = 0;
-    dmy = 0;
-
-    screenWidth = 0;
-    screenHeight = 0;
+    ZeroMemory(this, sizeof(Input));
 }
 
 Input::~Input() {
 }
 
-bool Input::init() {
+bool Input::Init() {
     HRESULT r;
     screenWidth = 800;
     screenHeight = 600;
 
     r = DirectInput8Create(System::hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, NULL);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = keyboard->SetDataFormat(&c_dfDIKeyboard);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = keyboard->SetCooperativeLevel(System::hWindow, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = keyboard->Acquire();
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = mouse->SetDataFormat(&c_dfDIMouse);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = mouse->SetCooperativeLevel(System::hWindow, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = mouse->Acquire();
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     return true;
 }
 
-bool Input::keyPressed(int key) {
+bool Input::KeyPressed(int key) {
     return (keyState[key] & 0x80) == 0x80;
 }
 
-bool Input::readInput() {
-    bool r;
-
-    r = readKeyboard();
-    if (!r) {
+bool Input::ReadInput() {
+    if (!readKeyboard()) {
         return false;
     }
 
-    r = readMouse();
-    if (!r) {
+    if (!readMouse()) {
         return false;
     }
 
@@ -96,7 +64,7 @@ bool Input::readInput() {
 bool Input::readKeyboard() {
     HRESULT r;
 
-    r = keyboard->GetDeviceState(sizeof(keyState), (LPVOID)&keyState);
+    r = keyboard->GetDeviceState(sizeof(keyState), (void*)&keyState);
     if (FAILED(r)) {
         if (r == DIERR_INPUTLOST || r == DIERR_NOTACQUIRED) {
             r = keyboard->Acquire();
@@ -114,7 +82,7 @@ bool Input::readKeyboard() {
 bool Input::readMouse() {
     HRESULT r;
 
-    r = mouse->GetDeviceState(sizeof(mouseState), (LPVOID)&mouseState);
+    r = mouse->GetDeviceState(sizeof(mouseState), (void*)&mouseState);
     if (FAILED(r)) {
         if (r == DIERR_INPUTLOST || r == DIERR_NOTACQUIRED) {
             r = mouse->Acquire();
@@ -150,7 +118,7 @@ void Input::processInput() {
     }
 }
 
-void Input::shutdown() {
+void Input::Shutdown() {
     if (mouse) {
         mouse->Unacquire();
         mouse->Release();

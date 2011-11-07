@@ -6,7 +6,10 @@
 template <typename T>
 class ArrayStack {
 public:
-    ArrayStack() : head(-1), count(), stackLength(BEGINNING_CAPACITY) {
+    ArrayStack() :
+        head(-1),
+        count(),
+        stackLength(BEGINNING_CAPACITY) {
         stack = (T*)malloc(sizeof(T*) * stackLength);
     }
 

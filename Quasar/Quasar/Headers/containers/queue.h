@@ -6,7 +6,9 @@ template <typename T>
 class Queue {
 private:
     struct Node {
-        Node(const T& value) : Value(value), Next() {
+        Node(const T& value) :
+            Value(value),
+            Next() {
         }
         ~Node() {
         }

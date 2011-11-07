@@ -7,12 +7,13 @@ extern int height;
 HRESULT r;
 
 Direct3D::Direct3D() {
+    ZeroMemory(this, sizeof(Direct3D));
 }
 
 Direct3D::~Direct3D() {
 }
 
-bool Direct3D::init() {
+bool Direct3D::Init() {
     DXGI_SWAP_CHAIN_DESC scd;
     ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
@@ -77,7 +78,7 @@ bool Direct3D::init() {
 
 }
 
-void Direct3D::shutdown() {
+void Direct3D::Shutdown() {
 	rasterState->Release();
 	depthStencilView->Release();
 	depthStencilBuffer->Release();
@@ -87,25 +88,23 @@ void Direct3D::shutdown() {
     swapChain->Release();
 }
 
-void Direct3D::beginScene() {
+void Direct3D::BeginScene() {
     deviceContext->ClearRenderTargetView(renderTarget, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Direct3D::endScene() {
+void Direct3D::EndScene() {
 	swapChain->Present(0, 0);
 }
 
 bool Direct3D::initRenderTarget() {
     ID3D11Texture2D *backbuffer;
 	r = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backbuffer);
-	if (FAILED(r)) {
-		return false;
-	}
+	if (FAILED(r)) return false;
+
 	r = device->CreateRenderTargetView(backbuffer, nullptr, &renderTarget);
-	if (FAILED(r)) {
-		return false;
-	}
+	if (FAILED(r)) return false;
+
     backbuffer->Release();
 
 	// Create depth stencil texture
@@ -124,9 +123,7 @@ bool Direct3D::initRenderTarget() {
     descDepth.MiscFlags = 0;
 
 	r = device->CreateTexture2D( &descDepth, nullptr, &depthStencilBuffer );
-    if (FAILED(r)) {
-        return false;
-	}
+    if (FAILED(r)) return false;
 
     // Create the depth stencil view
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
@@ -135,9 +132,7 @@ bool Direct3D::initRenderTarget() {
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 
 	r = device->CreateDepthStencilView( depthStencilBuffer, &descDSV, &depthStencilView );
-    if (FAILED(r)) {
-        return false;
-	}
+    if (FAILED(r)) return false;
 
     deviceContext->OMSetRenderTargets( 1, &renderTarget, depthStencilView );
 
@@ -156,9 +151,7 @@ bool Direct3D::initRenderTarget() {
 
 	// Create the rasterizer state from the description we just filled out.
 	r = device->CreateRasterizerState(&rasterDesc, &rasterState);
-	if(FAILED(r)) {
-		return false;
-	}
+	if (FAILED(r)) return false;
 
 	// Now set the rasterizer state.
 	deviceContext->RSSetState(rasterState);

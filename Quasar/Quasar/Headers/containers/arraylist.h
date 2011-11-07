@@ -6,9 +6,9 @@
 template <typename T>
 class ArrayList {
 public:
-    ArrayList() {
-        capacity = 0;
-        count = 0;
+    ArrayList() :
+        capacity(),
+        count() {
 
         data = malloc(sizeof(T) * BEGINNING_CAPACITY);
         if (data != nullptr) {

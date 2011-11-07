@@ -3,8 +3,6 @@
 #include "graphics/model.h"
 #include "graphics/direct3d.h"
 
-class Model;
-
 struct MatrixBuffer {
     XMMATRIX worldViewProj;
     XMFLOAT3 camPos;

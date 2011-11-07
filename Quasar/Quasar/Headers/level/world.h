@@ -6,8 +6,11 @@ class World {
 public:
     World();
     ~World();
+
     void Init(int chunksX, int chunksY, int chunksZ);
     void Shutdown();
+
+    void Generate();
 
     Block GetBlock(int x, int y, int z) {
         if (!InBlockBounds(x, y, z)) return Block::Undefined;
@@ -24,12 +27,10 @@ public:
                z >= 0 && z < widthZ;
     }
 
-    void Generate();
-    void ConstructChunkModel(Chunk* c);
-
     int chunksX, chunksY, chunksZ;
     int widthX, widthY, widthZ;
     int numChunks;
 
+private:
     Chunk** chunks;
 };

@@ -19,7 +19,8 @@ private:
 
     class Iterator {
     public:
-        Iterator(Node* node) : node(node) {
+        Iterator(Node* node) :
+            node(node) {
         }
         void Next() {
             if (node == nullptr) {

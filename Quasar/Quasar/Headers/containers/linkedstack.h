@@ -6,7 +6,9 @@ template <typename T>
 class LinkedStack {
 private:
     struct Node {
-        Node(const T& value) : Value(value), Next() {
+        Node(const T& value) :
+            Value(value),
+            Next() {
         }
         ~Node() {
         }

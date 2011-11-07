@@ -3,12 +3,12 @@
 #include "level/block.h"
 #include "level/world.h"
 
-World::World() {
-    chunksX = 0;
-    chunksY = 0;
-    chunksZ = 0;
-    numChunks = 0;
-    chunks = nullptr;
+World::World() :
+    chunksX(),
+    chunksY(),
+    chunksZ(),
+    numChunks(),
+    chunks() {
 }
 
 World::~World() {
@@ -23,8 +23,7 @@ void World::Init(int chunksX, int chunksY, int chunksZ) {
     widthZ = chunksZ * Chunk::DIM;
 
     numChunks = chunksX * chunksY * chunksZ;
-    chunks = new Chunk*[numChunks];
-    ZeroMemory(chunks, numChunks);
+    chunks = new Chunk*[numChunks]();
 }
 
 void World::Shutdown() {

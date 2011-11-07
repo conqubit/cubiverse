@@ -26,7 +26,7 @@ int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 
     RegisterClass(hInstance);
 
-    if (!InitInstance (hInstance, nCmdShow)) {
+    if (!InitInstance(hInstance, nCmdShow)) {
         return 0;
     }
 

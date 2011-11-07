@@ -3,27 +3,28 @@
 #include <d3d11.h>
 #include <d3dx10.h>
 #include "math.h"
+#include "graphics/shader.h"
 
 #define MF_CLOCKWISE true
 #define MF_COUNTER_CLOCKWISE false
 
-class Shader;
-
 struct ModelDesc {
-    Vertex* vertices;
     int vertexCount;
-
-    int* indices;
     int indexCount;
+    Vertex* vertices;
+    int* indices;
 
-    Shader* shader;
+    Shader shader;
 
-    ModelDesc() {
-        vertexCount = 0;
-        indexCount = 0;
-        vertices = nullptr;
-        indices = nullptr;
-        shader = nullptr;
+    ModelDesc() :
+        vertexCount(),
+        indexCount(),
+        vertices(),
+        indices(),
+        shader() {
+    }
+
+    ~ModelDesc() {
     }
 
     void DeleteBuffers() {
@@ -43,7 +44,7 @@ public:
     void Shutdown();
 
     Matrix mat;
-    Shader* shader;
+    Shader shader;
     int vertexCount;
     int indexCount;
 private:

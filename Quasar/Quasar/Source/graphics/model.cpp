@@ -3,14 +3,12 @@
 #include "graphics/model.h"
 #include "graphics/shader.h"
 
-Model::Model() {
-    shader = nullptr;
-
-    vertexBuffer = nullptr;
-    vertexCount = 0;
-
-    indexBuffer = nullptr;
-    indexCount = 0;
+Model::Model() : 
+    shader(),
+    vertexCount(),
+    indexCount(),
+    vertexBuffer(),
+    indexBuffer() {
 }
 
 Model::~Model() {
@@ -25,7 +23,7 @@ bool Model::Init(ModelDesc* modelDesc) {
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
     HRESULT r;
-
+    
     if (!modelDesc->vertices || !modelDesc->indices) {
         return false;
     }
@@ -38,7 +36,7 @@ bool Model::Init(ModelDesc* modelDesc) {
     ZeroMemory(&vertexData, sizeof(vertexData));
     vertexData.pSysMem = modelDesc->vertices;
 
-    r = System::graphics->getDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+    r = System::graphics->Device()->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
     if (FAILED(r)) {
         return false;
     }
@@ -51,7 +49,7 @@ bool Model::Init(ModelDesc* modelDesc) {
     ZeroMemory(&indexData, sizeof(indexData));
     indexData.pSysMem = modelDesc->indices;
 
-    r = System::graphics->getDevice()->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
+    r = System::graphics->Device()->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
     if (FAILED(r)) {
         return false;
     }
@@ -63,9 +61,9 @@ void Model::Render() {
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
 
-    System::graphics->getDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-    System::graphics->getDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    System::graphics->getDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    System::graphics->DeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+    System::graphics->DeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    System::graphics->DeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     shader->render(this);
 }

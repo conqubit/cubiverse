@@ -12,7 +12,11 @@ class BinaryTree {
 private:
     // ******** START INTERNAL TYPES ********
     struct Node {
-        Node(const T& value) : Value(value), Left(), Right(), Level(1) {
+        Node(const T& value) :
+            Value(value),
+            Left(),
+            Right(),
+            Level(1) {
         }
         Node* Left;
         Node* Right;

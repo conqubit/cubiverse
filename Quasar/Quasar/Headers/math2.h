@@ -22,8 +22,8 @@ struct Vertex {
 
 class Vector3 {
 public:
-    Vector3() {
-        set(XMVectorZero());
+    Vector3() :
+        data() {
     }
 
     XMFLOAT3 data;

@@ -7,15 +7,21 @@ class Graphics {
 public:
     Graphics();
     ~Graphics();
-    bool init();
-    void render();
-    void shutdown();
+    bool Init();
+    void Render();
+    void Shutdown();
 
-    ID3D11Device* getDevice();
-    ID3D11DeviceContext* getDeviceContext();
-    FreeCamera* cam;
+    ID3D11Device* Device() {
+        return direct3D->device;
+    }
 
+    ID3D11DeviceContext* DeviceContext() {
+        return direct3D->deviceContext;
+    }
+
+    Direct3D* direct3D;
+
+    FreeCamera camera;
     Matrix viewMat;
     Matrix projMat;
-    Direct3D* direct3D;
 };

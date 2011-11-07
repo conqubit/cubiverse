@@ -17,6 +17,7 @@
     <ClCompile Include="Source\graphics\model.cpp" />
     <ClCompile Include="Source\graphics\modelfactory.cpp" />
     <ClCompile Include="Source\graphics\shader.cpp" />
+    <ClCompile Include="Source\graphics\worldrender.cpp" />
     <ClCompile Include="Source\input.cpp" />
     <ClCompile Include="Source\level\chunk.cpp" />
     <ClCompile Include="Source\level\world.cpp" />
@@ -40,12 +41,12 @@
     <ClInclude Include="Headers\containers\linkedstack.h" />
     <ClInclude Include="Headers\containers\queue.h" />
     <ClInclude Include="Headers\containers\skiplist.h" />
-    <ClInclude Include="Headers\entity.h" />
     <ClInclude Include="headers\graphics\direct3d.h" />
     <ClInclude Include="headers\graphics\graphics.h" />
     <ClInclude Include="headers\graphics\model.h" />
     <ClInclude Include="Headers\graphics\shader.h" />
     <ClInclude Include="Headers\graphics\visiblechunk.h" />
+    <ClInclude Include="Headers\graphics\worldrender.h" />
     <ClInclude Include="headers\input.h" />
     <ClInclude Include="Headers\level\block.h" />
     <ClInclude Include="Headers\level\chunk.h" />

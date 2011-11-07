@@ -3,7 +3,11 @@
 #include "system.h"
 #include <stdio.h>
 
-Shader::Shader() {
+Shader::Shader() :
+    vertexShader(),
+    pixelShader(),
+    inputLayout(),
+    matrixBuffer() {
 }
 Shader::~Shader() {
 }

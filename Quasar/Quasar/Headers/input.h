@@ -10,10 +10,10 @@ public:
     Input();
     ~Input();
 
-    bool init();
-    void shutdown();
-    bool readInput();
-    bool keyPressed(int key);
+    bool Init();
+    void Shutdown();
+    bool ReadInput();
+    bool KeyPressed(int key);
 
     int mx, my, dmx, dmy;
 
@@ -22,9 +22,9 @@ private:
     bool readMouse();
     void processInput();
 
-    LPDIRECTINPUT8 directInput;
-    LPDIRECTINPUTDEVICE8 keyboard;
-    LPDIRECTINPUTDEVICE8 mouse;
+    IDirectInput8W* directInput;
+    IDirectInputDevice8W* keyboard;
+    IDirectInputDevice8W* mouse;
 
     unsigned char keyState[256];
     DIMOUSESTATE mouseState;

@@ -16,12 +16,12 @@ public:
     Direct3D();
     ~Direct3D();
 
-    bool init();
+    bool Init();
 
-    void render();
-    void beginScene();
-    void endScene();
-    void shutdown();
+    void Render();
+    void BeginScene();
+    void EndScene();
+    void Shutdown();
 
     ID3D11Device* device;
     ID3D11DeviceContext* deviceContext;
