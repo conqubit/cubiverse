@@ -2,7 +2,7 @@
 
 #include <d3d11.h>
 #include <d3dx10.h>
-#include "math.h"
+#include "math/math.h"
 #include "graphics/shader.h"
 
 #define MF_CLOCKWISE true
@@ -20,8 +20,7 @@ struct ModelDesc {
         vertexCount(),
         indexCount(),
         vertices(),
-        indices(),
-        shader() {
+        indices() {
     }
 
     ~ModelDesc() {
@@ -54,6 +53,5 @@ private:
 
 class ModelFactory {
 public:
-    static ModelDesc CreateGlobe(double radius, int width, int height, bool clockwise);
-    static Model* CreateBox(Shader* shader);
+    //static ModelDesc CreateGlobe(double radius, int width, int height, bool clockwise);
 };

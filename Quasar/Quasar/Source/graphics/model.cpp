@@ -65,7 +65,7 @@ void Model::Render() {
     System::graphics->DeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
     System::graphics->DeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    shader->render(this);
+    shader.Render(this);
 }
 
 void Model::Shutdown() {

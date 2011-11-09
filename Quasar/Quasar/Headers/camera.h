@@ -1,5 +1,5 @@
 #pragma once
-#include "math2.h"
+#include "math/math.h"
 
 class FreeCamera {
 public:
@@ -8,8 +8,8 @@ public:
     void DoInput();
     XMMATRIX GetMat();
 
-    Vector3 pos;
-    Vector3 dir;
+    Vec3 pos;
+    Vec3 dir;
     float yaw;
     float pitch;
 };

@@ -17,7 +17,8 @@
     <ClCompile Include="Source\graphics\model.cpp" />
     <ClCompile Include="Source\graphics\modelfactory.cpp" />
     <ClCompile Include="Source\graphics\shader.cpp" />
-    <ClCompile Include="Source\graphics\worldrender.cpp" />
+    <ClCompile Include="Source\graphics\visiblechunk.cpp" />
+    <ClCompile Include="Source\graphics\worldrenderer.cpp" />
     <ClCompile Include="Source\input.cpp" />
     <ClCompile Include="Source\level\chunk.cpp" />
     <ClCompile Include="Source\level\world.cpp" />
@@ -28,6 +29,7 @@
   <ItemGroup>
     <None Include="Quasar.aps" />
     <None Include="Quasar.ico" />
+    <None Include="Quasar.user" />
     <None Include="Quasar.vcxproj" />
     <None Include="Quasar.vcxproj.user" />
     <None Include="shaders.hlsl" />
@@ -46,15 +48,15 @@
     <ClInclude Include="headers\graphics\model.h" />
     <ClInclude Include="Headers\graphics\shader.h" />
     <ClInclude Include="Headers\graphics\visiblechunk.h" />
-    <ClInclude Include="Headers\graphics\worldrender.h" />
+    <ClInclude Include="Headers\graphics\worldrenderer.h" />
     <ClInclude Include="headers\input.h" />
     <ClInclude Include="Headers\level\block.h" />
     <ClInclude Include="Headers\level\chunk.h" />
     <ClInclude Include="Headers\level\world.h" />
-    <ClInclude Include="Headers\math2.h" />
+    <ClInclude Include="Headers\math\math.h" />
+    <ClInclude Include="Headers\math\vector3.h" />
     <ClInclude Include="Headers\system.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Source\graphics\visiblechunk.cpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -72,11 +74,12 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -93,6 +96,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)$(Configuration)\temp\</IntDir>
+    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -108,6 +113,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers</AdditionalIncludeDirectories>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +132,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

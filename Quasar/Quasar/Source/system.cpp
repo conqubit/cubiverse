@@ -7,8 +7,12 @@ bool System::running = true;
 Graphics* System::graphics = nullptr;
 Input* System::input = nullptr;
 
+
+#include "containers/arraylist.h"
+#include "level/chunk.h"
+
 bool System::Init(HINSTANCE hInst, HWND hWnd) {
-    srand(time(nullptr));
+    srand((unsigned int)time(nullptr));
 
     hInstance = hInst;
     hWindow = hWnd;
@@ -26,6 +30,15 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
     ShowCursor(true);
 
     BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
+
+
+
+
+
+    Vector3i v(Vector3d());
+
+
+
 
     return true;
 }
@@ -70,6 +83,7 @@ void System::Shutdown() {
 
 LRESULT System::HandleMsg(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
+        case 0:
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
     }

@@ -6,10 +6,10 @@
 #include "level/chunk.h"
 #include "level/block.h"
 
-class WorldRender {
+class WorldRenderer {
 public:
-    WorldRender();
-    ~WorldRender();
+    WorldRenderer();
+    ~WorldRenderer();
     void Init(World* w);
     void Shutdown();
     void ConstructVisibleChunks();

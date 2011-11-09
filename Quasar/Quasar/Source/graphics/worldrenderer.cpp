@@ -1,26 +1,25 @@
 #include "stdafx.h"
 
-#include "graphics/WorldRender.h"
+#include "graphics/worldrenderer.h"
 
-WorldRender::WorldRender() :
+WorldRenderer::WorldRenderer() :
     world() {
 }
 
-WorldRender::~WorldRender() {
-    world = nullptr;
+WorldRenderer::~WorldRenderer() {
 }
 
-void WorldRender::Init(World* w) {
+void WorldRenderer::Init(World* w) {
     world = w;
 }
 
-void WorldRender::Shutdown() {
+void WorldRenderer::Shutdown() {
     // TODO: shutdown things
     world = nullptr;
 }
 
-void WorldRender::ConstructVisibleChunks() {
-    for (int x = c->x; x < c->x + Chunk::DIM; x++) {
+void WorldRenderer::ConstructVisibleChunks() {
+    /*for (int x = c->x; x < c->x + Chunk::DIM; x++) {
         for (int y = c->y; y < c->y + Chunk::DIM; y++) {
             for (int z = c->z; z < c->z + Chunk::DIM; z++) {
                 if (w->GetBlock(x, y, z) != Block::Air) {
@@ -29,11 +28,11 @@ void WorldRender::ConstructVisibleChunks() {
 
             }
         }
-    }
+    }*/
 }
 
-void WorldRender::Render() {
-    for (int i = 0; i < visibleChunks.Count(); i++) {
+void WorldRenderer::Render() {
+    /*for (int i = 0; i < visibleChunks.Count(); i++) {
         visibleChunks[i].model.Render();
-    }
+    }*/
 }

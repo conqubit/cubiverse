@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "graphics/shader.h"
-#include "system.h"
 #include <stdio.h>
+#include "system.h"
+#include "graphics/shader.h"
+#include "graphics/model.h"
 
 Shader::Shader() :
     vertexShader(),
@@ -42,12 +43,12 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
         return false;
     }
 
-    r = System::graphics->getDevice()->CreateVertexShader(vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), nullptr, &vertexShader);
+    r = System::graphics->Device()->CreateVertexShader(vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), nullptr, &vertexShader);
     if (FAILED(r)) {
         return false;
     }
 
-    r = System::graphics->getDevice()->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), nullptr, &pixelShader);
+    r = System::graphics->Device()->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), nullptr, &pixelShader);
     if (FAILED(r)) {
         return false;
     }
@@ -75,7 +76,7 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
     ld[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
     ld[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
-    r = System::graphics->getDevice()->CreateInputLayout(ld, numElements, vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), &inputLayout);
+    r = System::graphics->Device()->CreateInputLayout(ld, numElements, vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), &inputLayout);
     if (FAILED(r)) {
         return false;
     }
@@ -91,7 +92,7 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
     buffDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     buffDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-    r = System::graphics->getDevice()->CreateBuffer(&buffDesc, nullptr, &matrixBuffer);
+    r = System::graphics->Device()->CreateBuffer(&buffDesc, nullptr, &matrixBuffer);
     if (FAILED(r)) {
         return false;
     }
@@ -107,22 +108,22 @@ void Shader::Shutdown() {
 void Shader::UpdateConstants(XMMATRIX* mat) {
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-    System::graphics->getDeviceContext()->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    System::graphics->DeviceContext()->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     MatrixBuffer* data = (MatrixBuffer*)mappedResource.pData;
-    data->camPos = System::graphics->cam->pos.data;
+    data->camPos = System::graphics->camera.pos.data;
     data->worldViewProj = XMMatrixTranspose(*mat);
-    System::graphics->getDeviceContext()->Unmap(matrixBuffer, 0);
+    System::graphics->DeviceContext()->Unmap(matrixBuffer, 0);
 
-    System::graphics->getDeviceContext()->VSSetConstantBuffers(0, 1, &matrixBuffer);
-    System::graphics->getDeviceContext()->PSSetConstantBuffers(0, 1, &matrixBuffer);
+    System::graphics->DeviceContext()->VSSetConstantBuffers(0, 1, &matrixBuffer);
+    System::graphics->DeviceContext()->PSSetConstantBuffers(0, 1, &matrixBuffer);
 }
 void Shader::Render(Model* model) {
     XMMATRIX m = System::graphics->viewMat.get() * System::graphics->projMat.get();
     UpdateConstants(&m);
 
-    System::graphics->getDeviceContext()->IASetInputLayout(inputLayout);
-    System::graphics->getDeviceContext()->VSSetShader(vertexShader, nullptr, 0);
-    System::graphics->getDeviceContext()->PSSetShader(pixelShader, nullptr, 0);
+    System::graphics->DeviceContext()->IASetInputLayout(inputLayout);
+    System::graphics->DeviceContext()->VSSetShader(vertexShader, nullptr, 0);
+    System::graphics->DeviceContext()->PSSetShader(pixelShader, nullptr, 0);
 
-    System::graphics->getDeviceContext()->DrawIndexed(model->indexCount, 0, 0);
+    System::graphics->DeviceContext()->DrawIndexed(model->indexCount, 0, 0);
 }

@@ -5,6 +5,8 @@
 #include <d3dx11.h>
 #include <d3dx10.h>
 
+#include "math/vector3.h"
+
 #define square(x) (x)*(x)
 
 struct Vertex {
@@ -20,9 +22,9 @@ struct Vertex {
     }
 };
 
-class Vector3 {
+class Vec3 {
 public:
-    Vector3() :
+    Vec3() :
         data() {
     }
 

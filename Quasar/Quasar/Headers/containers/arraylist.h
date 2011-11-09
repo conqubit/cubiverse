@@ -1,37 +1,27 @@
 #pragma once
 
-#include "stdafx.h"
 #define BEGINNING_CAPACITY 32
 
 template <typename T>
 class ArrayList {
+
+private:
+    T* data;
+    int capacity;
+    int count;
+
 public:
     ArrayList() :
-        capacity(),
+        data(),
+        capacity(BEGINNING_CAPACITY),
         count() {
-
-        data = malloc(sizeof(T) * BEGINNING_CAPACITY);
-        if (data != nullptr) {
-            capacity = BEGINNING_CAPACITY;
-        }
-    }
-
-    ArrayList(const ArrayList<T>& ArrayList) {
-        capacity = 0;
-        count = 0;
-
-        data = malloc(sizeof(T) * ArrayList.capacity);
-        if (data != nullptr) {
-            capacity = ArrayList.capacity;
-            count = ArrayList.count;
-            memcpy(data, ArrayList.data, sizeof(T) * count)
-        }
+		printf("%d\n", count);
+        data = (T*)malloc(sizeof(T) * BEGINNING_CAPACITY);
     }
 
     ~ArrayList() {
-        for (int i = 0; i < count; i++) {
-            data[i].~T();
-        }
+        for (int i = 0; i < count; i++) data[i].~T();
+
         free(data);
         data = nullptr;
         capacity = 0;
@@ -40,29 +30,16 @@ public:
 
     void Add(const T& element) {
         if (count + 1 >= capacity) {
-            T* newLocation = realloc(data, capacity * 2);
-
-            if (newLocation == nullptr) {
-                return;
-            }
-            int test = 5;
-            test.~int();
-            data = newLocation;
-            data[count++] = element;
-            capacity *= 2;
+            data = (T*)realloc(data, capacity *= 2);
         }
+        data[count++] = element;
     }
 
     T operator[](int i) {
         return data[i];
     }
 
-    size_t Count() {
+    int Count() {
         return count;
     }
-
-private
-    T* data;
-    size_t capacity;
-    size_t count;
 };

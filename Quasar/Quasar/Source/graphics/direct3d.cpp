@@ -13,6 +13,7 @@ Direct3D::Direct3D() {
 Direct3D::~Direct3D() {
 }
 
+// Initializes D3D object.
 bool Direct3D::Init() {
     DXGI_SWAP_CHAIN_DESC scd;
     ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
