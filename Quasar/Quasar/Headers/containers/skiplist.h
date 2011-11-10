@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_LEVELS 31
+#define TOP_LEVEL 30
 
 // -------------------------------------------
 // Implements an ordered set with a skip list.
@@ -12,7 +12,11 @@ private:
     // ******** START INTERNAL TYPES ********
     struct Node {
         T Value;
-        Node* Next[0];
+        Node* Next[1]; // Variable length, but has at least 1 element.
+
+        static Node* Create(int level) {
+            return (Node*)calloc(sizeof(Node) + sizeof(Node*) * level, 1);
+        }
     };
 
     class Iterator {
@@ -43,7 +47,7 @@ private:
 
 public:
     SkipList() : count(), topLevel() {
-        head = new_Node(MAX_LEVELS);
+        head = Node::Create(TOP_LEVEL);
     }
 
     ~SkipList() {
@@ -74,11 +78,6 @@ public:
     T* ToArray();
 
 public:
-    Node* new_Node(int levels) {
-        int size = sizeof(Node) + sizeof(Node*) * levels;
-        return (Node*)calloc(size, 1);
-    }
-
     void trimLevels() {
         while (head->Next[topLevel] == nullptr && topLevel >= 1) {
             topLevel--;
@@ -100,7 +99,6 @@ public:
 };
 
 
-
 template <typename T>
 bool SkipList<T>::Insert(const T& value) {
     int level = getRandomLevel();
@@ -108,7 +106,7 @@ bool SkipList<T>::Insert(const T& value) {
         topLevel = level;
     }
     // The new node to insert.
-    Node* node = new_Node(level+1);
+    Node* node = Node::Create(level);
     node->Value = value;
     // Rightmost node that is less than or equal to the new node at the current search level.
     Node* left = head;
@@ -138,6 +136,7 @@ bool SkipList<T>::Insert(const T& value) {
     return true;
 }
 
+
 template <typename T>
 bool SkipList<T>::Remove(const T& value) {
     Node* left = head;
@@ -159,6 +158,7 @@ bool SkipList<T>::Remove(const T& value) {
     return false;
 }
 
+
 template <typename T>
 bool SkipList<T>::Contains(const T& value) {
     Node* left = head;
@@ -172,6 +172,7 @@ bool SkipList<T>::Contains(const T& value) {
     }
     return false;
 }
+
 
 template <typename T>
 T* SkipList<T>::ToArray() {

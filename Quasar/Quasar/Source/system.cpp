@@ -34,8 +34,8 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
 
 
-
-    Vector3i v(Vector3d());
+    Vector3D g();
+    Vector3I v();
 
 
 
