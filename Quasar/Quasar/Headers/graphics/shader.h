@@ -1,12 +1,13 @@
 #pragma once
 
+#include "math/vector3.h"
 #include "graphics/direct3d.h"
 
 class Model;
 
 struct MatrixBuffer {
     XMMATRIX worldViewProj;
-    XMFLOAT3 camPos;
+    Vector3F camPos;
     float padding;
 };
 

@@ -20,41 +20,42 @@ public:
     x(), y(), z() {
     }
 
-    template <typename U>
-    Vector3(U x, U y, U z) :
-    x(x), y(y), z(z) {
+    template <typename U, typename V, typename W>
+    explicit Vector3(U x, V y, W z) :
+    x((T)x), y((T)y), z((T)z) {
     }
 
     template <typename U>
     explicit Vector3(const Vector3<U>& v) :
-    x(v.x), y(v.y), z(v.z) {
+    x((T)v.x), y((T)v.y), z((T)v.z) {
     }
 
     ~Vector3() {
     }
 
-    Vector3I ToInt() {
+    Vector3I ToInt()const {
         return Vector3I(*this);
     }
 
-    Vector3F ToFloat() {
+    Vector3F ToFloat()const {
         return Vector3F(*this);
     }
 
-    Vector3D ToDouble() {
-        return Vector3F(*this);
+    Vector3D ToDouble()const {
+        return Vector3D(*this);
     }
 
-    XMFLOAT3 ToXMFloat3() {
+    XMFLOAT3 ToXMFloat3()const {
         return XMFLOAT3((float)x, (float)y, (float)z);
     }
 
-    XMVECTOR ToXMVector() {
+    XMVECTOR ToXMVector()const {
         return XMVectorSet((float)x, (float)y, (float)z, 0.0f);
     }
 
     //---------------- Initializers ----------------
-    Vector3<T>& Set(T x, T y, T z) {
+    template <typename U, typename V, typename W>
+    Vector3<T>& Set(U x, V y, W z) {
         return this->x = x, this->y = y, this->z = z, *this;
     }
 
@@ -70,21 +71,17 @@ public:
     
     //---------------- Lengths ----------------
     double Length()const {
-        return sqrt(LengthSquaredPrecise());
+        return sqrt(LengthSquared());
     }
 
-    T LengthSquared()const {
-        return x * x + y * y + z * z;
-    }
-
-    double LengthSquaredPrecise()const {
+    double LengthSquared()const {
         return (double)x * x + (double)y * y + (double)z * z;
     }
     
     //---------------- Normalizers ----------------
     Vector3D Normalize()const {
-        if (IsZero()) return this->ToDouble();
-        return this->ToDouble() / Length();
+        if (IsZero()) return ToDouble();
+        return ToDouble() / Length();
     }
 
     template <typename U>
@@ -108,7 +105,7 @@ public:
     }
 
     Vector3D VectorProjectionOnto(const Vector3<T>& v)const {
-        return v.ToDouble() * (Dot(v) / v.LengthSquaredPricise());
+        return v.ToDouble() * (Dot(v) / v.LengthSquared());
     }
 
     //---------------- Accessors ----------------
@@ -164,6 +161,6 @@ public:
 };
 
 template <>
-inline XMFLOAT3 Vector3F::ToXMFloat3() {
+inline XMFLOAT3 Vector3F::ToXMFloat3()const {
     return *((XMFLOAT3*)(&x));
 }

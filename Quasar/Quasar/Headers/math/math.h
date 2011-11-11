@@ -9,6 +9,10 @@
 
 #define square(x) (x)*(x)
 
+#define PI     3.14159265358979323846
+#define PI_2   1.57079632679489661923
+#define SQRT_2 1.41421356237309504880
+
 struct Vertex {
     XMFLOAT3 position;
     XMFLOAT3 normal;
@@ -18,23 +22,8 @@ struct Vertex {
     Vertex() {
     }
 
-    Vertex(XMFLOAT3 pos, XMFLOAT3 norm, D3DXCOLOR col) : position(pos), normal(norm), color(col) {
-    }
-};
-
-class Vec3 {
-public:
-    Vec3() :
-        data() {
-    }
-
-    XMFLOAT3 data;
-
-    XMVECTOR get() {
-        return XMLoadFloat3(&data);
-    }
-    void set(const XMVECTOR& vec) {
-        XMStoreFloat3(&data, vec);
+    Vertex(XMFLOAT3 pos, XMFLOAT3 norm, D3DXCOLOR col) :
+        position(pos), normal(norm), color(col) {
     }
 };
 

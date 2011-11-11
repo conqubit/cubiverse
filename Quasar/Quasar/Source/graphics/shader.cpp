@@ -110,7 +110,7 @@ void Shader::UpdateConstants(XMMATRIX* mat) {
 
     System::graphics->DeviceContext()->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     MatrixBuffer* data = (MatrixBuffer*)mappedResource.pData;
-    data->camPos = System::graphics->camera.pos.data;
+    data->camPos = System::graphics->camera.pos.ToFloat();
     data->worldViewProj = XMMatrixTranspose(*mat);
     System::graphics->DeviceContext()->Unmap(matrixBuffer, 0);
 

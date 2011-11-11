@@ -7,7 +7,6 @@ bool System::running = true;
 Graphics* System::graphics = nullptr;
 Input* System::input = nullptr;
 
-
 #include "containers/arraylist.h"
 #include "level/chunk.h"
 
@@ -16,6 +15,7 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     hInstance = hInst;
     hWindow = hWnd;
+
     input = new Input();
     if (!input->Init()) {
         MessageBoxA(hWindow, "Could not initialize input", "Error", MB_OK);

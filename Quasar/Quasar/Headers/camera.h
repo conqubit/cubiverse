@@ -8,8 +8,6 @@ public:
     void DoInput();
     XMMATRIX GetMat();
 
-    Vec3 pos;
-    Vec3 dir;
-    float yaw;
-    float pitch;
+    Vector3D pos, dir;
+    double yaw, pitch;
 };
