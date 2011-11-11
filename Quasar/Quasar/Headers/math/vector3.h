@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include <xnamath.h>
 
 template <typename T>
 class Vector3;
@@ -13,8 +14,6 @@ template <typename T>
 class Vector3 {
 public:
     T x, y, z;
-
-    #pragma region Methods
 
     //---------------- Constructors / Destructors ----------------
     Vector3() :
@@ -44,6 +43,14 @@ public:
 
     Vector3D ToDouble() {
         return Vector3F(*this);
+    }
+
+    XMFLOAT3 ToXMFloat3() {
+        return XMFLOAT3((float)x, (float)y, (float)z);
+    }
+
+    XMVECTOR ToXMVector() {
+        return XMVectorSet((float)x, (float)y, (float)z, 0.0f);
     }
 
     //---------------- Initializers ----------------
@@ -76,88 +83,37 @@ public:
     
     //---------------- Normalizers ----------------
     Vector3D Normalize()const {
-        if (IsZero()) {
-            return this->ToDouble();
-        }
+        if (IsZero()) return this->ToDouble();
         return this->ToDouble() / Length();
     }
 
     template <typename U>
     Vector3D Normalize(U newLength)const {
-        if (IsZero()) {
-            return this->ToDouble();
-        }
-        return this->ToDouble() * (newLength / Length());
+        if (IsZero()) return ToDouble();
+        return ToDouble() * (newLength / Length());
     }
     
     //---------------- Products ----------------
-
-    #pragma region Dot
-
-    template <typename U>
-    U Vector3I::Dot(const Vector3<U>& v)const {
-        return (x * v.x) + (y * v.y) + (z * v.z);
+    T Dot(const Vector3<T>& v)const {
+        return x * v.x + y * v.y + z * v.z;
     }
 
-    template <typename U>
-    float Vector3F::Dot(const Vector3<U>& v)const {
-        return (x * v.x) + (y * v.y) + (z * v.z);
+    Vector3<T> Cross(const Vector3<T>& v)const {
+        return Vector3<T>((y * v.z - z * v.y), (z * v.x - x * v.z), (x * v.y - y * v.x));
     }
-
-    double Vector3F::Dot(const Vector3<double>& v)const {
-        return (x * v.x) + (y * v.y) + (z * v.z);
-    }
-
-    template <typename U>
-    double Vector3D::Dot(const Vector3<U>& v)const {
-        return (x * v.x) + (y * v.y) + (z * v.z);
-    }
-
-    #pragma endregion
-
-    #pragma region Cross
-
-    template <typename U>
-    Vector3<U> Vector3I::Cross(const Vector3<U>& v)const {
-        return Vector3<U>((y * v.z - z * v.y), (z * v.x - x * v.z), (x * v.y - y * v.x));
-    }
-
-    template <typename U>
-    Vector3F Vector3F::Cross(const Vector3<U>& v)const {
-        return Vector3F((y * v.z - z * v.y), (z * v.x - x * v.z), (x * v.y - y * v.x));
-    }
-
-    Vector3D Vector3F::Cross(const Vector3D& v)const {
-        return Vector3D((y * v.z - z * v.y), (z * v.x - x * v.z), (x * v.y - y * v.x));
-    }
-
-    template <typename U>
-    Vector3D Vector3D::Cross(const Vector3<U>& v)const {
-        return Vector3D((y * v.z - z * v.y), (z * v.x - x * v.z), (x * v.y - y * v.x));
-    }
-
-    #pragma endregion
     
     //---------------- Projections ----------------
-    double ScalarProjectionOver(const Vector3<T>& v)const {
+    double ScalarProjectionOnto(const Vector3<T>& v)const {
         return Dot(v).ToDouble() / v.Length();
     }
 
-    Vector3D VectorProjectionOver(const Vector3<T>& v)const {
-        return v * (Dot(v).ToDouble() / v.LengthSquaredPricise());
+    Vector3D VectorProjectionOnto(const Vector3<T>& v)const {
+        return v.ToDouble() * (Dot(v) / v.LengthSquaredPricise());
     }
-
-    #pragma endregion
-
-    #pragma region Operators
 
     //---------------- Accessors ----------------
     T operator[](int i)const {
-        switch (i) {
-            case 0:  return x;
-            case 1:  return y;
-            default: return z;
-        }
+        return (&x)[i];
     }
     
     //---------------- Unitary ----------------
@@ -166,54 +122,48 @@ public:
     }
     
     //---------------- Vector-Vector Arithmetic ----------------
-    template <typename U>
-    Vector3<T> operator+(const Vector3<U>& v)const {
+    Vector3<T> operator+(const Vector3<T>& v)const {
         return Vector3<T>(x + v.x, y + v.y, z + v.z);
     }
 
-    template <typename U>
-    Vector3<T> operator-(const Vector3<U>& v)const {
+    Vector3<T> operator-(const Vector3<T>& v)const {
         return Vector3<T>(x - v.x, y - v.y, z - v.z);
     }
     
     //---------------- Vector-Scalar Arithmetic ----------------
-    template <typename U>
-    Vector3<T> operator*(U s)const {
+    Vector3<T> operator*(T s)const {
         return Vector3<T>(x * s, y * s, z * s);
     }
 
-    template <typename U>
-    Vector3<T> operator/(U s)const {
+    Vector3<T> operator/(T s)const {
         return Vector3<T>(x / s, y / s, z / s);
     }
     
     //---------------- Vector-Vector Assignment ----------------
-    template <typename U>
-    Vector3<T>& operator=(const Vector3<U>& v) {
+    Vector3<T>& operator=(const Vector3<T>& v) {
         return x = v.x, y = v.y, z = v.z, *this;
     }
 
-    template <typename U>
-    Vector3<T>& operator+=(const Vector3<U>& v) {
+    Vector3<T>& operator+=(const Vector3<T>& v) {
         return x += v.x, y += v.y, z += v.z, *this;
     }
 
-    template <typename U>
-    Vector3<T>& operator-=(const Vector3<U>& v) {
+    Vector3<T>& operator-=(const Vector3<T>& v) {
         return x -= v.x, y -= v.y, z -= v.z, *this;
     }
     
     //---------------- Vector-Scalar Assignment ----------------
-    template <typename U>
-    Vector3<T>& operator*=(U s) {
+    Vector3<T>& operator*=(T s) {
         return x *= s, y *= s, z *= s, *this;
     }
 
-    template <typename U>
-    Vector3<T>& operator/=(U s) {
+    Vector3<T>& operator/=(T s) {
         return x /= s, y /= s, z /= s, *this;
     }
-
-    #pragma endregion
     
 };
+
+template <>
+inline XMFLOAT3 Vector3F::ToXMFloat3() {
+    return *((XMFLOAT3*)(&x));
+}

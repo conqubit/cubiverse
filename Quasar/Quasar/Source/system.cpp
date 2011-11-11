@@ -31,15 +31,6 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
-
-
-
-    Vector3D g();
-    Vector3I v();
-
-
-
-
     return true;
 }
 
