@@ -26,7 +26,7 @@ void FreeCamera::DoInput() {
     dir = Vector3D(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)).Normalize();
 
     Vector3D vel = dir * (System::input->KeyPressed(DIK_W) - System::input->KeyPressed(DIK_S))
-                 + Vector3D(0, 1, 0).Cross(dir).Normalize()
+                 + Vector3D::AXIS_Y.Cross(dir).Normalize()
                  * (System::input->KeyPressed(DIK_D) - System::input->KeyPressed(DIK_A))
                  + Vector3D(0, (System::input->KeyPressed(DIK_Q) - System::input->KeyPressed(DIK_E)), 0);
 

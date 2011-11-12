@@ -31,6 +31,8 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
+    print(Vector3D::ZERO.ToString());
+
     return true;
 }
 

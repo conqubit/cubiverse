@@ -38,7 +38,7 @@ class Model {
 public:
     Model();
     ~Model();
-    bool Init(ModelDesc* modelDesc);
+    bool Init(ModelDesc& modelDesc);
     void Render();
     void Shutdown();
 
