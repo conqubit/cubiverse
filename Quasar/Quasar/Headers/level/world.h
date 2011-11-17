@@ -17,8 +17,11 @@ public:
         GetChunk(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)->GetBlock(x, y, z);
     }
 
+    int GetChunkIndex(int cx, int cy, int cz) {
+        return cx + cy * chunksX + cz * chunksX * chunksY;
+    }
     Chunk* GetChunk(int cx, int cy, int cz) {
-        return chunks[(cx + cy * chunksX + cz * chunksX * chunksY)];
+        return chunks[GetChunkIndex(cx, cy, cz)];
     }
 
     bool InBlockBounds(int x, int y, int z) {
@@ -30,7 +33,5 @@ public:
     int chunksX, chunksY, chunksZ;
     int widthX, widthY, widthZ;
     int numChunks;
-
-private:
     Chunk** chunks;
 };

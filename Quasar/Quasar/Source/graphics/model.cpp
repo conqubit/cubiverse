@@ -1,6 +1,8 @@
 #include "stdafx.h"
+
 #include "system.h"
 #include "graphics/model.h"
+#include "graphics/modelfactory.h"
 #include "graphics/shader.h"
 
 Model::Model() : 
@@ -14,17 +16,17 @@ Model::Model() :
 Model::~Model() {
 }
 
-bool Model::Init(ModelDesc& modelDesc) {
-    shader = modelDesc.shader;
-    vertexCount = modelDesc.vertexCount;
-    indexCount = modelDesc.indexCount;
+bool Model::Init(const ModelFactory& mf) {
+    shader = mf.shader;
+    vertexCount = mf.vertices.Count();
+    indexCount = mf.indices.Count();
 
     D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
     HRESULT r;
     
-    if (!modelDesc.vertices || !modelDesc.indices) {
+    if (vertexCount == 0 || indexCount == 0) {
         return false;
     }
 
@@ -34,7 +36,7 @@ bool Model::Init(ModelDesc& modelDesc) {
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
     ZeroMemory(&vertexData, sizeof(vertexData));
-    vertexData.pSysMem = modelDesc.vertices;
+    vertexData.pSysMem = mf.vertices.DataPtr();
 
     r = System::graphics->Device()->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
     if (FAILED(r)) {
@@ -47,7 +49,7 @@ bool Model::Init(ModelDesc& modelDesc) {
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
     ZeroMemory(&indexData, sizeof(indexData));
-    indexData.pSysMem = modelDesc.indices;
+    indexData.pSysMem = mf.indices.DataPtr();
 
     r = System::graphics->Device()->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
     if (FAILED(r)) {

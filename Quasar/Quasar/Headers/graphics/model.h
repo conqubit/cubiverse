@@ -2,43 +2,18 @@
 
 #include <d3d11.h>
 #include <d3dx10.h>
+
 #include "math/math.h"
+#include "graphics/irender.h"
 #include "graphics/shader.h"
 
-#define MF_CLOCKWISE true
-#define MF_COUNTER_CLOCKWISE false
+class ModelFactory;
 
-struct ModelDesc {
-    int vertexCount;
-    int indexCount;
-    Vertex* vertices;
-    int* indices;
-
-    Shader shader;
-
-    ModelDesc() :
-        vertexCount(),
-        indexCount(),
-        vertices(),
-        indices() {
-    }
-
-    ~ModelDesc() {
-    }
-
-    void DeleteBuffers() {
-        delete[] indices;
-        delete[] vertices;
-        indices = nullptr;
-        vertices = nullptr;
-    }
-};
-
-class Model {
+class Model : public IRender {
 public:
     Model();
     ~Model();
-    bool Init(ModelDesc& modelDesc);
+    bool Init(const ModelFactory& mf);
     void Render();
     void Shutdown();
 
@@ -49,9 +24,4 @@ public:
 private:
     ID3D11Buffer* vertexBuffer;
     ID3D11Buffer* indexBuffer;
-};
-
-class ModelFactory {
-public:
-    //static ModelDesc CreateGlobe(double radius, int width, int height, bool clockwise);
 };

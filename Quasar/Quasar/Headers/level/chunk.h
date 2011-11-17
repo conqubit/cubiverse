@@ -13,11 +13,11 @@ public:
     void Init(int cx, int cy, int cz);
     void Fill(Block type);
 
-    Block GetBlock(int x, int y, int z) {
+    Block GetBlock(int x, int y, int z)const {
         return (Block)data[GetIndex(x, y, z)];
     }
 
-    int GetIndex(int x, int y, int z) {
+    static int GetIndex(int x, int y, int z) {
         return (x & MASK) + (y & MASK) * DIM + (z & MASK) * DIM * DIM;
     }
 

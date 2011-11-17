@@ -1,9 +1,11 @@
 #pragma once
 
+#include "containers/arraylist.h"
+#include "graphics/irender.h"
 #include "graphics/direct3d.h"
 #include "camera.h"
 
-class Graphics {
+class Graphics : public IRender {
 public:
     Graphics();
     ~Graphics();
@@ -18,6 +20,8 @@ public:
     ID3D11DeviceContext* DeviceContext() {
         return direct3D->deviceContext;
     }
+
+    ArrayList<IRender*> things;
 
     Direct3D* direct3D;
 

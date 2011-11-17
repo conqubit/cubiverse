@@ -7,8 +7,6 @@ class Model;
 
 struct MatrixBuffer {
     XMMATRIX worldViewProj;
-    Vector3F camPos;
-    float padding;
 };
 
 class Shader {

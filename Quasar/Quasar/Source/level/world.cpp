@@ -38,9 +38,10 @@ void World::Generate() {
     for (int cx = 0; cx < chunksX; cx++) {
         for (int cy = 0; cy < chunksY; cy++) {
             for (int cz = 0; cz < chunksZ; cz++) {
-                Chunk* c = GetChunk(cx, cy, cz);
-                c->Init(cx, cy, cz);
-                c->Fill(Block::Stone);
+                int i = GetChunkIndex(cx, cy, cz);
+                chunks[i] = new Chunk();
+                chunks[i]->Init(cx, cy, cz);
+                chunks[i]->Fill(Block::Stone);
             }
         }
     }

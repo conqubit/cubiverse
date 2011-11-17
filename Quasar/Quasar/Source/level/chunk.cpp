@@ -6,7 +6,6 @@ Chunk::Chunk() {
 }
 
 Chunk::~Chunk() {
-    printf("F\n");
 }
 
 void Chunk::Init(int cx, int cy, int cz) {

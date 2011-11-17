@@ -15,7 +15,6 @@
     <ClCompile Include="Source\graphics\direct3d.cpp" />
     <ClCompile Include="Source\graphics\graphics.cpp" />
     <ClCompile Include="Source\graphics\model.cpp" />
-    <ClCompile Include="Source\graphics\modelfactory.cpp" />
     <ClCompile Include="Source\graphics\shader.cpp" />
     <ClCompile Include="Source\graphics\visiblechunk.cpp" />
     <ClCompile Include="Source\graphics\worldrenderer.cpp" />
@@ -45,7 +44,9 @@
     <ClInclude Include="Headers\containers\skiplist.h" />
     <ClInclude Include="headers\graphics\direct3d.h" />
     <ClInclude Include="headers\graphics\graphics.h" />
+    <ClInclude Include="Headers\graphics\irender.h" />
     <ClInclude Include="headers\graphics\model.h" />
+    <ClInclude Include="Headers\graphics\modelfactory.h" />
     <ClInclude Include="Headers\graphics\shader.h" />
     <ClInclude Include="Headers\graphics\visiblechunk.h" />
     <ClInclude Include="Headers\graphics\worldrenderer.h" />

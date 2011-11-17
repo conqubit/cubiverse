@@ -61,20 +61,20 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
     ld[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
     ld[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
-    ld[1].SemanticName = "NORMAL";
+    /*ld[1].SemanticName = "NORMAL";
     ld[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
     ld[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-    ld[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    ld[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;*/
 
     ld[2].SemanticName = "COLOR";
     ld[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     ld[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
     ld[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
-    ld[3].SemanticName = "TEXCOORD";
+    /*ld[3].SemanticName = "TEXCOORD";
     ld[3].Format = DXGI_FORMAT_R32G32_FLOAT;
     ld[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-    ld[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    ld[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;*/
 
     r = System::graphics->Device()->CreateInputLayout(ld, numElements, vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), &inputLayout);
     if (FAILED(r)) {
@@ -110,7 +110,6 @@ void Shader::UpdateConstants(XMMATRIX* mat) {
 
     System::graphics->DeviceContext()->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     MatrixBuffer* data = (MatrixBuffer*)mappedResource.pData;
-    data->camPos = System::graphics->camera.pos;
     data->worldViewProj = XMMatrixTranspose(*mat);
     System::graphics->DeviceContext()->Unmap(matrixBuffer, 0);
 

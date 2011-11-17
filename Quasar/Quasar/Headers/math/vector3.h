@@ -35,6 +35,14 @@ public:
         x((T)x), y((T)y), z((T)z) {
     }
 
+    explicit Vector3(const XMFLOAT3& v) :
+        x((T)v.x), y((T)v.y), z((T)v.z) {
+    }
+
+    explicit Vector3(const XMVECTOR& v) :
+        x((T)v.m128_f32[0]), y((T)v.m128_f32[1]), z((T)v.m128_f32[2]) {
+    }
+
     ~Vector3() {
     }
 
@@ -85,13 +93,13 @@ public:
     
     //---------------- Normalizers ----------------
     Vector3D Normalize()const {
-        if (IsZero()) return ZERO;
+        if (IsZero()) return Vector3D();
         return ToDouble() / Length();
     }
 
     template <typename U>
     Vector3D Normalize(U newLength)const {
-        if (IsZero()) return ZERO;
+        if (IsZero()) return Vector3D();
         return ToDouble() * (newLength / Length());
     }
     
@@ -176,7 +184,7 @@ public:
 };
 
 template <typename T>
-const Vector3<T> Vector3<T>::ZERO = Vector3<T>(0, 0, 0);
+const Vector3<T> Vector3<T>::ZERO = Vector3<T>();
 template <typename T>
 const Vector3<T> Vector3<T>::AXIS_X = Vector3<T>(1, 0, 0);
 template <typename T>

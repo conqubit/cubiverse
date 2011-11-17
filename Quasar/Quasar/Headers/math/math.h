@@ -14,16 +14,14 @@
 #define SQRT_2 1.41421356237309504880
 
 struct Vertex {
-    XMFLOAT3 position;
-    XMFLOAT3 normal;
-    D3DXCOLOR color;
-    XMFLOAT2 texcoord;
+    Vector3F position;
+    XMFLOAT4 color;
 
     Vertex() {
     }
 
-    Vertex(XMFLOAT3 pos, XMFLOAT3 norm, D3DXCOLOR col) :
-        position(pos), normal(norm), color(col) {
+    Vertex(float x, float y, float z) :
+        position(x, y, z), color(1, 1, 1, 1) {
     }
 };
 

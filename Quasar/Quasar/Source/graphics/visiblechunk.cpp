@@ -2,8 +2,9 @@
 
 #include "graphics/visiblechunk.h"
 
-VisibleChunk::VisibleChunk() {// :
-    //model() {
+VisibleChunk::VisibleChunk() :
+    model(), 
+    visibleBlocks() {
 }
 
 VisibleChunk::~VisibleChunk() {

@@ -1,5 +1,8 @@
 #include "stdafx.h"
+
 #include "system.h"
+#include "level/world.h"
+#include "graphics/worldrenderer.h"
 
 HINSTANCE System::hInstance = nullptr;
 HWND System::hWindow = nullptr;
@@ -9,6 +12,9 @@ Input* System::input = nullptr;
 
 #include "containers/arraylist.h"
 #include "level/chunk.h"
+
+World* world;
+WorldRenderer* worldRenderer;
 
 bool System::Init(HINSTANCE hInst, HWND hWnd) {
     srand((unsigned int)time(nullptr));
@@ -29,9 +35,19 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     ShowCursor(true);
 
-    BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
+    //BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
-    print(Vector3D::ZERO.ToString());
+
+    world = new World();
+    world->Init(2, 2, 2);
+    world->Generate();
+
+    worldRenderer = new WorldRenderer();
+    worldRenderer->Init(world);
+
+    worldRenderer->ConstructVisibleChunks();
+
+    graphics->things.Add(worldRenderer);
 
     return true;
 }
@@ -41,8 +57,8 @@ void System::Run() {
     while(running) {
         input->ReadInput();
         if (input->KeyPressed(DIK_ESCAPE)) {
-            //running = false;
-            //break;
+            running = false;
+            break;
         }
         graphics->Render();
         Sleep(5);
