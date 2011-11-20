@@ -28,6 +28,7 @@ public:
     Model* Create() {
         Model* m = new Model();
         if (!m->Init(*this)) {
+            delete m;
             m = nullptr;
         }
         return m;

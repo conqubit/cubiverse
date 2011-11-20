@@ -4,14 +4,13 @@
 #include "level/world.h"
 #include "graphics/worldrenderer.h"
 
-HINSTANCE System::hInstance = nullptr;
-HWND System::hWindow = nullptr;
-bool System::running = true;
-Graphics* System::graphics = nullptr;
-Input* System::input = nullptr;
+HINSTANCE System::hInstance;
+HWND      System::hWindow;
+bool      System::running;
 
-#include "containers/arraylist.h"
-#include "level/chunk.h"
+Graphics* System::graphics;
+Input*    System::input;
+Player*   System::player;
 
 World* world;
 WorldRenderer* worldRenderer;
@@ -33,12 +32,15 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
         return false;
     }
 
-    ShowCursor(true);
+    ShowCursor(false);
+
+    player = new Player();
+    player->Init();
 
     //BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
     world = new World();
-    world->Init(2, 2, 2);
+    world->Init(5, 5, 5);
     world->Fill(Block::Air);
     world->GenerateSphere(Block::Stone);
 
@@ -55,16 +57,19 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 }
 
 void System::Run() {
-    MSG msg;
+    if (running) return;
+    running = true;
     while(running) {
         input->ReadInput();
         if (input->KeyPressed(DIK_ESCAPE)) {
             running = false;
             break;
         }
+
         graphics->Render();
         Sleep(5);
 
+        MSG msg;
         while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);

@@ -2,18 +2,17 @@
 
 #include "level/chunk.h"
 
-Chunk::Chunk() :
-    x(), y(), z() {
+const Vector3I Chunk::DIM_VEC = Vector3I(Chunk::DIM, Chunk::DIM, Chunk::DIM);
+
+Chunk::Chunk() : pos() {
 }
 
 Chunk::~Chunk() {
 }
 
 void Chunk::Init(int t, int cx, int cy, int cz) {
-    x = cx * DIM;
-    y = cy * DIM;
-    z = cz * DIM;
-    memset(data, t, Chunk::SIZE);
+    pos = Vector3I(cx, cy, cz) * Chunk::DIM;
+    Fill(t);
 }
 
 void Chunk::Fill(int t) {

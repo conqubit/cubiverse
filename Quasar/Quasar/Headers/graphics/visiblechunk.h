@@ -10,6 +10,8 @@ public:
     VisibleChunk();
     ~VisibleChunk();
 
+    void Shutdown();
+
     Model* model;
     SkipList<int> visibleBlocks;
 };

@@ -17,7 +17,10 @@ void WorldRenderer::Init(World* w) {
 }
 
 void WorldRenderer::Shutdown() {
-    // TODO: shutdown things
+    for (int i = 0; i < visibleChunks.Count(); i++) {
+        visibleChunks[i]->Shutdown();
+        delete visibleChunks[i];
+    }
     world = nullptr;
 }
 
@@ -37,56 +40,56 @@ bool WorldRenderer::ConstructVisibleChunks() {
     if (!s->Init(L"shaders.hlsl", "_vshader", "_pshader")) {
         return false;
     }
+    int total = 0;
     for (int i = 0; i < world->numChunks; i++) {
         Chunk* c = world->chunks[i];
         ModelFactory mf = ModelFactory();
         int numVisibleBlocks = 0;
-        for (int x = c->x; x < c->x + Chunk::DIM; x++) {
-        for (int y = c->y; y < c->y + Chunk::DIM; y++) {
-        for (int z = c->z; z < c->z + Chunk::DIM; z++) {
-            if (world->GetBlock(x, y, z) == Block::Air) {
+        VEC3_RANGE_OFFSET(c->pos, Chunk::DIM_VEC) {
+            if (world->GetBlock(p) == Block::Air) {
                 continue;
             }
             bool visible = false;
-            if (world->GetBlock(x + 1, y, z) == Block::Air) {
-                ConstructFace(mf, x + 1, y, z, 0, 1, 2, XMFLOAT4(1, 1, 1, 1));
+            if (world->GetBlock(p.x + 1, p.y, p.z) == Block::Air) { // X +
+                ConstructFace(mf, p.x + 1, p.y, p.z, 0, 1, 2, XMFLOAT4(.9f, .9f, .9f, 1.0f));
                 visible = true;
             }
-            if (world->GetBlock(x - 1, y, z) == Block::Air) {
-                ConstructFace(mf, x, y, z, 0, 2, 1, XMFLOAT4(.5, .5, .5, 1));
+            if (world->GetBlock(p.x - 1, p.y, p.z) == Block::Air) { // X -
+                ConstructFace(mf, p.x, p.y, p.z, 0, 2, 1, XMFLOAT4(.6f, .6f, .6f, 1.0f));
                 visible = true;
             }
-            if (world->GetBlock(x, y + 1, z) == Block::Air) {
-                ConstructFace(mf, x, y + 1, z, 1, 2, 0, XMFLOAT4(.9, .9, .9, 1));
+            if (world->GetBlock(p.x, p.y + 1, p.z) == Block::Air) { // Y +
+                ConstructFace(mf, p.x, p.y + 1, p.z, 1, 2, 0, XMFLOAT4(.8f, .8f, .8f, 1.0f));
                 visible = true;
             }
-            if (world->GetBlock(x, y - 1, z) == Block::Air) {
-                ConstructFace(mf, x, y, z, 1, 0, 2, XMFLOAT4(.8, .8, .8, 1));
+            if (world->GetBlock(p.x, p.y - 1, p.z) == Block::Air) { // Y -
+                ConstructFace(mf, p.x, p.y, p.z, 1, 0, 2, XMFLOAT4(.7f, .7f, .7f, 1.0f));
                 visible = true;
             }
-            if (world->GetBlock(x, y, z + 1) == Block::Air) {
-                ConstructFace(mf, x, y, z + 1, 2, 0, 1, XMFLOAT4(.7, .7, .7, 1));
+            if (world->GetBlock(p.x, p.y, p.z + 1) == Block::Air) { // Z +
+                ConstructFace(mf, p.x, p.y, p.z + 1, 2, 0, 1, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
                 visible = true;
             }
-            if (world->GetBlock(x, y, z - 1) == Block::Air) {
-                ConstructFace(mf, x, y, z, 2, 1, 0, XMFLOAT4(.6, .6, .6, 1));
+            if (world->GetBlock(p.x, p.y, p.z - 1) == Block::Air) { // Z -
+                ConstructFace(mf, p.x, p.y, p.z, 2, 1, 0, XMFLOAT4(.5f, .5f, .5f, 1.0f));
                 visible = true;
             }
             if (visible) {
                 //vc->visibleBlocks.Insert(Chunk::GetIndex(x, y, z));
                 numVisibleBlocks++;
             }
-        }}}
+        }
         if (numVisibleBlocks > 0) {
+            total += numVisibleBlocks;
             mf.shader = s;
+            Model* m = mf.Create();
+            if (!m) continue;
             VisibleChunk* vc = new VisibleChunk();
-            vc->model = mf.Create();
-            if (!vc->model) {
-                return false;
-            }
+            vc->model = m;
             visibleChunks.Add(vc);
         }
     }
+    print(total);
     return true;
 }
 

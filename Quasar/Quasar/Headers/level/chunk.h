@@ -1,5 +1,6 @@
 #pragma once
 
+#include "math/vector3.h"
 #include "level/block.h"
 
 class Chunk {
@@ -7,6 +8,7 @@ public:
     static const int DIM = 32;
     static const int SIZE = DIM * DIM * DIM;
     static const int MASK = DIM - 1;
+    static const Vector3I DIM_VEC;
 
     Chunk();
     ~Chunk();
@@ -26,7 +28,7 @@ public:
         return (x & MASK) + (y & MASK) * DIM + (z & MASK) * DIM * DIM;
     }
 
-    int x, y, z;
+    Vector3I pos;
 
     unsigned char data[SIZE];
 };

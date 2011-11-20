@@ -4,18 +4,15 @@
 #include "camera.h"
 
 FreeCamera::FreeCamera() :
-    pos(),
-    dir(),
-    yaw(),
-    pitch() {
+    pos(), dir(), yaw(), pitch() {
 }
 
 FreeCamera::~FreeCamera() {
 }
 
 void FreeCamera::DoInput() {
-    yaw += System::input->dmx/300.0;
-    pitch -= System::input->dmy/300.0;
+    yaw -= System::input->dx / 300.0;
+    pitch -= System::input->dy / 300.0;
 
     if (pitch < -PI_2 + 0.01) {
         pitch = -PI_2 + 0.01;
@@ -24,18 +21,18 @@ void FreeCamera::DoInput() {
         pitch = PI_2 - 0.01;
     }
 
-    dir = Vector3D(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)).Normalize();
+    dir = Vector3D(sin(yaw) * cos(pitch), cos(yaw) * cos(pitch), sin(pitch)).Normalize();
 
     Vector3D vel = dir * (System::input->KeyPressed(DIK_W) - System::input->KeyPressed(DIK_S))
-                 + Vector3D::AXIS_Y.Cross(dir).Normalize()
-                 * (System::input->KeyPressed(DIK_D) - System::input->KeyPressed(DIK_A))
-                 + Vector3D(0, (System::input->KeyPressed(DIK_Q) - System::input->KeyPressed(DIK_E)), 0);
+                   + Vector3D::AXIS_Z.Cross(dir).Normalize() *
+                   (System::input->KeyPressed(DIK_D) - System::input->KeyPressed(DIK_A))
+                   + Vector3D::AXIS_Z * (System::input->KeyPressed(DIK_Q) - System::input->KeyPressed(DIK_E));
 
-    pos += vel.Normalize() / (System::input->KeyPressed(DIK_LCONTROL) ? 100 : 10);
+    pos += vel.Normalize(1.0 / (System::input->KeyPressed(DIK_LCONTROL) ? 100 : (System::input->KeyPressed(DIK_LSHIFT) ? 1 : 10)));
 
     SetCursorPos(800, 450);
 }
 
 XMMATRIX FreeCamera::GetMat() {
-    return XMMatrixLookToLH(pos.ToXMVector(), dir.ToXMVector(), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+    return XMMatrixLookToLH(pos.ToXMVector(), dir.ToXMVector(), Vector3F::AXIS_Z.ToXMVector());
 }

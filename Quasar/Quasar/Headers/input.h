@@ -15,7 +15,7 @@ public:
     bool ReadInput();
     bool KeyPressed(int key);
 
-    int mx, my, dmx, dmy;
+    int mx, my, dx, dy;
 
 private:
     bool readKeyboard();

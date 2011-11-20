@@ -4,6 +4,7 @@
 #include "graphics/graphics.h"
 #include "graphics/direct3d.h"
 #include "input.h"
+#include "player.h"
 
 class System {
 public:
@@ -14,8 +15,10 @@ public:
     static LRESULT HandleMsg(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     static HINSTANCE hInstance;
-    static HWND hWindow;
-    static bool running;
+    static HWND      hWindow;
+    static bool      running;
+
     static Graphics* graphics;
-    static Input* input;
+    static Input*    input;
+    static Player*   player;
 };

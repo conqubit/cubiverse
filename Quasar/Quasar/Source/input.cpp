@@ -10,8 +10,8 @@ Input::~Input() {
 
 bool Input::Init() {
     HRESULT r;
-    screenWidth = 800;
-    screenHeight = 600;
+    screenWidth = 1600;
+    screenHeight = 900;
 
     r = DirectInput8Create(System::hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, NULL);
     if (FAILED(r)) return false;
@@ -98,10 +98,10 @@ bool Input::readMouse() {
 }
 
 void Input::processInput() {
-    dmx = mouseState.lX;
-    dmy = mouseState.lY;
-    mx += dmx;
-    my += dmy;
+    dx = mouseState.lX;
+    dy = mouseState.lY;
+    mx += dx;
+    my += dy;
 
     if (mx < 0) {
         mx = 0;
