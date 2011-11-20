@@ -10,15 +10,15 @@ struct VertexIn {
 };
 
 struct PixelIn {
-    float4 position : POSITION;
+    float4 position : SV_POSITION;
 	float4 color : COLOR;
 };
 
 PixelIn _vshader(VertexIn input) {
     PixelIn o;
 
-	o.color = input.color;
 	o.position = mul(input.position, WorldViewProj);
+    o.color = input.color;
 
 	return o;
 }

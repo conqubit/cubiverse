@@ -1,7 +1,7 @@
 #pragma once
 
 enum Block {
-    Undefined = 255,
     Air = 0,
-    Stone = 1
+    Stone = 1,
+    Undefined = 255
 };

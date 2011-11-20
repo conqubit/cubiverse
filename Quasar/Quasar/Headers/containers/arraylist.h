@@ -15,7 +15,7 @@ public:
         data(),
         capacity(BEGINNING_CAPACITY),
         count() {
-        data = (T*)malloc(sizeof(T) * BEGINNING_CAPACITY);
+        data = (T*)malloc(sizeof(T) * capacity);
     }
 
     ~ArrayList() {
@@ -38,7 +38,7 @@ public:
 
     void Add(const T& element) {
         if (count + 1 > capacity) {
-            data = (T*)realloc(data, capacity *= 2);
+            data = (T*)realloc(data, sizeof(T) * (capacity *= 2));
         }
         data[count++] = element;
     }

@@ -13,7 +13,7 @@ public:
     ~WorldRenderer();
     void Init(World* w);
     void Shutdown();
-    void ConstructVisibleChunks();
+    bool ConstructVisibleChunks();
     void Render();
 
 private:

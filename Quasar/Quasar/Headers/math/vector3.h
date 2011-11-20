@@ -122,7 +122,7 @@ public:
     }
 
     //---------------- Accessors ----------------
-    T operator[](int i)const {
+    T& operator[](int i) {
         return (&x)[i];
     }
     
@@ -192,9 +192,9 @@ const Vector3<T> Vector3<T>::AXIS_Y = Vector3<T>(0, 1, 0);
 template <typename T>
 const Vector3<T> Vector3<T>::AXIS_Z = Vector3<T>(0, 0, 1);
 template <typename T>
-const Vector3<T> Vector3<T>::AXIS = {Vector3<T>::AXIS_X,
-                                     Vector3<T>::AXIS_Y,
-                                     Vector3<T>::AXIS_Z};
+const Vector3<T> Vector3<T>::AXIS[3] = { Vector3<T>::AXIS_X,
+                                         Vector3<T>::AXIS_Y,
+                                         Vector3<T>::AXIS_Z };
 
 template <>
 inline XMFLOAT3 Vector3F::ToXMFloat3()const {

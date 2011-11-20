@@ -33,8 +33,10 @@ string str(T x) {
 
 template <typename T>
 void print(T x) {
-    std::cout << x;
+    std::cout << x << '\n';
 }
+
+#define ZeroStruct(s) memset(&(s), 0, sizeof(s))
 
 // TODO: reference additional headers your program requires here
 #include "math/math.h"

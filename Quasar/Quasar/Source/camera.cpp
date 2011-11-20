@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
 #include "system.h"
 #include "camera.h"
 
 FreeCamera::FreeCamera() :
-    pos(0, 0, -5),
+    pos(),
     dir(),
     yaw(),
     pitch() {
@@ -30,9 +31,9 @@ void FreeCamera::DoInput() {
                  * (System::input->KeyPressed(DIK_D) - System::input->KeyPressed(DIK_A))
                  + Vector3D(0, (System::input->KeyPressed(DIK_Q) - System::input->KeyPressed(DIK_E)), 0);
 
-    pos += vel.Normalize((System::input->KeyPressed(DIK_LCONTROL) ? 5000 : 100));
+    pos += vel.Normalize() / (System::input->KeyPressed(DIK_LCONTROL) ? 100 : 10);
 
-    //SetCursorPos(800, 450);
+    SetCursorPos(800, 450);
 }
 
 XMMATRIX FreeCamera::GetMat() {

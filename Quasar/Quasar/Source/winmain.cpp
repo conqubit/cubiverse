@@ -11,8 +11,8 @@ ATOM				RegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WindowProc(HWND, UINT, WPARAM, LPARAM);
 
-int width = 800;
-int height = 600;
+int width = 1600;
+int height = 900;
 
 int main() {
     return _tWinMain(GetModuleHandle(NULL), NULL, GetCommandLine(), SW_SHOW);
@@ -41,7 +41,7 @@ int APIENTRY _tWinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPTSTR lpCmdLin
 
 ATOM RegisterClass(HINSTANCE hInstance) {
     WNDCLASSEX wc;
-    ZeroMemory(&wc, sizeof(WNDCLASSEX));
+    ZeroStruct(wc);
     wc.cbSize = sizeof(WNDCLASSEX);
 
     wc.style			= CS_HREDRAW | CS_VREDRAW;

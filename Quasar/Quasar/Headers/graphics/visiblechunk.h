@@ -10,6 +10,6 @@ public:
     VisibleChunk();
     ~VisibleChunk();
 
-    Model model;
+    Model* model;
     SkipList<int> visibleBlocks;
 };

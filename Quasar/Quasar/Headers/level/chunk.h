@@ -10,11 +10,16 @@ public:
 
     Chunk();
     ~Chunk();
-    void Init(int cx, int cy, int cz);
-    void Fill(Block type);
 
-    Block GetBlock(int x, int y, int z)const {
-        return (Block)data[GetIndex(x, y, z)];
+    void Init(int t, int cx, int cy, int cz);
+    void Fill(int t);
+
+    int GetBlock(int x, int y, int z)const {
+        return data[GetIndex(x, y, z)];
+    }
+
+    int SetBlock(int x, int y, int z, int t) {
+        return data[GetIndex(x, y, z)] = t;
     }
 
     static int GetIndex(int x, int y, int z) {

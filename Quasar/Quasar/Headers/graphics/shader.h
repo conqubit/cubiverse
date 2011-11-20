@@ -15,7 +15,7 @@ public:
     ~Shader();
     bool Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShaderName);
     void Shutdown();
-    void UpdateConstants(XMMATRIX* mat);
+    void UpdateConstants(XMMATRIX& mat);
     void Render(Model* model);
 
     ID3D11VertexShader* vertexShader;

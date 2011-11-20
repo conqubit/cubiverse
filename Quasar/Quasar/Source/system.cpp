@@ -37,15 +37,17 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     //BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
-
     world = new World();
     world->Init(2, 2, 2);
-    world->Generate();
+    world->Fill(Block::Air);
+    world->GenerateSphere(Block::Stone);
 
     worldRenderer = new WorldRenderer();
     worldRenderer->Init(world);
 
-    worldRenderer->ConstructVisibleChunks();
+    if (!worldRenderer->ConstructVisibleChunks()) {
+        return false;
+    }
 
     graphics->things.Add(worldRenderer);
 

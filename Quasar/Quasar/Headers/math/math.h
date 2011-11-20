@@ -20,8 +20,8 @@ struct Vertex {
     Vertex() {
     }
 
-    Vertex(float x, float y, float z) :
-        position(x, y, z), color(1, 1, 1, 1) {
+    Vertex(Vector3F pos, XMFLOAT4 color) :
+        position(pos), color(color) {
     }
 };
 

@@ -16,7 +16,7 @@ Direct3D::~Direct3D() {
 // Initializes D3D object.
 bool Direct3D::Init() {
     DXGI_SWAP_CHAIN_DESC scd;
-    ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
+    ZeroStruct(scd);
 
     scd.BufferCount = 1;
 	scd.BufferDesc.Width = width;
@@ -39,7 +39,7 @@ bool Direct3D::Init() {
 	initViewPort();
 
 	D3D11_BLEND_DESC blendStateDescription;
-	ZeroMemory(&blendStateDescription, sizeof(blendStateDescription));
+	ZeroStruct(blendStateDescription);
 	blendStateDescription.RenderTarget[0].BlendEnable = true;
 	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -50,7 +50,7 @@ bool Direct3D::Init() {
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
 	D3D11_SAMPLER_DESC sampDesc;
-    ZeroMemory( &sampDesc, sizeof(sampDesc) );
+    ZeroStruct(sampDesc);
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -110,7 +110,7 @@ bool Direct3D::initRenderTarget() {
 
 	// Create depth stencil texture
     D3D11_TEXTURE2D_DESC descDepth;
-    ZeroMemory( &descDepth, sizeof(descDepth) );
+    ZeroStruct(descDepth);
     descDepth.Width = width;
     descDepth.Height = height;
     descDepth.MipLevels = 1;
@@ -128,7 +128,7 @@ bool Direct3D::initRenderTarget() {
 
     // Create the depth stencil view
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-    ZeroMemory( &descDSV, sizeof(descDSV) );
+    ZeroStruct(descDSV);
     descDSV.Format = descDepth.Format;
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 
@@ -162,7 +162,7 @@ bool Direct3D::initRenderTarget() {
 
 bool Direct3D::initViewPort() {
 	D3D11_VIEWPORT viewport;
-    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+    ZeroStruct(viewport);
 
 	viewport.Width = (float)width;
     viewport.Height = (float)height;

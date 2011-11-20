@@ -8,8 +8,8 @@
 class ModelFactory {
 public:
     ArrayList<Vertex> vertices;
-    ArrayList<int> indices;
-    Shader shader;
+    ArrayList<unsigned int> indices;
+    Shader* shader;
 
     ModelFactory() :
         vertices(),
@@ -25,9 +25,11 @@ public:
         indices.Add(c);
     }
 
-    Model Create() {
-        Model m = Model();
-        m.Init(*this);
+    Model* Create() {
+        Model* m = new Model();
+        if (!m->Init(*this)) {
+            m = nullptr;
+        }
         return m;
     }
 };

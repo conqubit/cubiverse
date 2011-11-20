@@ -10,11 +10,18 @@ public:
     void Init(int chunksX, int chunksY, int chunksZ);
     void Shutdown();
 
-    void Generate();
+    void Fill(int t);
+    void GenerateSphere(int t);
 
-    Block GetBlock(int x, int y, int z) {
-        if (!InBlockBounds(x, y, z)) return Block::Undefined;
-        GetChunk(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)->GetBlock(x, y, z);
+    int GetBlock(int x, int y, int z) {
+        if (!InBlockBounds(x, y, z)) return Block::Air;
+        return GetChunk(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)->GetBlock(x, y, z);
+    }
+
+    bool SetBlock(int x, int y, int z, int t) {
+        if (!InBlockBounds(x, y, z)) return false;
+        GetChunk(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)->SetBlock(x, y, z, t);
+        return true;
     }
 
     int GetChunkIndex(int cx, int cy, int cz) {

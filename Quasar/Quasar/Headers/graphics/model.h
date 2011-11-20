@@ -18,7 +18,7 @@ public:
     void Shutdown();
 
     Matrix mat;
-    Shader shader;
+    Shader* shader;
     int vertexCount;
     int indexCount;
 private:

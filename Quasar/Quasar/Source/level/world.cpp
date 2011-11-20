@@ -4,9 +4,8 @@
 #include "level/world.h"
 
 World::World() :
-    chunksX(),
-    chunksY(),
-    chunksZ(),
+    chunksX(), chunksY(), chunksZ(),
+    widthX(), widthY(), widthZ(),
     numChunks(),
     chunks() {
 }
@@ -34,15 +33,22 @@ void World::Shutdown() {
     chunks = nullptr;
 }
 
-void World::Generate() {
+void World::Fill(int t) {
     for (int cx = 0; cx < chunksX; cx++) {
-        for (int cy = 0; cy < chunksY; cy++) {
-            for (int cz = 0; cz < chunksZ; cz++) {
-                int i = GetChunkIndex(cx, cy, cz);
-                chunks[i] = new Chunk();
-                chunks[i]->Init(cx, cy, cz);
-                chunks[i]->Fill(Block::Stone);
-            }
+    for (int cy = 0; cy < chunksY; cy++) {
+    for (int cz = 0; cz < chunksZ; cz++) {
+        int i = GetChunkIndex(cx, cy, cz);
+        chunks[i] = new Chunk();
+        chunks[i]->Init(t, cx, cy, cz);
+    }}}
+}
+
+void World::GenerateSphere(int t) {
+    for (int x = 0; x < widthX; x++) {
+    for (int y = 0; y < widthY; y++) {
+    for (int z = 0; z < widthZ; z++) {
+        if (Vector3F(x - widthX/2, y - widthY/2, z - widthZ/2).Length() < min(min(widthX, widthY), widthZ) / 2) {
+            SetBlock(x, y, z, t);
         }
-    }
+    }}}
 }

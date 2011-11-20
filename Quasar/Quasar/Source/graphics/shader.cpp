@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <stdio.h>
+
 #include "system.h"
 #include "graphics/shader.h"
 #include "graphics/model.h"
@@ -44,18 +44,14 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
     }
 
     r = System::graphics->Device()->CreateVertexShader(vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), nullptr, &vertexShader);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     r = System::graphics->Device()->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), nullptr, &pixelShader);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
-    const int numElements = 4;
+    const int numElements = 2;
     D3D11_INPUT_ELEMENT_DESC ld[numElements];
-    ZeroMemory(ld, sizeof(ld));
+    ZeroStruct(ld);
 
     ld[0].SemanticName = "POSITION";
     ld[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -66,10 +62,10 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
     ld[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
     ld[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;*/
 
-    ld[2].SemanticName = "COLOR";
-    ld[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    ld[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-    ld[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    ld[1].SemanticName = "COLOR";
+    ld[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    ld[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+    ld[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
     /*ld[3].SemanticName = "TEXCOORD";
     ld[3].Format = DXGI_FORMAT_R32G32_FLOAT;
@@ -77,15 +73,13 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
     ld[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;*/
 
     r = System::graphics->Device()->CreateInputLayout(ld, numElements, vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), &inputLayout);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     vsBuffer->Release();
     psBuffer->Release();
 
     D3D11_BUFFER_DESC buffDesc;
-    ZeroMemory(&buffDesc, sizeof(buffDesc));
+    ZeroStruct(buffDesc);
 
     buffDesc.Usage = D3D11_USAGE_DYNAMIC;
     buffDesc.ByteWidth = sizeof(MatrixBuffer);
@@ -93,9 +87,7 @@ bool Shader::Init(LPCWSTR shaderFile, LPCSTR vertexShaderName, LPCSTR pixelShade
     buffDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
     r = System::graphics->Device()->CreateBuffer(&buffDesc, nullptr, &matrixBuffer);
-    if (FAILED(r)) {
-        return false;
-    }
+    if (FAILED(r)) return false;
 
     return true;
 }
@@ -105,12 +97,12 @@ void Shader::Shutdown() {
     pixelShader->Release();
     vertexShader->Release();
 }
-void Shader::UpdateConstants(XMMATRIX* mat) {
+void Shader::UpdateConstants(XMMATRIX& mat) {
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
     System::graphics->DeviceContext()->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     MatrixBuffer* data = (MatrixBuffer*)mappedResource.pData;
-    data->worldViewProj = XMMatrixTranspose(*mat);
+    data->worldViewProj = XMMatrixTranspose(mat);
     System::graphics->DeviceContext()->Unmap(matrixBuffer, 0);
 
     System::graphics->DeviceContext()->VSSetConstantBuffers(0, 1, &matrixBuffer);
@@ -118,7 +110,7 @@ void Shader::UpdateConstants(XMMATRIX* mat) {
 }
 void Shader::Render(Model* model) {
     XMMATRIX m = System::graphics->viewMat.get() * System::graphics->projMat.get();
-    UpdateConstants(&m);
+    UpdateConstants(m);
 
     System::graphics->DeviceContext()->IASetInputLayout(inputLayout);
     System::graphics->DeviceContext()->VSSetShader(vertexShader, nullptr, 0);

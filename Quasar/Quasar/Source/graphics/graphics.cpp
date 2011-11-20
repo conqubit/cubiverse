@@ -7,7 +7,6 @@ Graphics::Graphics() :
     camera(),
     viewMat(),
     projMat() {
-    projMat.set(XMMatrixPerspectiveFovLH(60.0f/180.0f*XM_PI, 1.7777f, 0.01f, 1000.0f));
 }
 
 Graphics::~Graphics() {
@@ -20,6 +19,8 @@ bool Graphics::Init() {
         MessageBoxA(System::hWindow, "Could not initialize Direct3D", "Error", MB_OK);
         return false;
     }
+
+    projMat.set(XMMatrixPerspectiveFovLH(60.0f / 180.0f * PI, 1.7777f, 0.01f, 1000.0f));
 
     return true;
 }
