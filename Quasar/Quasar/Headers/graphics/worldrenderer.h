@@ -1,11 +1,11 @@
 #pragma once
 
-#include "containers/arraylist.h"
-#include "graphics/visiblechunk.h"
-#include "graphics/irender.h"
-#include "level/world.h"
-#include "level/chunk.h"
-#include "level/block.h"
+#include "containers/ArrayList.h"
+#include "graphics/VisibleChunk.h"
+#include "graphics/IRender.h"
+#include "level/World.h"
+#include "level/Chunk.h"
+#include "level/Block.h"
 
 class WorldRenderer : public IRender {
 public:

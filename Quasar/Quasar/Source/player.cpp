@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "player.h"
+#include "Player.h"
 
 Player::Player() :
     pos(), vel(), camera() {

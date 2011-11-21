@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "graphics/visiblechunk.h"
+#include "graphics/VisibleChunk.h"
 
 VisibleChunk::VisibleChunk() :
     model(), 

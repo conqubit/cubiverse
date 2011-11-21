@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "level/block.h"
-#include "level/world.h"
+#include "level/Block.h"
+#include "level/World.h"
 
 World::World() :
     chunkWidth(),

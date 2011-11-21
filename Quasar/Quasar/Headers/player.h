@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/math.h"
-#include "camera.h"
+#include "math/Math.h"
+#include "Camera.h"
 
 class Player {
 public:

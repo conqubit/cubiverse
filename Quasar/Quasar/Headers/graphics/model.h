@@ -3,9 +3,9 @@
 #include <d3d11.h>
 #include <d3dx10.h>
 
-#include "math/math.h"
-#include "graphics/irender.h"
-#include "graphics/shader.h"
+#include "math/Math.h"
+#include "graphics/IRender.h"
+#include "graphics/Shader.h"
 
 class ModelFactory;
 

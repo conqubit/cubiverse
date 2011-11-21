@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "graphics/model.h"
-#include "graphics/modelfactory.h"
-#include "graphics/worldrenderer.h"
+#include "graphics/Model.h"
+#include "graphics/ModelFactory.h"
+#include "graphics/WorldRenderer.h"
 
 WorldRenderer::WorldRenderer() :
     world(),

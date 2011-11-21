@@ -1,10 +1,10 @@
 #pragma once
 
 #include "stdafx.h"
-#include "graphics/graphics.h"
-#include "graphics/direct3d.h"
-#include "input.h"
-#include "player.h"
+#include "graphics/Graphics.h"
+#include "graphics/Direct3D.h"
+#include "Input.h"
+#include "Player.h"
 
 class System {
 public:

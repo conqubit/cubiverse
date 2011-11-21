@@ -5,7 +5,6 @@
 #include <d3dx10.h>
 #include <D3DCSX.h>
 #include <D3Dcompiler.h>
-#include "math.h"
 
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dx11.lib")

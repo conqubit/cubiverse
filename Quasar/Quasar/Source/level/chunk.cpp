@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "level/chunk.h"
+#include "level/Chunk.h"
 
 const Vector3I Chunk::DIM_VEC = Vector3I(Chunk::DIM, Chunk::DIM, Chunk::DIM);
 

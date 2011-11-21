@@ -1,9 +1,9 @@
 #pragma once
 
-#include "math/math.h"
-#include "graphics/model.h"
-#include "graphics/shader.h"
-#include "containers/arraylist.h"
+#include "math/Math.h"
+#include "graphics/Model.h"
+#include "graphics/Shader.h"
+#include "containers/ArrayList.h"
 
 class ModelFactory {
 public:

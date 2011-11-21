@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "system.h"
-#include "level/world.h"
-#include "graphics/worldrenderer.h"
+#include "System.h"
+#include "level/World.h"
+#include "graphics/WorldRenderer.h"
 
 HINSTANCE System::hInstance;
 HWND      System::hWindow;

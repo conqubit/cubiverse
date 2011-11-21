@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "system.h"
+#include "System.h"
 
 extern int width;
 extern int height;

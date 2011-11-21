@@ -5,7 +5,7 @@
 #include <d3dx11.h>
 #include <d3dx10.h>
 
-#include "math/vector3.h"
+#include "math/Vector3.h"
 
 #define square(x) (x)*(x)
 

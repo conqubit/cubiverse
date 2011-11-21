@@ -1,9 +1,9 @@
 #pragma once
 
-#include "containers/arraylist.h"
-#include "graphics/irender.h"
-#include "graphics/direct3d.h"
-#include "camera.h"
+#include "containers/ArrayList.h"
+#include "graphics/IRender.h"
+#include "graphics/Direct3D.h"
+#include "Camera.h"
 
 class Graphics : public IRender {
 public:

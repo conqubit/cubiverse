@@ -1,7 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
-#include "arraystack.h"
+#include "ArrayStack.h"
 
 // ------------------------------------------
 // Implements an ordered set with an AA tree.

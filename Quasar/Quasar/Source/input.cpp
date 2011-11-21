@@ -1,5 +1,6 @@
 #include "stdafx.h"
-#include "system.h"
+
+#include "System.h"
 
 Input::Input() {
     ZeroMemory(this, sizeof(Input));

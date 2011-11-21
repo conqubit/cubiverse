@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "system.h"
 #include "resource.h"
+
+#include "System.h"
 
 #define MAX_LOADSTRING 100
 

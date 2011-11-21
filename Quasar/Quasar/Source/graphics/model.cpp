@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "system.h"
-#include "graphics/model.h"
-#include "graphics/modelfactory.h"
-#include "graphics/shader.h"
+#include "System.h"
+#include "graphics/Model.h"
+#include "graphics/ModelFactory.h"
+#include "graphics/Shader.h"
 
 Model::Model() : 
     shader(),

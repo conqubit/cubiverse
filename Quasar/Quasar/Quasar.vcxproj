@@ -11,19 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\camera.cpp" />
-    <ClCompile Include="Source\graphics\direct3d.cpp" />
-    <ClCompile Include="Source\graphics\graphics.cpp" />
-    <ClCompile Include="Source\graphics\model.cpp" />
-    <ClCompile Include="Source\graphics\shader.cpp" />
-    <ClCompile Include="Source\graphics\visiblechunk.cpp" />
-    <ClCompile Include="Source\graphics\worldrenderer.cpp" />
-    <ClCompile Include="Source\input.cpp" />
-    <ClCompile Include="Source\level\chunk.cpp" />
-    <ClCompile Include="Source\level\world.cpp" />
-    <ClCompile Include="Source\player.cpp" />
-    <ClCompile Include="Source\system.cpp" />
-    <ClCompile Include="Source\winmain.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\graphics\Direct3D.cpp" />
+    <ClCompile Include="Source\graphics\Graphics.cpp" />
+    <ClCompile Include="Source\graphics\Model.cpp" />
+    <ClCompile Include="Source\graphics\Shader.cpp" />
+    <ClCompile Include="Source\graphics\VisibleChunk.cpp" />
+    <ClCompile Include="Source\graphics\WorldRenderer.cpp" />
+    <ClCompile Include="Source\Input.cpp" />
+    <ClCompile Include="Source\level\Chunk.cpp" />
+    <ClCompile Include="Source\level\World.cpp" />
+    <ClCompile Include="Source\Player.cpp" />
+    <ClCompile Include="Source\System.cpp" />
+    <ClCompile Include="Source\WinMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -36,29 +36,30 @@
     <None Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\camera.h" />
-    <ClInclude Include="Headers\containers\arraylist.h" />
-    <ClInclude Include="Headers\containers\arraystack.h" />
-    <ClInclude Include="Headers\containers\binarytree.h" />
-    <ClInclude Include="Headers\containers\linkedstack.h" />
-    <ClInclude Include="Headers\containers\queue.h" />
-    <ClInclude Include="Headers\containers\skiplist.h" />
-    <ClInclude Include="headers\graphics\direct3d.h" />
-    <ClInclude Include="headers\graphics\graphics.h" />
-    <ClInclude Include="Headers\graphics\irender.h" />
-    <ClInclude Include="headers\graphics\model.h" />
-    <ClInclude Include="Headers\graphics\modelfactory.h" />
-    <ClInclude Include="Headers\graphics\shader.h" />
-    <ClInclude Include="Headers\graphics\visiblechunk.h" />
-    <ClInclude Include="Headers\graphics\worldrenderer.h" />
-    <ClInclude Include="headers\input.h" />
-    <ClInclude Include="Headers\level\block.h" />
-    <ClInclude Include="Headers\level\chunk.h" />
-    <ClInclude Include="Headers\level\world.h" />
-    <ClInclude Include="Headers\math\math.h" />
-    <ClInclude Include="Headers\math\vector3.h" />
-    <ClInclude Include="Headers\player.h" />
-    <ClInclude Include="Headers\system.h" />
+    <ClInclude Include="Headers\Camera.h" />
+    <ClInclude Include="Headers\containers\ArrayList.h" />
+    <ClInclude Include="Headers\containers\ArrayStack.h" />
+    <ClInclude Include="Headers\containers\BinaryTree.h" />
+    <ClInclude Include="Headers\containers\LinkedStack.h" />
+    <ClInclude Include="Headers\containers\Queue.h" />
+    <ClInclude Include="Headers\containers\SkipList.h" />
+    <ClInclude Include="headers\graphics\Direct3D.h" />
+    <ClInclude Include="headers\graphics\Graphics.h" />
+    <ClInclude Include="Headers\graphics\IRender.h" />
+    <ClInclude Include="headers\graphics\Model.h" />
+    <ClInclude Include="Headers\graphics\ModelFactory.h" />
+    <ClInclude Include="Headers\graphics\Shader.h" />
+    <ClInclude Include="Headers\graphics\VisibleChunk.h" />
+    <ClInclude Include="Headers\graphics\WorldRenderer.h" />
+    <ClInclude Include="headers\Input.h" />
+    <ClInclude Include="Headers\level\Block.h" />
+    <ClInclude Include="Headers\level\Chunk.h" />
+    <ClInclude Include="Headers\level\World.h" />
+    <ClInclude Include="Headers\math\BoundingBox.h" />
+    <ClInclude Include="Headers\math\Math.h" />
+    <ClInclude Include="Headers\math\Vector3.h" />
+    <ClInclude Include="Headers\Player.h" />
+    <ClInclude Include="Headers\System.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

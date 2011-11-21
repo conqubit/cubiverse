@@ -1,5 +1,5 @@
 #pragma once
-#include "math/math.h"
+#include "math/Math.h"
 
 class FreeCamera {
 public:

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "system.h"
-#include "camera.h"
+#include "System.h"
+#include "Camera.h"
 
 FreeCamera::FreeCamera() :
     pos(), dir(), yaw(), pitch() {

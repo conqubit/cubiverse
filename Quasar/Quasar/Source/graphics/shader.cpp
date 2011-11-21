@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "system.h"
-#include "graphics/shader.h"
-#include "graphics/model.h"
+#include "graphics/Shader.h"
+#include "graphics/Model.h"
 
 Shader::Shader() :
     vertexShader(),

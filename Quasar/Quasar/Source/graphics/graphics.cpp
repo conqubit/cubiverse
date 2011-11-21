@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "graphics/graphics.h"
-#include "system.h"
+#include "graphics/Graphics.h"
+#include "System.h"
 
 Graphics::Graphics() :
     direct3D(),

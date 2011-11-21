@@ -1,9 +1,9 @@
 #pragma once
 
-#include "level/world.h"
-#include "level/block.h"
-#include "graphics/model.h"
-#include "containers/skiplist.h"
+#include "level/World.h"
+#include "level/Block.h"
+#include "graphics/Model.h"
+#include "containers/SkipList.h"
 
 class VisibleChunk {
 public:

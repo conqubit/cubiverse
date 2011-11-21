@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/vector3.h"
-#include "graphics/direct3d.h"
+#include "math/Vector3.h"
+#include "graphics/Direct3D.h"
 
 class Model;
 
