@@ -1,0 +1,49 @@
+#pragma once
+
+#define BEGINNING_CAPACITY 32
+
+template <typename T>
+class ArrayList {
+
+private:
+    T* data;
+    int capacity;
+    int count;
+
+public:
+    ArrayList() :
+        data(),
+        capacity(BEGINNING_CAPACITY),
+        count() {
+        data = (T*)malloc(sizeof(T) * capacity);
+    }
+
+    ~ArrayList() {
+        for (int i = 0; i < count; i++) {
+            data[i].~T();
+        }
+        free(data);
+        data = nullptr;
+        capacity = 0;
+        count = 0;
+    }
+
+    int Count()const {
+        return count;
+    }
+
+    T* DataPtr()const {
+        return data;
+    }
+
+    void Add(const T& element) {
+        if (count + 1 > capacity) {
+            data = (T*)realloc(data, sizeof(T) * (capacity *= 2));
+        }
+        data[count++] = element;
+    }
+
+    T& operator[](int i) {
+        return data[i];
+    }
+};
