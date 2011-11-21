@@ -35,8 +35,7 @@ void Graphics::Shutdown() {
 void Graphics::Render() {
     direct3D->BeginScene();
 
-    System::player->camera.DoInput();
-    viewMat.set(System::player->camera.GetMat());
+    viewMat.set(System::player->GetMat());
 
     for (int i = 0; i < things.Count(); i++) {
         things[i]->Render();

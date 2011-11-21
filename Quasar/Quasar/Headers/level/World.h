@@ -1,9 +1,15 @@
 #pragma once
 
+#include "math/BoundingBox.h"
 #include "level/Chunk.h"
 
 class World {
 public:
+    Vector3I chunkWidth;
+    Vector3I width;
+    int numChunks;
+    Chunk** chunks;
+
     World();
     ~World();
 
@@ -12,6 +18,8 @@ public:
 
     void Fill(int t);
     void GenerateSphere(int t);
+
+    bool Intersects(const BoundingBox& bb);
 
     int GetBlock(int x, int y, int z) {
         if (!InBlockBounds(x, y, z)) return Block::Air;
@@ -49,9 +57,4 @@ public:
                y >= 0 && y < width.y &&
                z >= 0 && z < width.z;
     }
-
-    Vector3I chunkWidth;
-    Vector3I width;
-    int numChunks;
-    Chunk** chunks;
 };

@@ -44,3 +44,12 @@ void World::GenerateSphere(int t) {
         }
     }
 }
+
+bool World::Intersects(const BoundingBox& bb) {
+    VEC3_RANGE_AB_INC(bb.Min().Floor(), bb.Max().Floor()) {
+        if (GetBlock(p) == Block::Stone && bb.Intersects(BoundingBox::Block(p))) {
+            return true;
+        }
+    }
+    return false;
+}

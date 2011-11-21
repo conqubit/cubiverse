@@ -21,26 +21,21 @@ public:
     T x, y, z;
 
     //---------------- Constructors / Destructors ----------------
-    Vector3() :
-        x(), y(), z() {
+    Vector3() : x(), y(), z() {
     }
 
     template <typename U>
-    explicit Vector3(const Vector3<U>& v) :
-        x((T)v.x), y((T)v.y), z((T)v.z) {
+    explicit Vector3(const Vector3<U>& v) : x((T)v.x), y((T)v.y), z((T)v.z) {
     }
 
     template <typename U, typename V, typename W>
-    explicit Vector3(U x, V y, W z) :
-        x((T)x), y((T)y), z((T)z) {
+    explicit Vector3(U x, V y, W z) : x((T)x), y((T)y), z((T)z) {
     }
 
-    explicit Vector3(const XMFLOAT3& v) :
-        x((T)v.x), y((T)v.y), z((T)v.z) {
+    explicit Vector3(const XMFLOAT3& v) : x((T)v.x), y((T)v.y), z((T)v.z) {
     }
 
-    explicit Vector3(const XMVECTOR& v) :
-        x((T)v.m128_f32[0]), y((T)v.m128_f32[1]), z((T)v.m128_f32[2]) {
+    explicit Vector3(const XMVECTOR& v) : x((T)v.m128_f32[0]), y((T)v.m128_f32[1]), z((T)v.m128_f32[2]) {
     }
 
     ~Vector3() {
@@ -180,6 +175,31 @@ public:
 
     string ToString()const {
         return '{' + str(x) + ", " + str(y) + ", " + str(z) + '}';
+    }
+
+    //---------------- Utilities ----------------
+    Vector3<T> OnlyX() {
+        return Vector3<T>(x, 0, 0);
+    }
+
+    Vector3<T> OnlyY() {
+        return Vector3<T>(0, y, 0);
+    }
+
+    Vector3<T> OnlyZ() {
+        return Vector3<T>(0, 0, z);
+    }
+
+    Vector3I Floor() {
+        return Vector3I(floor(x), floor(y), floor(z));
+    }
+
+    Vector3I Ceil() {
+        return Vector3I(ceil(x), ceil(y), ceil(z));
+    }
+
+    Vector3<T> Abs() {
+        return Vector3<T>(abs(x), abs(y), abs(z));
     }
 };
 

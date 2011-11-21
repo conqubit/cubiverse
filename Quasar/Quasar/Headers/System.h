@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "graphics/Graphics.h"
 #include "graphics/Direct3D.h"
+#include "level/World.h"
 #include "Input.h"
 #include "Player.h"
 
@@ -21,4 +22,5 @@ public:
     static Graphics* graphics;
     static Input*    input;
     static Player*   player;
+    static World*    world;
 };

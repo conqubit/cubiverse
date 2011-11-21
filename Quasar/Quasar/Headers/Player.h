@@ -10,9 +10,12 @@ public:
 
     void Init();
     void Shutdown();
+    void Tick();
+    Vector3D MovementVector();
+    XMMATRIX GetMat();
 
-    Vector3D pos;
-    Vector3D vel;
-
-    FreeCamera camera;
+    Vector3D pos, vel, dir;
+    double yaw, pitch;
+    BoundingBox bb;
+    bool inAir;
 };

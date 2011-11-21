@@ -46,10 +46,20 @@ void print(T x) {
 
 #define MEASURE(tag, code) {clock_t t=clock();{code}t=clock()-t;printf("%s: %d ms\n",tag,t);}
 
-#define VEC3_RANGE(vec)             Vector3I p, _v = vec; \
-                                    for(p.x = 0; p.x < _v.x; p.x++) \
-                                    for(p.y = 0; p.y < _v.y; p.y++) \
-                                    for(p.z = 0; p.z < _v.z; p.z++)
+#define VEC3_RANGE(vec) Vector3I p, _v = vec; \
+                        for(p.x = 0; p.x < _v.x; p.x++) \
+                        for(p.y = 0; p.y < _v.y; p.y++) \
+                        for(p.z = 0; p.z < _v.z; p.z++)
+
+#define VEC3_RANGE_AB(start, end) Vector3I p, _s = start, _e = end; \
+                                  for(p.x = _s.x; p.x < _e.x; p.x++) \
+                                  for(p.y = _s.y; p.y < _e.y; p.y++) \
+                                  for(p.z = _s.z; p.z < _e.z; p.z++)
+
+#define VEC3_RANGE_AB_INC(start, end) Vector3I p, _s = start, _e = end; \
+                                      for(p.x = _s.x; p.x <= _e.x; p.x++) \
+                                      for(p.y = _s.y; p.y <= _e.y; p.y++) \
+                                      for(p.z = _s.z; p.z <= _e.z; p.z++)
 
 #define VEC3_RANGE_OFFSET(off, vec) Vector3I p, _o = off, _v = _o + vec; \
                                     for(p.x = _o.x; p.x < _v.x; p.x++) \

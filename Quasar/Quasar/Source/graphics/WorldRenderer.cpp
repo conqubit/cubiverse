@@ -24,15 +24,15 @@ void WorldRenderer::Shutdown() {
     world = nullptr;
 }
 
-void ConstructFace(ModelFactory& mf, int x, int y, int z, int xi, int yi, int zi, XMFLOAT4 color) {
+void ConstructFace(ModelFactory& mf, int x, int y, int z, int xi, int yi, int zi, float b) {
     int count = mf.vertices.Count();
     mf.AddTriangle(count, count + 1, count + 2);
     mf.AddTriangle(count, count + 2, count + 3);
     Vector3F v = Vector3F(x, y, z);
-    mf.vertices.Add(Vertex(v, color));
-    mf.vertices.Add(Vertex(v + Vector3F::AXIS[yi], color));
-    mf.vertices.Add(Vertex(v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi], color));
-    mf.vertices.Add(Vertex(v + Vector3F::AXIS[zi], color));
+    mf.vertices.Add(Vertex(v, XMFLOAT4(b, b, b, 1.0f)));
+    mf.vertices.Add(Vertex(v + Vector3F::AXIS[yi], XMFLOAT4(b * 0.9f, b * 0.9f, b * 0.9f, 1.0f)));
+    mf.vertices.Add(Vertex(v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi], XMFLOAT4(b * 0.7f, b * 0.7f, b * 0.7f, 1.0f)));
+    mf.vertices.Add(Vertex(v + Vector3F::AXIS[zi], XMFLOAT4(b * 0.8f, b * 0.8f, b * 0.8f, 1.0f)));
 }
 
 bool WorldRenderer::ConstructVisibleChunks() {
@@ -51,27 +51,27 @@ bool WorldRenderer::ConstructVisibleChunks() {
             }
             bool visible = false;
             if (world->GetBlock(p.x + 1, p.y, p.z) == Block::Air) { // X +
-                ConstructFace(mf, p.x + 1, p.y, p.z, 0, 1, 2, XMFLOAT4(.9f, .9f, .9f, 1.0f));
+                ConstructFace(mf, p.x + 1, p.y, p.z, 0, 1, 2, 0.9f);
                 visible = true;
             }
             if (world->GetBlock(p.x - 1, p.y, p.z) == Block::Air) { // X -
-                ConstructFace(mf, p.x, p.y, p.z, 0, 2, 1, XMFLOAT4(.6f, .6f, .6f, 1.0f));
+                ConstructFace(mf, p.x, p.y, p.z, 0, 2, 1, 0.6f);
                 visible = true;
             }
             if (world->GetBlock(p.x, p.y + 1, p.z) == Block::Air) { // Y +
-                ConstructFace(mf, p.x, p.y + 1, p.z, 1, 2, 0, XMFLOAT4(.8f, .8f, .8f, 1.0f));
+                ConstructFace(mf, p.x, p.y + 1, p.z, 1, 2, 0, 0.8f);
                 visible = true;
             }
             if (world->GetBlock(p.x, p.y - 1, p.z) == Block::Air) { // Y -
-                ConstructFace(mf, p.x, p.y, p.z, 1, 0, 2, XMFLOAT4(.7f, .7f, .7f, 1.0f));
+                ConstructFace(mf, p.x, p.y, p.z, 1, 0, 2, 0.7f);
                 visible = true;
             }
             if (world->GetBlock(p.x, p.y, p.z + 1) == Block::Air) { // Z +
-                ConstructFace(mf, p.x, p.y, p.z + 1, 2, 0, 1, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+                ConstructFace(mf, p.x, p.y, p.z + 1, 2, 0, 1, 1.0f);
                 visible = true;
             }
             if (world->GetBlock(p.x, p.y, p.z - 1) == Block::Air) { // Z -
-                ConstructFace(mf, p.x, p.y, p.z, 2, 1, 0, XMFLOAT4(.5f, .5f, .5f, 1.0f));
+                ConstructFace(mf, p.x, p.y, p.z, 2, 1, 0, 0.5f);
                 visible = true;
             }
             if (visible) {

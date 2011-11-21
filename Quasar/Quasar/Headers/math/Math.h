@@ -6,6 +6,7 @@
 #include <d3dx10.h>
 
 #include "math/Vector3.h"
+#include "math/BoundingBox.h"
 
 #define square(x) (x)*(x)
 

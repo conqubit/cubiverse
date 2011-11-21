@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "System.h"
-#include "level/World.h"
 #include "graphics/WorldRenderer.h"
 
 HINSTANCE System::hInstance;
@@ -11,8 +10,8 @@ bool      System::running;
 Graphics* System::graphics;
 Input*    System::input;
 Player*   System::player;
+World*    System::world;
 
-World* world;
 WorldRenderer* worldRenderer;
 
 bool System::Init(HINSTANCE hInst, HWND hWnd) {
@@ -40,7 +39,7 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
     //BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
     world = new World();
-    world->Init(5, 5, 5);
+    world->Init(2, 2, 2);
     world->Fill(Block::Air);
     world->GenerateSphere(Block::Stone);
 
@@ -66,7 +65,9 @@ void System::Run() {
             break;
         }
 
+        Tick();
         graphics->Render();
+        SetCursorPos(800, 450);
         Sleep(5);
 
         MSG msg;
@@ -83,6 +84,7 @@ void System::Run() {
 }
 
 void System::Tick() {
+    player->Tick();
 }
 
 void System::Shutdown() {

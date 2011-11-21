@@ -29,8 +29,6 @@ void FreeCamera::DoInput() {
                    + Vector3D::AXIS_Z * (System::input->KeyPressed(DIK_Q) - System::input->KeyPressed(DIK_E));
 
     pos += vel.Normalize(1.0 / (System::input->KeyPressed(DIK_LCONTROL) ? 100 : (System::input->KeyPressed(DIK_LSHIFT) ? 1 : 10)));
-
-    SetCursorPos(800, 450);
 }
 
 XMMATRIX FreeCamera::GetMat() {
