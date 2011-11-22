@@ -21,8 +21,8 @@ bool Model::Init(const ModelFactory& mf) {
     vertexCount = mf.vertices.Count();
     indexCount = mf.indices.Count();
 
-    D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-    D3D11_SUBRESOURCE_DATA vertexData, indexData;
+    D3D10_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+    D3D10_SUBRESOURCE_DATA vertexData, indexData;
 
     HRESULT r;
     
@@ -31,9 +31,9 @@ bool Model::Init(const ModelFactory& mf) {
     }
 
     ZeroStruct(vertexBufferDesc);
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    vertexBufferDesc.Usage = D3D10_USAGE_DEFAULT;
     vertexBufferDesc.ByteWidth = sizeof(Vertex) * vertexCount;
-    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDesc.BindFlags = D3D10_BIND_VERTEX_BUFFER;
 
     ZeroStruct(vertexData);
     vertexData.pSysMem = mf.vertices.DataPtr();
@@ -42,9 +42,9 @@ bool Model::Init(const ModelFactory& mf) {
     if (FAILED(r)) return false;
 
     ZeroStruct(indexBufferDesc);
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.Usage = D3D10_USAGE_DEFAULT;
     indexBufferDesc.ByteWidth = sizeof(unsigned int) * indexCount;
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.BindFlags = D3D10_BIND_INDEX_BUFFER;
 
     ZeroStruct(indexData);
     indexData.pSysMem = mf.indices.DataPtr();
@@ -59,9 +59,9 @@ void Model::Render() {
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
 
-    System::graphics->DeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-    System::graphics->DeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    System::graphics->DeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    System::graphics->Device()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+    System::graphics->Device()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    System::graphics->Device()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     shader->Render(this);
 }

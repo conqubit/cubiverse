@@ -13,12 +13,8 @@ public:
     void Render();
     void Shutdown();
 
-    ID3D11Device* Device() {
+    ID3D10Device* Device() {
         return direct3D->device;
-    }
-
-    ID3D11DeviceContext* DeviceContext() {
-        return direct3D->deviceContext;
     }
 
     ArrayList<IRender*> things;

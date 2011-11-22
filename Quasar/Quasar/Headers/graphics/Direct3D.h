@@ -1,13 +1,11 @@
 #pragma once
 
-#include <d3d11.h>
-#include <d3dx11.h>
+#include <d3d10.h>
 #include <d3dx10.h>
-#include <D3DCSX.h>
-#include <D3Dcompiler.h>
+//#include <D3DCSX.h>
+//#include <D3Dcompiler.h>
 
-#pragma comment (lib, "d3d11.lib")
-#pragma comment (lib, "d3dx11.lib")
+#pragma comment (lib, "d3d10.lib")
 #pragma comment (lib, "d3dx10.lib")
 
 class Direct3D {
@@ -22,18 +20,17 @@ public:
     void EndScene();
     void Shutdown();
 
-    ID3D11Device* device;
-    ID3D11DeviceContext* deviceContext;
-    ID3D11Buffer* globalConstBuffer;
+    ID3D10Device* device;
+    ID3D10Buffer* globalConstBuffer;
 
     IDXGISwapChain *swapChain;
-    ID3D11RenderTargetView *renderTarget;
+    ID3D10RenderTargetView *renderTarget;
 
-    ID3D11Texture2D* depthStencilBuffer;
-    ID3D11DepthStencilView* depthStencilView;
-    ID3D11RasterizerState* rasterState;
-    ID3D11BlendState *BlendState;
-    ID3D11SamplerState* samp;
+    ID3D10Texture2D* depthStencilBuffer;
+    ID3D10DepthStencilView* depthStencilView;
+    ID3D10RasterizerState* rasterState;
+    ID3D10BlendState *BlendState;
+    ID3D10SamplerState* samp;
 
 private:
     bool initRenderTarget();

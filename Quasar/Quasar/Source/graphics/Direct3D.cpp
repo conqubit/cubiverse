@@ -28,8 +28,7 @@ bool Direct3D::Init() {
     scd.Windowed = TRUE;
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-	r = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0,
-			D3D11_SDK_VERSION, &scd, &swapChain, &device, nullptr, &deviceContext);
+	r = D3D10CreateDeviceAndSwapChain(nullptr, D3D10_DRIVER_TYPE_HARDWARE, nullptr, 0, D3D10_SDK_VERSION, &scd, &swapChain, &device);
 	if (FAILED(r)) {
 		return false;
 	}
@@ -37,26 +36,26 @@ bool Direct3D::Init() {
 	initRenderTarget();
 	initViewPort();
 
-	D3D11_BLEND_DESC blendStateDescription;
+	D3D10_BLEND_DESC blendStateDescription;
 	ZeroStruct(blendStateDescription);
-	blendStateDescription.RenderTarget[0].BlendEnable = true;
-	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	blendStateDescription.BlendEnable[0] = true;
+	blendStateDescription.SrcBlend = D3D10_BLEND_SRC_ALPHA;
+	blendStateDescription.DestBlend = D3D10_BLEND_INV_SRC_ALPHA;
+	blendStateDescription.BlendOp = D3D10_BLEND_OP_ADD;
+	blendStateDescription.SrcBlendAlpha = D3D10_BLEND_ONE;
+	blendStateDescription.DestBlendAlpha = D3D10_BLEND_ZERO;
+	blendStateDescription.BlendOpAlpha = D3D10_BLEND_OP_ADD;
+	blendStateDescription.RenderTargetWriteMask[0] = D3D10_COLOR_WRITE_ENABLE_ALL;
 
-	D3D11_SAMPLER_DESC sampDesc;
+	D3D10_SAMPLER_DESC sampDesc;
     ZeroStruct(sampDesc);
-    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.Filter = D3D10_FILTER_MIN_MAG_MIP_LINEAR;
+    sampDesc.AddressU = D3D10_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D10_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D10_TEXTURE_ADDRESS_WRAP;
+    sampDesc.ComparisonFunc = D3D10_COMPARISON_NEVER;
     sampDesc.MinLOD = 0;
-    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+    sampDesc.MaxLOD = D3D10_FLOAT32_MAX;
     r = device->CreateSamplerState(&sampDesc, &samp);
 
 	if (FAILED(r)) {
@@ -73,7 +72,7 @@ bool Direct3D::Init() {
 	blendFactor[2] = 0.0f;
 	blendFactor[3] = 0.0f;
 
-	deviceContext->OMSetBlendState(BlendState, blendFactor, 0xffffffff);
+	device->OMSetBlendState(BlendState, blendFactor, 0xffffffff);
 	return true;
 
 }
@@ -83,14 +82,13 @@ void Direct3D::Shutdown() {
 	depthStencilView->Release();
 	depthStencilBuffer->Release();
 	renderTarget->Release();
-    deviceContext->Release();
     device->Release();
     swapChain->Release();
 }
 
 void Direct3D::BeginScene() {
-    deviceContext->ClearRenderTargetView(renderTarget, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    device->ClearRenderTargetView(renderTarget, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	device->ClearDepthStencilView(depthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Direct3D::EndScene() {
@@ -98,8 +96,8 @@ void Direct3D::EndScene() {
 }
 
 bool Direct3D::initRenderTarget() {
-    ID3D11Texture2D *backbuffer;
-	r = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backbuffer);
+    ID3D10Texture2D *backbuffer;
+	r = swapChain->GetBuffer(0, __uuidof(ID3D10Texture2D), (LPVOID*)&backbuffer);
 	if (FAILED(r)) return false;
 
 	r = device->CreateRenderTargetView(backbuffer, nullptr, &renderTarget);
@@ -108,7 +106,7 @@ bool Direct3D::initRenderTarget() {
     backbuffer->Release();
 
 	// Create depth stencil texture
-    D3D11_TEXTURE2D_DESC descDepth;
+    D3D10_TEXTURE2D_DESC descDepth;
     ZeroStruct(descDepth);
     descDepth.Width = width;
     descDepth.Height = height;
@@ -117,8 +115,8 @@ bool Direct3D::initRenderTarget() {
     descDepth.Format = DXGI_FORMAT_D32_FLOAT;
     descDepth.SampleDesc.Count = 1;
     descDepth.SampleDesc.Quality = 0;
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.Usage = D3D10_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D10_BIND_DEPTH_STENCIL;
     descDepth.CPUAccessFlags = 0;
     descDepth.MiscFlags = 0;
 
@@ -126,24 +124,24 @@ bool Direct3D::initRenderTarget() {
     if (FAILED(r)) return false;
 
     // Create the depth stencil view
-    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+    D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
     ZeroStruct(descDSV);
     descDSV.Format = descDepth.Format;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+    descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2DMS;
 
 	r = device->CreateDepthStencilView( depthStencilBuffer, &descDSV, &depthStencilView );
     if (FAILED(r)) return false;
 
-    deviceContext->OMSetRenderTargets( 1, &renderTarget, depthStencilView );
+    device->OMSetRenderTargets( 1, &renderTarget, depthStencilView );
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
-	D3D11_RASTERIZER_DESC rasterDesc;
+	D3D10_RASTERIZER_DESC rasterDesc;
 	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.CullMode = D3D10_CULL_BACK;
 	rasterDesc.DepthBias = 0;
 	rasterDesc.DepthBiasClamp = 0.0f;
 	rasterDesc.DepthClipEnable = true;
-	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.FillMode = D3D10_FILL_SOLID;
 	rasterDesc.FrontCounterClockwise = false;
 	rasterDesc.MultisampleEnable = true;
 	rasterDesc.ScissorEnable = false;
@@ -154,13 +152,13 @@ bool Direct3D::initRenderTarget() {
 	if (FAILED(r)) return false;
 
 	// Now set the rasterizer state.
-	deviceContext->RSSetState(rasterState);
+	device->RSSetState(rasterState);
 
 	return true;
 }
 
 bool Direct3D::initViewPort() {
-	D3D11_VIEWPORT viewport;
+	D3D10_VIEWPORT viewport;
     ZeroStruct(viewport);
 
 	viewport.Width = (float)width;
@@ -170,7 +168,7 @@ bool Direct3D::initViewPort() {
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
 
-    deviceContext->RSSetViewports(1, &viewport);
+    device->RSSetViewports(1, &viewport);
 
 	return true;
 }

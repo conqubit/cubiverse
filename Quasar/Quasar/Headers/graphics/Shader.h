@@ -18,8 +18,8 @@ public:
     void UpdateConstants(XMMATRIX& mat);
     void Render(Model* model);
 
-    ID3D11VertexShader* vertexShader;
-    ID3D11PixelShader* pixelShader;
-    ID3D11InputLayout* inputLayout;
-    ID3D11Buffer* matrixBuffer;
+    ID3D10VertexShader* vertexShader;
+    ID3D10PixelShader* pixelShader;
+    ID3D10InputLayout* inputLayout;
+    ID3D10Buffer* matrixBuffer;
 };

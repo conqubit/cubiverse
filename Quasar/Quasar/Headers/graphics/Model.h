@@ -22,6 +22,6 @@ public:
     int vertexCount;
     int indexCount;
 private:
-    ID3D11Buffer* vertexBuffer;
-    ID3D11Buffer* indexBuffer;
+    ID3D10Buffer* vertexBuffer;
+    ID3D10Buffer* indexBuffer;
 };
