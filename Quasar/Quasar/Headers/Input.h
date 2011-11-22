@@ -14,10 +14,11 @@ public:
     void Shutdown();
     bool ReadInput();
     bool KeyPressed(int key);
+    bool MouseLeft();
+    bool MouseRight();
 
     int mx, my, dx, dy;
 
-private:
     bool readKeyboard();
     bool readMouse();
     void processInput();

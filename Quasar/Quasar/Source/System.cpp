@@ -7,12 +7,11 @@ HINSTANCE System::hInstance;
 HWND      System::hWindow;
 bool      System::running;
 
-Graphics* System::graphics;
-Input*    System::input;
-Player*   System::player;
-World*    System::world;
-
-WorldRenderer* worldRenderer;
+Graphics*      System::graphics;
+Input*         System::input;
+Player*        System::player;
+World*         System::world;
+WorldRenderer* System::worldRenderer;
 
 bool System::Init(HINSTANCE hInst, HWND hWnd) {
     srand((unsigned int)time(nullptr));
@@ -22,12 +21,13 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     input = new Input();
     if (!input->Init()) {
-        MessageBoxA(hWindow, "Could not initialize input", "Error", MB_OK);
+        MessageBoxA(hWindow, "Could not initialize input.", "Error", MB_OK);
         return false;
     }
 
     graphics = new Graphics();
     if (!graphics->Init()) {
+        MessageBoxA(hWindow, "Could not initialize graphics.", "Error", MB_OK);
         return false;
     }
 
@@ -39,16 +39,14 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
     //BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
     world = new World();
-    world->Init(2, 2, 2);
+    world->Init(2, 2, 4);
     world->Fill(Block::Air);
-    world->GenerateSphere(Block::Stone);
+    world->Generate();
 
     worldRenderer = new WorldRenderer();
     worldRenderer->Init(world);
 
-    if (!worldRenderer->ConstructVisibleChunks()) {
-        return false;
-    }
+    worldRenderer->ConstructVisibleChunks();
 
     graphics->things.Add(worldRenderer);
 

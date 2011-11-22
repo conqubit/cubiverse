@@ -3,7 +3,12 @@
 #include "System.h"
 #include "Player.h"
 
-Player::Player() : pos(), vel(), dir(), yaw(), pitch(), inAir() {
+Player::Player() :
+pos(), vel(), dir(),
+yaw(), pitch(),
+inAir(), 
+pickedBlock(), picked(), lastMouse(),
+counter() {
 }
 
 Player::~Player() {
@@ -18,6 +23,30 @@ void Player::Shutdown() {
 }
 
 void Player::Tick() {
+    PickBlock();
+
+    if (picked && !lastMouse) {
+        if (System::input->MouseRight()) {
+            int old = System::world->GetBlock(pickedBlock + side);
+            System::world->SetBlock(pickedBlock + side, Block::Stone);
+            if (System::world->Intersects(bb.Offset(pos))) {
+                System::world->SetBlock(pickedBlock + side, old);
+            } else {
+                System::worldRenderer->UpdateBlock(pickedBlock + side);
+            }
+        } else if (System::input->MouseLeft()) {
+            System::world->SetBlock(pickedBlock, Block::Air);
+            System::worldRenderer->UpdateBlock(pickedBlock);
+        }
+        counter = 0;
+    }
+
+    lastMouse = System::input->MouseLeft() || System::input->MouseRight();
+
+    if (counter > 50) {
+        lastMouse = false;
+    }
+
     if (!inAir && System::input->KeyPressed(DIK_SPACE)) {
         vel.z += 0.05;
         inAir = true;
@@ -34,12 +63,45 @@ void Player::Tick() {
         vel.y = 0;
     }
     if (System::world->Intersects(bb.Offset(pos + vel.OnlyZ()))) {
+        inAir = vel.z > 0;
         vel.z = 0;
-        inAir = false;
     } else {
         inAir = true;
     }
     pos += vel;
+    counter++;
+}
+
+void Player::PickBlock() {
+    Vector3D p = Eye();
+    Vector3I b = p.Floor();
+    while ((Eye() - p).LengthSquared() < 5 * 5) {
+        if (System::world->GetBlock(b) == Block::Stone) {
+            pickedBlock = b;
+            picked = true;
+            return;
+        }
+        double xPlaneDist = abs((p.x - (b.x + (dir.x > 0 ? 1 : 0))) / dir.x);
+        double yPlaneDist = abs((p.y - (b.y + (dir.y > 0 ? 1 : 0))) / dir.y);
+        double zPlaneDist = abs((p.z - (b.z + (dir.z > 0 ? 1 : 0))) / dir.z);
+        if (xPlaneDist < yPlaneDist && xPlaneDist < zPlaneDist) {
+            b.x += sign(dir.x);
+            p += dir * xPlaneDist;
+            side = -Vector3I::AXIS_X * sign(dir.x);
+        }
+        else if (yPlaneDist < zPlaneDist) {
+            b.y += sign(dir.y);
+            p += dir * yPlaneDist;
+            side = -Vector3I::AXIS_Y * sign(dir.y);
+        }
+        else {
+            b.z += sign(dir.z);
+            p += dir * zPlaneDist;
+            side = -Vector3I::AXIS_Z * sign(dir.z);
+        }
+    }
+    picked = false;
+    return;
 }
 
 Vector3D Player::MovementVector() {

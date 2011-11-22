@@ -13,7 +13,6 @@ Direct3D::Direct3D() {
 Direct3D::~Direct3D() {
 }
 
-// Initializes D3D object.
 bool Direct3D::Init() {
     DXGI_SWAP_CHAIN_DESC scd;
     ZeroStruct(scd);
@@ -24,7 +23,7 @@ bool Direct3D::Init() {
     scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     scd.OutputWindow = System::hWindow;
-    scd.SampleDesc.Count = 8;
+    scd.SampleDesc.Count = 1;
 	scd.SampleDesc.Quality = 0;
     scd.Windowed = TRUE;
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
@@ -116,7 +115,7 @@ bool Direct3D::initRenderTarget() {
     descDepth.MipLevels = 1;
     descDepth.ArraySize = 1;
     descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-    descDepth.SampleDesc.Count = 8;
+    descDepth.SampleDesc.Count = 1;
     descDepth.SampleDesc.Quality = 0;
     descDepth.Usage = D3D11_USAGE_DEFAULT;
     descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;

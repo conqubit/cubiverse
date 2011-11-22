@@ -13,5 +13,6 @@ public:
     void Shutdown();
 
     Model* model;
+    Chunk* chunk;
     SkipList<int> visibleBlocks;
 };

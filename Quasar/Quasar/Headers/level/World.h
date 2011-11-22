@@ -17,13 +17,13 @@ public:
     void Shutdown();
 
     void Fill(int t);
-    void GenerateSphere(int t);
+    void Generate();
 
     bool Intersects(const BoundingBox& bb);
 
     int GetBlock(int x, int y, int z) {
         if (!InBlockBounds(x, y, z)) return Block::Air;
-        return GetChunk(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)->GetBlock(x, y, z);
+        return GetChunk(x, y, z)->GetBlock(x, y, z);
     }
 
     int GetBlock(Vector3I p) {
@@ -32,7 +32,7 @@ public:
 
     bool SetBlock(int x, int y, int z, int t) {
         if (!InBlockBounds(x, y, z)) return false;
-        GetChunk(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)->SetBlock(x, y, z, t);
+        GetChunk(x, y, z)->SetBlock(x, y, z, t);
         return true;
     }
 
@@ -41,15 +41,20 @@ public:
     }
 
     int GetChunkIndex(int cx, int cy, int cz) {
-        return cx + cy * chunkWidth.x + cz * chunkWidth.x * chunkWidth.z;
+        return cx + cy * chunkWidth.x + cz * chunkWidth.x * chunkWidth.y;
     }
 
     int GetChunkIndex(Vector3I p) {
         return GetChunkIndex(p.x, p.y, p.z);
     }
 
-    Chunk* GetChunk(int cx, int cy, int cz) {
-        return chunks[GetChunkIndex(cx, cy, cz)];
+    Chunk* GetChunk(int x, int y, int z) {
+        if (!InBlockBounds(x, y, z)) return nullptr;
+        return chunks[GetChunkIndex(x / Chunk::DIM, y / Chunk::DIM, z / Chunk::DIM)];
+    }
+
+    Chunk* GetChunk(Vector3I p) {
+        return GetChunk(p.x, p.y, p.z);
     }
 
     bool InBlockBounds(int x, int y, int z) {

@@ -37,17 +37,15 @@ void World::Fill(int t) {
     }
 }
 
-void World::GenerateSphere(int t) {
-    VEC3_RANGE(width) {
-        if ((p - (width / 2)).Length() < min(min(width.x, width.y), width.z) / 2) {
-            SetBlock(p, t);
-        }
+void World::Generate() {
+    VEC3_RANGE(Vector3I(width.x, width.y, width.z / 2)) {
+        SetBlock(p, Block::Stone);
     }
 }
 
 bool World::Intersects(const BoundingBox& bb) {
-    VEC3_RANGE_AB_INC(bb.Min().Floor(), bb.Max().Floor()) {
-        if (GetBlock(p) == Block::Stone && bb.Intersects(BoundingBox::Block(p))) {
+    VEC3_RANGE_AB(bb.Min().Floor(), bb.Max().Floor()) {
+        if (GetBlock(p) == Block::Stone) {
             return true;
         }
     }

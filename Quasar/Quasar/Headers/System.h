@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "graphics/Graphics.h"
 #include "graphics/Direct3D.h"
+#include "graphics/WorldRenderer.h"
 #include "level/World.h"
 #include "Input.h"
 #include "Player.h"
@@ -19,8 +20,9 @@ public:
     static HWND      hWindow;
     static bool      running;
 
-    static Graphics* graphics;
-    static Input*    input;
-    static Player*   player;
-    static World*    world;
+    static Graphics*      graphics;
+    static Input*         input;
+    static Player*        player;
+    static World*         world;
+    static WorldRenderer* worldRenderer;
 };

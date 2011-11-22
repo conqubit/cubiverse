@@ -48,6 +48,14 @@ bool Input::KeyPressed(int key) {
     return (keyState[key] & 0x80) == 0x80;
 }
 
+bool Input::MouseLeft() {
+    return mouseState.rgbButtons[0] >> 7;
+}
+
+bool Input::MouseRight() {
+    return mouseState.rgbButtons[1] >> 7;
+}
+
 bool Input::ReadInput() {
     if (!readKeyboard()) {
         return false;

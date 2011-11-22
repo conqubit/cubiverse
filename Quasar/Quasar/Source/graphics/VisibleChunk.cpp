@@ -3,7 +3,8 @@
 #include "graphics/VisibleChunk.h"
 
 VisibleChunk::VisibleChunk() :
-    model(), 
+    model(),
+    chunk(),
     visibleBlocks() {
 }
 

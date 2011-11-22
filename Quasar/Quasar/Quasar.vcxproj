@@ -32,6 +32,7 @@
     <None Include="Quasar.user" />
     <None Include="Quasar.vcxproj" />
     <None Include="Quasar.vcxproj.user" />
+    <None Include="shader-error.txt" />
     <None Include="shaders.hlsl" />
     <None Include="small.ico" />
   </ItemGroup>

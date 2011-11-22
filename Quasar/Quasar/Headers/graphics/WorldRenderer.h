@@ -11,12 +11,16 @@ class WorldRenderer : public IRender {
 public:
     WorldRenderer();
     ~WorldRenderer();
-    void Init(World* w);
+    bool Init(World* w);
     void Shutdown();
-    bool ConstructVisibleChunks();
+    void ConstructVisibleChunks();
+    VisibleChunk* ConstructVisibleChunk(Chunk* c);
+    void UpdateBlock(Vector3I p);
+    void UpdateChunk(Chunk* c);
     void Render();
 
 private:
     ArrayList<VisibleChunk*> visibleChunks;
     World* world;
+    Shader* shader;
 };
