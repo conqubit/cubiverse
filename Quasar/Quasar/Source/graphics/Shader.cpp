@@ -108,7 +108,7 @@ void Shader::UpdateConstants(XMMATRIX& mat) {
     System::graphics->Device()->PSSetConstantBuffers(0, 1, &matrixBuffer);
 }
 void Shader::Render(Model* model) {
-    XMMATRIX m = System::graphics->viewMat.get() * System::graphics->projMat.get();
+    XMMATRIX m = model->mat.get() * System::graphics->viewMat.get() * System::graphics->projMat.get();
     UpdateConstants(m);
 
     System::graphics->Device()->IASetInputLayout(inputLayout);

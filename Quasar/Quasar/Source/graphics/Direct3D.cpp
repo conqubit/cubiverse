@@ -28,7 +28,7 @@ bool Direct3D::Init() {
     scd.Windowed = TRUE;
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-	r = D3D10CreateDeviceAndSwapChain(nullptr, D3D10_DRIVER_TYPE_HARDWARE, nullptr, 0, D3D10_SDK_VERSION, &scd, &swapChain, &device);
+    r = D3D10CreateDeviceAndSwapChain(nullptr, D3D10_DRIVER_TYPE_HARDWARE, nullptr, 0, D3D10_SDK_VERSION, &scd, &swapChain, &device);
 	if (FAILED(r)) {
 		return false;
 	}
@@ -86,9 +86,13 @@ void Direct3D::Shutdown() {
     swapChain->Release();
 }
 
+void Direct3D::ClearDepth() {
+    device->ClearDepthStencilView(depthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
+}
+
 void Direct3D::BeginScene() {
     device->ClearRenderTargetView(renderTarget, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-	device->ClearDepthStencilView(depthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
+	ClearDepth();
 }
 
 void Direct3D::EndScene() {

@@ -178,16 +178,28 @@ public:
     }
 
     //---------------- Utilities ----------------
-    Vector3<T> OnlyX() {
+    Vector3<T> X() {
         return Vector3<T>(x, 0, 0);
     }
 
-    Vector3<T> OnlyY() {
+    Vector3<T> Y() {
         return Vector3<T>(0, y, 0);
     }
 
-    Vector3<T> OnlyZ() {
+    Vector3<T> Z() {
         return Vector3<T>(0, 0, z);
+    }
+
+    Vector3<T> XY() {
+        return Vector3<T>(x, y, 0);
+    }
+
+    Vector3<T> YZ() {
+        return Vector3<T>(0, y, z);
+    }
+
+    Vector3<T> XZ() {
+        return Vector3<T>(x, 0, z);
     }
 
     Vector3I Floor() {

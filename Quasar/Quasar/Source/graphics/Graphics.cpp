@@ -20,7 +20,7 @@ bool Graphics::Init() {
         return false;
     }
 
-    projMat.set(XMMatrixPerspectiveFovLH(70.0f / 180.0f * PI, 1.7777f, 0.01f, 1000.0f));
+    projMat.set(XMMatrixPerspectiveFovLH(70.0f / 180.0f * PI, 1.7777f, 0.01f, 256.0f));
 
     return true;
 }
@@ -35,7 +35,7 @@ void Graphics::Shutdown() {
 void Graphics::Render() {
     direct3D->BeginScene();
 
-    viewMat.set(System::player->GetMat());
+    viewMat.set(System::player->GetViewMatrix());
 
     for (int i = 0; i < things.Count(); i++) {
         things[i]->Render();

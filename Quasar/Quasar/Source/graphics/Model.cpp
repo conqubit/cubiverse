@@ -6,17 +6,19 @@
 #include "graphics/Shader.h"
 
 Model::Model() : 
-    shader(),
-    vertexCount(),
-    indexCount(),
-    vertexBuffer(),
-    indexBuffer() {
+shader(),
+vertexCount(),
+indexCount(),
+vertexBuffer(),
+indexBuffer(),
+topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {
 }
 
 Model::~Model() {
 }
 
 bool Model::Init(const ModelFactory& mf) {
+    mat.set(XMMatrixIdentity());
     shader = mf.shader;
     vertexCount = mf.vertices.Count();
     indexCount = mf.indices.Count();
@@ -61,7 +63,7 @@ void Model::Render() {
 
     System::graphics->Device()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
     System::graphics->Device()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    System::graphics->Device()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    System::graphics->Device()->IASetPrimitiveTopology(topology);
 
     shader->Render(this);
 }

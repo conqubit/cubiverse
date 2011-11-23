@@ -3,29 +3,87 @@
 #include "System.h"
 #include "Player.h"
 
-Player::Player() :
-pos(), vel(), dir(),
-yaw(), pitch(),
-inAir(), 
-pickedBlock(), picked(), lastMouse(),
-counter() {
-}
-
-Player::~Player() {
-}
+#include "graphics/ModelFactory.h"
 
 void Player::Init() {
     pos = Vector3D(32, 32, 70);
     bb = BoundingBox(-0.4, -0.4, 0, 0.4, 0.4, 1.7);
+
+    // Block picking outline.
+    ModelFactory mf = ModelFactory();
+    mf.shader = System::worldRenderer->shader;
+    mf.topology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+    float d = 0.005;
+    mf.vertices.Add(Vertex(Vector3F(-d, -d, -d), XMFLOAT4(0, 0, 0, 1)));
+    mf.vertices.Add(Vertex(Vector3F(1+d, -d, -d), XMFLOAT4(0, 0, 0, 1)));
+    mf.vertices.Add(Vertex(Vector3F(1+d, 1+d, -d), XMFLOAT4(0, 0, 0, 1)));
+    mf.vertices.Add(Vertex(Vector3F(0, 1+d, -d), XMFLOAT4(0, 0, 0, 1)));
+    mf.vertices.Add(Vertex(Vector3F(-d, -d, 1+d), XMFLOAT4(0, 0, 0, 1)));
+    mf.vertices.Add(Vertex(Vector3F(1, -d, 1+d), XMFLOAT4(0, 0, 0, 1)));
+    mf.vertices.Add(Vertex(Vector3F(1+d, 1+d, 1+d), XMFLOAT4(0, 0, 0, 1)));
+    mf.vertices.Add(Vertex(Vector3F(-d, 1+d, 1+d), XMFLOAT4(0, 0, 0, 1)));
+    mf.AddSegment(0, 1);
+    mf.AddSegment(1, 2);
+    mf.AddSegment(2, 3);
+    mf.AddSegment(3, 0);
+    mf.AddSegment(4, 5);
+    mf.AddSegment(5, 6);
+    mf.AddSegment(6, 7);
+    mf.AddSegment(7, 4);
+    mf.AddSegment(0, 4);
+    mf.AddSegment(1, 5);
+    mf.AddSegment(2, 6);
+    mf.AddSegment(3, 7);
+    selectedBlock = mf.Create();
+
+    // Crappy cursor.
+    ModelFactory mf2 = ModelFactory();
+    mf2.shader = System::worldRenderer->shader;
+    mf2.vertices.Add(Vertex(Vector3F(-0.002, -0.004, 0.1), XMFLOAT4(0, 1, 0, 0)));
+    mf2.vertices.Add(Vertex(Vector3F(0, 0, 0.1), XMFLOAT4(0, 0.6, 0, 0.75)));
+    mf2.vertices.Add(Vertex(Vector3F(0.002, -0.004, 0.1), XMFLOAT4(0, 1, 0, 0)));
+    mf2.AddTriangle(0, 1, 2);
+    cursor = mf2.Create();
 }
 
 void Player::Shutdown() {
 }
 
+void Player::Render() {
+    if (picked) {
+        selectedBlock->mat.set(XMMatrixTranslation(pickedBlock.x, pickedBlock.y, pickedBlock.z));
+        selectedBlock->Render();
+    }
+    XMVECTOR det = XMMatrixDeterminant(System::graphics->viewMat.get());
+    cursor->mat.set(XMMatrixInverse(&det, System::graphics->viewMat.get()));
+    cursor->Render();
+}
+
 void Player::Tick() {
+    DoMouseKeyboardInput();
+    DoJump();
+
+    UpdateVelocity();
+    DoCollision();
+    UpdatePosition();
+
+    DoBlockPicking();
+
+    counter++;
+}
+
+void Player::UpdateVelocity() {
+    vel.z -= 0.0008;
+    vel += kvec * (inAir ? 0.02 : 0.10);
+    vel.x *= (inAir ? 0.99 : 0.94);
+    vel.y *= (inAir ? 0.99 : 0.94);
+    vel.z *= 0.999;
+}
+
+void Player::DoBlockPicking() {
     PickBlock();
 
-    if (picked && !lastMouse) {
+    if (picked && !mouseStateLastTick) {
         if (System::input->MouseRight()) {
             int old = System::world->GetBlock(pickedBlock + side);
             System::world->SetBlock(pickedBlock + side, Block::Stone);
@@ -41,35 +99,11 @@ void Player::Tick() {
         counter = 0;
     }
 
-    lastMouse = System::input->MouseLeft() || System::input->MouseRight();
+    mouseStateLastTick = System::input->MouseLeft() || System::input->MouseRight();
 
     if (counter > 50) {
-        lastMouse = false;
+        mouseStateLastTick = false;
     }
-
-    if (!inAir && System::input->KeyPressed(DIK_SPACE)) {
-        vel.z += 0.05;
-        inAir = true;
-    }
-    vel.z -= 0.0008;
-    vel += MovementVector() * (inAir ? 0.02 : 0.15);
-    vel.x *= (inAir ? 0.99 : 0.9);
-    vel.y *= (inAir ? 0.99 : 0.9);
-    vel.z *= 0.999;
-    if (System::world->Intersects(bb.Offset(pos + vel.OnlyX()))) {
-        vel.x = 0;
-    }
-    if (System::world->Intersects(bb.Offset(pos + vel.OnlyY()))) {
-        vel.y = 0;
-    }
-    if (System::world->Intersects(bb.Offset(pos + vel.OnlyZ()))) {
-        inAir = vel.z > 0;
-        vel.z = 0;
-    } else {
-        inAir = true;
-    }
-    pos += vel;
-    counter++;
 }
 
 void Player::PickBlock() {
@@ -104,27 +138,80 @@ void Player::PickBlock() {
     return;
 }
 
-Vector3D Player::MovementVector() {
+void Player::DoJump() {
+    if (!inAir && System::input->KeyPressed(DIK_SPACE)) {
+        vel.z += 0.05;
+        inAir = true;
+    }
+}
+
+void Player::DoCollision() {
+    bool X = true, Y = true, Z = true;
+    if (System::world->Intersects(bb.Offset(pos + vel.X()))) {
+        vel.x = 0;
+        X = false;
+    }
+    if (System::world->Intersects(bb.Offset(pos + vel.Y()))) {
+        vel.y = 0;
+        Y = false;
+    }
+    if (System::world->Intersects(bb.Offset(pos + vel.Z()))) {
+        inAir = vel.z > 0;
+        vel.z = 0;
+        Z = false;
+    } else {
+        inAir = true;
+    }
+
+    if (X && Y && System::world->Intersects(bb.Offset(pos + vel.XY()))) {
+        if (vel.x < vel.y) {
+            vel.x = 0;
+        } else {
+            vel.y = 0;
+        }
+    }
+    if (X && Z && System::world->Intersects(bb.Offset(pos + vel.XZ()))) {
+        if (vel.x < vel.z) {
+            vel.x = 0;
+        } else {
+            vel.z = 0;
+        }
+    }
+    if (Y && Z && System::world->Intersects(bb.Offset(pos + vel.YZ()))) {
+        if (vel.y < vel.z) {
+            vel.y = 0;
+        } else {
+            vel.z = 0;
+        }
+    }
+    if (X && Y && Z && System::world->Intersects(bb.Offset(pos + vel))) {
+        if (vel.x < vel.y && vel.x < vel.z) {
+            vel.x = 0;
+        } else if (vel.y < vel.z) {
+            vel.y = 0;
+        } else {
+            vel.z = 0;
+        }
+    }
+}
+
+void Player::DoMouseKeyboardInput() {
     yaw -= System::input->dx / 300.0;
     pitch -= System::input->dy / 300.0;
 
-    if (pitch < -PI_2 + 0.01) {
-        pitch = -PI_2 + 0.01;
+    if (pitch < -PI_2) {
+        pitch = -PI_2;
     }
-    if (pitch > PI_2 - 0.01) {
-        pitch = PI_2 - 0.01;
+    if (pitch > PI_2) {
+        pitch = PI_2;
     }
 
     dir = Vector3D(sin(yaw) * cos(pitch), cos(yaw) * cos(pitch), sin(pitch)).Normalize();
     Vector3D kdir = Vector3D(sin(yaw), cos(yaw), 0).Normalize();
-    Vector3D kvec = kdir * (System::input->KeyPressed(DIK_W) - System::input->KeyPressed(DIK_S))
+    kvec = kdir * (System::input->KeyPressed(DIK_W) - System::input->KeyPressed(DIK_S))
                     + Vector3D::AXIS_Z.Cross(kdir).Normalize() *
                     (System::input->KeyPressed(DIK_D) - System::input->KeyPressed(DIK_A))
                     + Vector3D::AXIS_Z * (System::input->KeyPressed(DIK_Q) - System::input->KeyPressed(DIK_E));
 
-    return kvec.Normalize(1.0 / (System::input->KeyPressed(DIK_LCONTROL) ? 200 : (System::input->KeyPressed(DIK_LSHIFT) ? 25 : 50)));
-}
-
-XMMATRIX Player::GetMat() {
-    return XMMatrixLookToLH((pos + Vector3D(0, 0, 5.0 / 3.0)).ToXMVector(), dir.ToXMVector(), Vector3F::AXIS_Z.ToXMVector());
+    kvec = kvec.Normalize(1.0 / (System::input->KeyPressed(DIK_LCONTROL) ? 200 : (System::input->KeyPressed(DIK_LSHIFT) ? 25 : 50)));
 }

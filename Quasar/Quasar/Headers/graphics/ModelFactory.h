@@ -10,10 +10,12 @@ public:
     ArrayList<Vertex> vertices;
     ArrayList<unsigned int> indices;
     Shader* shader;
+    D3D_PRIMITIVE_TOPOLOGY topology;
 
     ModelFactory() :
-        vertices(),
-        indices() {
+    vertices(),
+    indices(),
+    topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {
     }
 
     ~ModelFactory() {
@@ -25,8 +27,14 @@ public:
         indices.Add(c);
     }
 
+    void AddSegment(int a, int b) {
+        indices.Add(a);
+        indices.Add(b);
+    }
+
     Model* Create() {
         Model* m = new Model();
+        m->topology = topology;
         if (!m->Init(*this)) {
             delete m;
             m = nullptr;

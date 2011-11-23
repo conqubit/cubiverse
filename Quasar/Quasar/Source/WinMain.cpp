@@ -14,6 +14,7 @@ LRESULT CALLBACK	WindowProc(HWND, UINT, WPARAM, LPARAM);
 
 int width = 1600;
 int height = 900;
+RECT r = {0, 0, width, height};
 
 int main() {
     return _tWinMain(GetModuleHandle(NULL), NULL, GetCommandLine(), SW_SHOW);
@@ -58,7 +59,6 @@ ATOM RegisterClass(HINSTANCE hInstance) {
 }
 
 BOOL InitInstance(HINSTANCE hInst, int nCmdShow) {
-   RECT r = {0, 0, width, height};
    AdjustWindowRect(&r, WS_OVERLAPPEDWINDOW, false);
 
    hWindow = CreateWindowEx(0, L"TestWindowClass", L"Slacker", WS_OVERLAPPEDWINDOW,

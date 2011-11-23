@@ -19,7 +19,6 @@ public:
     void UpdateChunk(Chunk* c);
     void Render();
 
-private:
     ArrayList<VisibleChunk*> visibleChunks;
     World* world;
     Shader* shader;

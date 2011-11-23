@@ -13,6 +13,7 @@ Player*        System::player;
 World*         System::world;
 WorldRenderer* System::worldRenderer;
 
+extern RECT r;
 bool System::Init(HINSTANCE hInst, HWND hWnd) {
     srand((unsigned int)time(nullptr));
 
@@ -33,9 +34,6 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     ShowCursor(false);
 
-    player = new Player();
-    player->Init();
-
     //BringWindowToTop(GetNextWindow(hWindow, GW_HWNDNEXT));
 
     world = new World();
@@ -48,8 +46,11 @@ bool System::Init(HINSTANCE hInst, HWND hWnd) {
 
     worldRenderer->ConstructVisibleChunks();
 
-    graphics->things.Add(worldRenderer);
+    player = new Player();
+    player->Init();
 
+    graphics->things.Add(worldRenderer);
+    graphics->things.Add(player);
     return true;
 }
 
@@ -65,7 +66,7 @@ void System::Run() {
 
         Tick();
         graphics->Render();
-        SetCursorPos(800, 450);
+        SetCursorPos(800 - r.left, 450 - r.top);
         Sleep(5);
 
         MSG msg;

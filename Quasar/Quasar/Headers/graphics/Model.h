@@ -21,6 +21,7 @@ public:
     Shader* shader;
     int vertexCount;
     int indexCount;
+    D3D_PRIMITIVE_TOPOLOGY topology;
 private:
     ID3D10Buffer* vertexBuffer;
     ID3D10Buffer* indexBuffer;

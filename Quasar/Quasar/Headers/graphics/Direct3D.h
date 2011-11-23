@@ -5,8 +5,8 @@
 //#include <D3DCSX.h>
 //#include <D3Dcompiler.h>
 
-#pragma comment (lib, "d3d10.lib")
-#pragma comment (lib, "d3dx10.lib")
+//#pragma comment (lib, "d3d10.lib")
+//#pragma comment (lib, "d3dx10.lib")
 
 class Direct3D {
 public:
@@ -19,6 +19,7 @@ public:
     void BeginScene();
     void EndScene();
     void Shutdown();
+    void ClearDepth();
 
     ID3D10Device* device;
     ID3D10Buffer* globalConstBuffer;
