@@ -5,7 +5,8 @@
 #include "graphics/ModelFactory.h"
 #include "graphics/WorldRenderer.h"
 
-WorldRenderer::WorldRenderer() : world(), visibleChunks() {
+WorldRenderer::WorldRenderer() :
+world(), visibleChunks(), shader(), texture() {
 }
 
 WorldRenderer::~WorldRenderer() {
@@ -14,9 +15,15 @@ WorldRenderer::~WorldRenderer() {
 bool WorldRenderer::Init(World* w) {
     world = w;
     shader = new Shader();
-    if (!shader->Init("test.v.glsl", "test.f.glsl")) {
+    if (!shader->Init("res/block.v.glsl", "res/block.f.glsl")) {
         return false;
     }
+
+    texture = new Texture();
+    if (!texture->Init("res/grass.png")) {
+        return false;
+    }
+
     return true;
 }
 
@@ -41,35 +48,42 @@ int inc = 0;
 
 VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
     if (!c) return nullptr;
+
     ModelFactory mf = ModelFactory();
+    mf.AddAttribute("position", 3);
+    mf.AddAttribute("color", 4);
+    mf.AddAttribute("texcoord", 2);
+
     int numVisibleBlocks = 0;
     inc = 0;
+
     VEC3_RANGE_OFFSET(c->pos, Chunk::DIM_VEC) {
         if (world->GetBlock(p) == Block::Air) {
             continue;
         }
         if (world->GetBlock(p.x + 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, p.x + 1, p.y, p.z, 0, 1, 2, 0.9f);
+            ConstructFace(mf, p.x + 1, p.y, p.z, 0, 1, 2, 0.85);
         }
         if (world->GetBlock(p.x - 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z, 0, 2, 1, 0.6f);
+            ConstructFace(mf, p.x, p.y, p.z, 0, 2, 1, 0.7);
         }
         if (world->GetBlock(p.x, p.y + 1, p.z) == Block::Air) {
-            ConstructFace(mf, p.x, p.y + 1, p.z, 1, 2, 0, 0.8f);
+            ConstructFace(mf, p.x, p.y + 1, p.z, 1, 2, 0, 0.8);
         }
         if (world->GetBlock(p.x, p.y - 1, p.z) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z, 1, 0, 2, 0.7f);
+            ConstructFace(mf, p.x, p.y, p.z, 1, 0, 2, 0.75);
         }
         if (world->GetBlock(p.x, p.y, p.z + 1) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z + 1, 2, 0, 1, 1.0f);
+            ConstructFace(mf, p.x, p.y, p.z + 1, 2, 0, 1, 1.0);
         }
         if (world->GetBlock(p.x, p.y, p.z - 1) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z, 2, 1, 0, 0.5f);
+            ConstructFace(mf, p.x, p.y, p.z, 2, 1, 0, 0.5);
         }
         numVisibleBlocks += inc;
     }
     if (numVisibleBlocks > 0) {
         mf.shader = shader;
+        mf.texture = texture;
         mf.topology = GL_QUADS;
         Model* m = mf.Create();
         if (!m) {
@@ -85,13 +99,22 @@ VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
 
 void WorldRenderer::ConstructFace(ModelFactory& mf, int x, int y, int z, int xi, int yi, int zi, double b) {
     int count = mf.VertexCount();
-    mf.AddTriangle(count, count + 1, count + 2);
-    mf.AddTriangle(count, count + 2, count + 3);
+    //mf.AddTriangle(count, count + 1, count + 2);
+    //mf.AddTriangle(count, count + 2, count + 3);
     Vector3F v = Vector3F(x, y, z);
-    mf.AddVertex(v, ColorF(b, b, b));
-    mf.AddVertex(v + Vector3F::AXIS[yi], ColorF(b * 0.9, b * 0.9, b * 0.9));
-    mf.AddVertex(v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi], ColorF(b * 0.7, b * 0.7, b * 0.7));
-    mf.AddVertex(v + Vector3F::AXIS[zi], ColorF(b * 0.8, b * 0.8, b * 0.8));
+    ColorF c(b, b, b);
+    mf.Next().Set("position", v)
+             .Set("color", c)
+             .Set("texcoord", 0, 0);
+    mf.Next().Set("position", v + Vector3F::AXIS[zi])
+             .Set("color", c)
+             .Set("texcoord", 1, 0);
+    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi])
+             .Set("color", c)
+             .Set("texcoord", 1, 1);
+    mf.Next().Set("position", v + Vector3F::AXIS[yi])
+             .Set("color", c)
+             .Set("texcoord", 0, 1);
     inc = 1;
 }
 
@@ -109,15 +132,20 @@ void WorldRenderer::UpdateBlock(Vector3I p) {
 
 void WorldRenderer::UpdateChunk(Chunk* c) {
     if (c == nullptr) return;
-    for (int i = 0; i < visibleChunks.size(); i++) {
+    int i;
+    for (i = 0; i < visibleChunks.size(); i++) {
         VisibleChunk* vc = visibleChunks[i];
-        if (vc) {
-            if (vc->chunk != c) continue;
-            vc->Shutdown();
-            delete vc;
-        }
+        if (!vc) continue;
+
+        if (vc->chunk != c) continue;
+        vc->Shutdown();
+        delete vc;
+
         visibleChunks[i] = ConstructVisibleChunk(c);
         return;
+    }
+    if (i == visibleChunks.size()) {
+        visibleChunks.push_back(ConstructVisibleChunk(c));
     }
 }
 

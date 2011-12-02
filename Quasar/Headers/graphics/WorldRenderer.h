@@ -22,4 +22,5 @@ public:
     std::vector<VisibleChunk*> visibleChunks;
     World* world;
     Shader* shader;
+    Texture* texture;
 };

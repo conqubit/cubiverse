@@ -33,4 +33,6 @@ public:
 
     static HWND WindowHandle();
     static void renderthread();
+    static void DoTicks();
+    static void DoWindowDrawing();
 };

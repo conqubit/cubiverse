@@ -94,6 +94,7 @@
     <ClInclude Include="Headers\graphics\Model.h" />
     <ClInclude Include="Headers\graphics\ModelFactory.h" />
     <ClInclude Include="Headers\graphics\Shader.h" />
+    <ClInclude Include="Headers\graphics\Texture.h" />
     <ClInclude Include="Headers\graphics\VisibleChunk.h" />
     <ClInclude Include="Headers\graphics\WorldRenderer.h" />
     <ClInclude Include="Headers\Input.h" />
@@ -109,16 +110,17 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\graphics\Graphics.cpp" />
     <ClCompile Include="Source\graphics\Model.cpp" />
     <ClCompile Include="Source\graphics\Shader.cpp" />
+    <ClCompile Include="Source\graphics\Texture.cpp" />
     <ClCompile Include="Source\graphics\VisibleChunk.cpp" />
     <ClCompile Include="Source\graphics\WorldRenderer.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\level\Chunk.cpp" />
     <ClCompile Include="Source\level\World.cpp" />
     <ClCompile Include="Source\Player.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\System.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -127,8 +129,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Quasar.vcxproj" />
-    <None Include="test.f.glsl" />
-    <None Include="test.v.glsl" />
+    <None Include="res\color.f.glsl" />
+    <None Include="res\color.v.glsl" />
+    <None Include="res\block.f.glsl" />
+    <None Include="res\block.v.glsl" />
+    <None Include="res\consola.ttf" />
+    <None Include="res\grass.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

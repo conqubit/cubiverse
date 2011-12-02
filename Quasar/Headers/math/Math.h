@@ -21,16 +21,8 @@
 #define PI     3.14159265358979323846
 #define PI_2   1.57079632679489661923
 #define SQRT_2 1.41421356237309504880
+#define PHI    1.61803398874989484820
 
 #include "math/Vector.h"
 #include "math/BoundingBox.h"
 #include "math/Color.h"
-
-struct Vertex {
-    Vector3F position;
-    ColorF color;
-
-    Vertex(Vector3F pos, ColorF color) :
-    position(pos), color(color) {
-    }
-};

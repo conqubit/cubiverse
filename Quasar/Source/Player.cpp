@@ -12,109 +12,80 @@ Model* Y1;
 Model* z0;
 Model* z1;
 
-void Player::Init() {
-    pos = Vector3D(System::world->width.x / 2.0, System::world->width.y / 2.0, System::world->width.z / 2.0 + 16.0);
+double eyeOffset = 1.7 - PHI;
+
+Shader* shader;
+
+void Player::Init(Vector3D p) {
+    pos = p;
+
     bb = BoundingBox(-0.3, -0.3, 0, 0.3, 0.3, 1.7);
+    height = 1.7;
+    eyeHeight = height - eyeOffset;
+
+    shader = new Shader();
+    shader->Init("res/color.v.glsl", "res/color.f.glsl");
 
     // Block picking outline.
     ModelFactory mf = ModelFactory();
-    mf.shader = System::worldRenderer->shader;
+    mf.AddAttribute("position", 3);
+    mf.AddAttribute("color", 4);
+
+    mf.shader = shader;
     mf.topology = GL_QUADS;
-    mf.colorState = ColorF(0, 0, 0, 0.75);
+    ColorF c(0, 0, 0, 0.5);
 
     double d = 0.0025;
 
-    mf.AddVertex(0 - d, 0 + d, 0 + d);
-    mf.AddVertex(0 - d, 0 + d, 1 - d);
-    mf.AddVertex(0 - d, 1 - d, 1 - d);
-    mf.AddVertex(0 - d, 1 - d, 0 + d);
+    mf.Next().Set("position", 0 - d, 1 - d, 0 + d).Set("color", c);
+    mf.Next().Set("position", 0 - d, 1 - d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 0 - d, 0 + d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 0 - d, 0 + d, 0 + d).Set("color", c);
     x0 = mf.Create();
 
     mf.Clear();
-    mf.AddVertex(1 + d, 1 - d, 0 + d);
-    mf.AddVertex(1 + d, 1 - d, 1 - d);
-    mf.AddVertex(1 + d, 0 + d, 1 - d);
-    mf.AddVertex(1 + d, 0 + d, 0 + d);
+    mf.Next().Set("position", 1 + d, 0 + d, 0 + d).Set("color", c);
+    mf.Next().Set("position", 1 + d, 0 + d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 1 + d, 1 - d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 1 + d, 1 - d, 0 + d).Set("color", c);
     x1 = mf.Create();
 
     mf.Clear();
-    mf.AddVertex(1 - d, 0 - d, 0 + d);
-    mf.AddVertex(1 - d, 0 - d, 1 - d);
-    mf.AddVertex(0 + d, 0 - d, 1 - d);
-    mf.AddVertex(0 + d, 0 - d, 0 + d);
+    mf.Next().Set("position", 0 + d, 0 - d, 0 + d).Set("color", c);
+    mf.Next().Set("position", 0 + d, 0 - d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 1 - d, 0 - d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 1 - d, 0 - d, 0 + d).Set("color", c);
     Y0 = mf.Create();
 
     mf.Clear();
-    mf.AddVertex(0 + d, 1 + d, 0 + d);
-    mf.AddVertex(0 + d, 1 + d, 1 - d);
-    mf.AddVertex(1 - d, 1 + d, 1 - d);
-    mf.AddVertex(1 - d, 1 + d, 0 + d);
+    mf.Next().Set("position", 1 - d, 1 + d, 0 + d).Set("color", c);
+    mf.Next().Set("position", 1 - d, 1 + d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 0 + d, 1 + d, 1 - d).Set("color", c);
+    mf.Next().Set("position", 0 + d, 1 + d, 0 + d).Set("color", c);
     Y1 = mf.Create();
 
     mf.Clear();
-    mf.AddVertex(0 + d, 0 + d, 0 - d);
-    mf.AddVertex(0 + d, 1 - d, 0 - d);
-    mf.AddVertex(1 - d, 1 - d, 0 - d);
-    mf.AddVertex(1 - d, 0 + d, 0 - d);
+    mf.Next().Set("position", 1 - d, 0 + d, 0 - d).Set("color", c);
+    mf.Next().Set("position", 1 - d, 1 - d, 0 - d).Set("color", c);
+    mf.Next().Set("position", 0 + d, 1 - d, 0 - d).Set("color", c);
+    mf.Next().Set("position", 0 + d, 0 + d, 0 - d).Set("color", c);
     z0 = mf.Create();
 
     mf.Clear();
-    mf.AddVertex(1 - d, 0 + d, 1 + d);
-    mf.AddVertex(1 - d, 1 - d, 1 + d);
-    mf.AddVertex(0 + d, 1 - d, 1 + d);
-    mf.AddVertex(0 + d, 0 + d, 1 + d);
+    mf.Next().Set("position", 0 + d, 0 + d, 1 + d).Set("color", c);
+    mf.Next().Set("position", 0 + d, 1 - d, 1 + d).Set("color", c);
+    mf.Next().Set("position", 1 - d, 1 - d, 1 + d).Set("color", c);
+    mf.Next().Set("position", 1 - d, 0 + d, 1 + d).Set("color", c);
     z1 = mf.Create();
 
-    /*
-    double p = 1 + d;
-    double n = -d;
-    mf.AddVertex(Vertex(Vector3F(n, n, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(p, n, n), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(p, n, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(p, p, n), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(p, p, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(n, p, n), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(n, p, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(n, n, n), ColorF(0, 0, 0)));
-    //
-    mf.AddVertex(Vertex(Vector3F(n, n, p), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(p, n, p), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(p, n, p), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(p, p, p), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(p, p, p), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(n, p, p), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(n, p, p), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(n, n, p), ColorF(0, 0, 0)));
-    //
-    mf.AddVertex(Vertex(Vector3F(n, n, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(n, n, p), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(p, n, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(p, n, p), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(p, p, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(p, p, p), ColorF(0, 0, 0)));
-
-    mf.AddVertex(Vertex(Vector3F(n, p, n), ColorF(0, 0, 0)));
-    mf.AddVertex(Vertex(Vector3F(n, p, p), ColorF(0, 0, 0)));
-    */
-
-    //selectedBlock = mf.Create();
-
     // Crappy cursor.
-    mf = ModelFactory();
+    mf.Clear();
     mf.topology = GL_TRIANGLES;
-    mf.shader = System::worldRenderer->shader;
-    mf.AddVertex(Vector3F(-0.02, -0.04, 0), ColorF(0, 1, 0, 0));
-    mf.AddVertex(Vector3F(0.02, -0.04, 0), ColorF(0, 1, 0, 0));
-    mf.AddVertex(Vector3F(0, 0, 0), ColorF(0, 0.6, 0, 0.75));
 
+    mf.Next().Set("position", 0, 0, 0).Set("color", 1, 1, 1, 0.75);
+    mf.Next().Set("position", 0.02, -0.04, 0).Set("color", 1, 1, 1, 0.2);
+    mf.Next().Set("position", -0.02, -0.04, 0).Set("color", 1, 1, 1, 0.2);
+    
     cursor = mf.Create();
     cursor->temp = true;
 }
@@ -131,7 +102,7 @@ void Player::Shutdown() {
 
 void Player::Render() {
     if (picked) {
-        glLineWidth(2);
+        glLineWidth(3);
         glPolygonMode(GL_FRONT, GL_LINE);
         glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(pickedBlock.x, pickedBlock.y, pickedBlock.z));
         if (side.x == -1) {
@@ -205,6 +176,7 @@ void Player::DoBlockPicking() {
             System::world->SetBlock(pickedBlock, Block::Air);
             System::worldRenderer->UpdateBlock(pickedBlock);
         }
+        PickBlock();
         counter = 0;
     }
 
@@ -275,28 +247,28 @@ void Player::DoCollision() {
         inAir = true;
     }
 
-    if (X && Y && System::world->Intersects(bb.Offset(pos + vel.XY()))) {
+    if (X && Y && System::world->Intersects(BBox().Offset(vel.XY()))) {
         if (vel.x < vel.y) {
             vel.x = 0;
         } else {
             vel.y = 0;
         }
     }
-    if (X && Z && System::world->Intersects(bb.Offset(pos + vel.XZ()))) {
+    if (X && Z && System::world->Intersects(BBox().Offset(vel.XZ()))) {
         if (vel.x < vel.z) {
             vel.x = 0;
         } else {
             vel.z = 0;
         }
     }
-    if (Y && Z && System::world->Intersects(bb.Offset(pos + vel.YZ()))) {
+    if (Y && Z && System::world->Intersects(BBox().Offset(vel.YZ()))) {
         if (vel.y < vel.z) {
             vel.y = 0;
         } else {
             vel.z = 0;
         }
     }
-    if (X && Y && Z && System::world->Intersects(bb.Offset(pos + vel))) {
+    if (X && Y && Z && System::world->Intersects(BBox().Offset(vel))) {
         if (vel.x < vel.y && vel.x < vel.z) {
             vel.x = 0;
         } else if (vel.y < vel.z) {

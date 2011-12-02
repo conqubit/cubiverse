@@ -38,7 +38,7 @@ void World::Fill(int t) {
 }
 
 void World::Generate() {
-    VEC3_RANGE(Vector3I(width.x, width.y, width.z / 2)) {
+    VEC3_RANGE_AB(Vector3I(16, 16, 16), width - Vector3I(17, 17, 17)) {
         SetBlock(p, Block::Stone);
     }
 }

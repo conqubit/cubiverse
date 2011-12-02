@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Graphics.h"
+#include "graphics/Graphics.h"
+#include "graphics/Texture.h"
 
 #include "math/Math.h"
 #include "graphics/IRender.h"
@@ -23,6 +24,8 @@ public:
     glm::mat4 world;
 
     Shader* shader;
+    Texture* texture;
+
     int vertexCount;
     int indexCount;
     GLenum topology;

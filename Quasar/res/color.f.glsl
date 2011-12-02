@@ -2,8 +2,8 @@
 
 smooth in vec4 fcolor;
 
-out vec4 outputColor;
+out vec4 colorOut;
 
 void main() {
-    outputColor = fcolor;
+    colorOut = fcolor;
 }

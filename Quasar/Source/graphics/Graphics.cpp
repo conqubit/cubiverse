@@ -14,14 +14,14 @@ Graphics::~Graphics() {
 bool Graphics::Init() {
     glewInit(); 
     glClearDepth(1.0);
-    glClearColor(0.1f, 0.1f, 0.3f, 1.0f);
+    glClearColor(0.5f, 0.7f, 0.9f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_CULL_FACE);
-    glFrontFace(GL_CCW);
+    glFrontFace(GL_CW);
     glCullFace(GL_BACK);
 
     SetProjection();

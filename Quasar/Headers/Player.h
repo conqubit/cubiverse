@@ -7,6 +7,10 @@
 class Player : public IRender {
 public:
     Vector3D pos, vel, dir, up, kvec;
+
+    double height;
+    double eyeHeight;
+
     double yaw, pitch;
     BoundingBox bb;
 
@@ -37,7 +41,7 @@ public:
     ~Player() {
     }
 
-    void Init();
+    void Init(Vector3D p);
     void Shutdown();
     void Tick();
 
@@ -55,12 +59,14 @@ public:
     }
 
     glm::mat4 View() {
-        return glm::lookAt(glm::vec3(pos.x, pos.y, pos.z + 5.0 / 3.0),
-                           glm::vec3(pos.x + dir.x, pos.y + dir.y, pos.z + 5.0 / 3.0 + dir.z),
-                           glm::vec3(up.x, up.y, up.z));
+        return glm::lookAt(Eye().ToGlmVec(), (Eye() + dir).ToGlmVec(), up.ToGlmVec());
+    }
+
+    BoundingBox BBox() {
+        return bb.Offset(pos);
     }
 
     Vector3D Eye() {
-        return Vector3D(pos.x, pos.y, pos.z + 5.0 / 3.0);
+        return Vector3D(pos.x, pos.y, pos.z + eyeHeight);
     }
 };

@@ -44,6 +44,10 @@ struct Vector3 {
         return Vector3D(*this);
     }
 
+    glm::vec3 ToGlmVec() {
+        return glm::vec3(x, y, z);
+    }
+
     //---------------- Initializers ----------------
     template <typename U, typename V, typename W>
     Vector3<T>& Set(U x, V y, W z) {
