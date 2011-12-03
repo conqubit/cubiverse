@@ -19,10 +19,14 @@ bool WorldRenderer::Init(World* w) {
         return false;
     }
 
-    texture = new Texture();
-    if (!texture->Init("res/grass.png")) {
+    sf::Image image;
+
+    if (!image.LoadFromFile("res/blocks2.png")) {
         return false;
     }
+
+    texture = new Texture();
+    texture->Init2DArray(4, image.GetWidth(), image.GetWidth(), (byte*)image.GetPixelsPtr());
 
     return true;
 }
@@ -43,6 +47,15 @@ void WorldRenderer::ConstructVisibleChunks() {
     }
 }
 
+enum Side {
+    X0 = 0,
+    X1 = 1,
+    Y0 = 2,
+    Y1 = 3,
+    Z0 = 4,
+    Z1 = 5
+};
+
 
 int inc = 0;
 
@@ -50,41 +63,42 @@ VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
     if (!c) return nullptr;
 
     ModelFactory mf = ModelFactory();
+    mf.shader = shader;
+    mf.texture = texture;
+    mf.topology = GL_TRIANGLE_STRIP;
     mf.AddAttribute("position", 3);
     mf.AddAttribute("color", 4);
-    mf.AddAttribute("texcoord", 2);
+    mf.AddAttribute("texcoord", 3);
 
     int numVisibleBlocks = 0;
     inc = 0;
 
     VEC3_RANGE_OFFSET(c->pos, Chunk::DIM_VEC) {
-        if (world->GetBlock(p) == Block::Air) {
+        int b = world->GetBlock(p);
+        if (b == Block::Air) {
             continue;
         }
         if (world->GetBlock(p.x + 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, p.x + 1, p.y, p.z, 0, 1, 2, 0.85);
+            ConstructFace(mf, b, Side::X1, p.x + 1, p.y, p.z, 0, 1, 2, 0.85);
         }
         if (world->GetBlock(p.x - 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z, 0, 2, 1, 0.7);
+            ConstructFace(mf, b, Side::X0, p.x, p.y, p.z, 0, 2, 1, 0.7);
         }
         if (world->GetBlock(p.x, p.y + 1, p.z) == Block::Air) {
-            ConstructFace(mf, p.x, p.y + 1, p.z, 1, 2, 0, 0.8);
+            ConstructFace(mf, b, Side::Y1, p.x, p.y + 1, p.z, 1, 2, 0, 0.8);
         }
         if (world->GetBlock(p.x, p.y - 1, p.z) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z, 1, 0, 2, 0.75);
+            ConstructFace(mf, b, Side::Y0, p.x, p.y, p.z, 1, 0, 2, 0.75);
         }
         if (world->GetBlock(p.x, p.y, p.z + 1) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z + 1, 2, 0, 1, 1.0);
+            ConstructFace(mf, b, Side::Z1, p.x, p.y, p.z + 1, 2, 0, 1, 1.0);
         }
         if (world->GetBlock(p.x, p.y, p.z - 1) == Block::Air) {
-            ConstructFace(mf, p.x, p.y, p.z, 2, 1, 0, 0.5);
+            ConstructFace(mf, b, Side::Z0, p.x, p.y, p.z, 2, 1, 0, 0.5);
         }
         numVisibleBlocks += inc;
     }
     if (numVisibleBlocks > 0) {
-        mf.shader = shader;
-        mf.texture = texture;
-        mf.topology = GL_QUADS;
         Model* m = mf.Create();
         if (!m) {
             return nullptr;
@@ -97,24 +111,43 @@ VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
     return nullptr;
 }
 
-void WorldRenderer::ConstructFace(ModelFactory& mf, int x, int y, int z, int xi, int yi, int zi, double b) {
-    int count = mf.VertexCount();
-    //mf.AddTriangle(count, count + 1, count + 2);
-    //mf.AddTriangle(count, count + 2, count + 3);
+int GetSliceIndex(int block, int side) {
+    switch (block) {
+    case Block::Stone:
+        return 0;
+    case Block::Dirt:
+        return 1;
+    case Block::Grass:
+        if (side == Side::Z1) {
+            return 2;
+        }
+        return 1;
+    case Block::Test:
+        return 3;
+    }
+}
+
+void WorldRenderer::ConstructFace(ModelFactory& mf, int block, int side, int x, int y, int z, int xi, int yi, int zi, double b) {
     Vector3F v = Vector3F(x, y, z);
     ColorF c(b, b, b);
+
+    int tz = GetSliceIndex(block, side);
+
+    // Degenerate.
+    mf.Next().Set("position", v).Set("texcoord", 0, 0, tz);
+
     mf.Next().Set("position", v)
-             .Set("color", c)
-             .Set("texcoord", 0, 0);
-    mf.Next().Set("position", v + Vector3F::AXIS[zi])
-             .Set("color", c)
-             .Set("texcoord", 1, 0);
-    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi])
-             .Set("color", c)
-             .Set("texcoord", 1, 1);
+             .Set("color", c).Set("texcoord", 0, 0, tz);
     mf.Next().Set("position", v + Vector3F::AXIS[yi])
-             .Set("color", c)
-             .Set("texcoord", 0, 1);
+             .Set("color", c).Set("texcoord", 0, 1, tz);
+    mf.Next().Set("position", v + Vector3F::AXIS[zi])
+             .Set("color", c).Set("texcoord", 1, 0, tz);
+    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi])
+             .Set("color", c).Set("texcoord", 1, 1, tz);
+
+    // Degenerate.
+    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi]).Set("texcoord", 0, 0, tz);
+
     inc = 1;
 }
 

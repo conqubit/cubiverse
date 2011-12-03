@@ -2,12 +2,12 @@
 
 uniform mat4 worldViewProjectionMat;
 
-in vec4 position;
-in vec4 color;
-in vec2 texcoord;
+layout(location = 0) in vec4 position;
+layout(location = 1) in vec4 color;
+layout(location = 2) in vec3 texcoord;
 
 smooth out vec4 fcolor;
-smooth out vec2 ftexcoord;
+smooth out vec3 ftexcoord;
 
 void main() {
     gl_Position = worldViewProjectionMat * position;

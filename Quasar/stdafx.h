@@ -16,12 +16,12 @@
 #include <iostream>
 #include <vector>
 
+#include <GL/glew.h>
+
 // SFML header files.
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-
-#include <GL/glew.h>
 
 // Integer typedefs for convenience and readability.
 typedef uint8_t  byte;

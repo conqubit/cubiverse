@@ -8,6 +8,8 @@ class Player : public IRender {
 public:
     Vector3D pos, vel, dir, up, kvec;
 
+    bool noclip;
+
     double height;
     double eyeHeight;
 
@@ -25,6 +27,7 @@ public:
 
     Player() :
     pos(), vel(), dir(), up(), kvec(),
+    noclip(),
     yaw(), pitch(),
     bb(),
 

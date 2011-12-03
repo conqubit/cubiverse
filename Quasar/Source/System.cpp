@@ -18,7 +18,7 @@ sf::Clock timer;
 
 int anti = 0;
 int depth = 24;
-int stencil = 0;
+int stencil = 8;
 
 int major = 3;
 int minor = 3;
@@ -185,7 +185,9 @@ void System::DoEvents() {
 
                 graphics->things.push_back(worldRenderer);
                 graphics->things.push_back(player);
-
+                break;
+            case Key::Z:
+                player->noclip = !(player->noclip);
                 break;
             }
             break;

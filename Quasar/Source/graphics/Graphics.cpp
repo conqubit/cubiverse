@@ -34,7 +34,7 @@ void Graphics::Shutdown() {
 }
 
 void Graphics::SetProjection() {
-    proj = glm::perspective(80.0f, (float)System::window.GetWidth() / System::window.GetHeight(), 0.01f, 250.0f);
+    proj = glm::perspective(80.0f, (float)System::window.GetWidth() / System::window.GetHeight(), 0.05f, 250.0f);
 }
 
 void Graphics::Render() {

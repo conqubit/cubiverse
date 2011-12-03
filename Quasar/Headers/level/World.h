@@ -17,6 +17,7 @@ public:
     void Shutdown();
 
     void Fill(int t);
+    void Fill(int t, Vector3I a, Vector3I b);
     void Generate();
 
     bool Intersects(const BoundingBox& bb);

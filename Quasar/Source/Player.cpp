@@ -32,7 +32,7 @@ void Player::Init(Vector3D p) {
     mf.AddAttribute("color", 4);
 
     mf.shader = shader;
-    mf.topology = GL_QUADS;
+    mf.topology = GL_LINE_LOOP;
     ColorF c(0, 0, 0, 0.5);
 
     double d = 0.0025;
@@ -103,7 +103,6 @@ void Player::Shutdown() {
 void Player::Render() {
     if (picked) {
         glLineWidth(3);
-        glPolygonMode(GL_FRONT, GL_LINE);
         glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(pickedBlock.x, pickedBlock.y, pickedBlock.z));
         if (side.x == -1) {
             x0->world = m;
@@ -129,7 +128,6 @@ void Player::Render() {
             z1->world = m;
             z1->Render();
         }
-        glPolygonMode(GL_FRONT, GL_FILL);
         glLineWidth(1);
     }
     cursor->Render();
@@ -149,11 +147,13 @@ void Player::Tick() {
 }
 
 void Player::UpdateVelocity() {
-    vel.z -= 0.0008;
-    vel += kvec * (inAir ? 0.02 : 0.10);
-    vel.x *= (inAir ? 0.99 : 0.94);
-    vel.y *= (inAir ? 0.99 : 0.94);
-    vel.z *= 0.999;
+    if (!noclip) {
+        vel.z -= 0.0008;
+    }
+    vel += kvec * (inAir && !noclip ? 0.02 : 0.10);
+    vel.x *= (inAir && !noclip ? 0.99 : 0.94);
+    vel.y *= (inAir && !noclip ? 0.99 : 0.94);
+    vel.z *= noclip ? 0.95 : 0.999;
 }
 
 void Player::DoBlockPicking() {
@@ -166,7 +166,7 @@ void Player::DoBlockPicking() {
     if (picked && !mouseStateLastTick) {
         if (Input::MouseRight()) {
             int old = System::world->GetBlock(pickedBlock + side);
-            System::world->SetBlock(pickedBlock + side, Block::Stone);
+            System::world->SetBlock(pickedBlock + side, Block::Test);
             if (BoundingBox::Block(pickedBlock + side).Intersects(bb.Offset(pos))) {
                 System::world->SetBlock(pickedBlock + side, old);
             } else {
@@ -191,7 +191,7 @@ void Player::PickBlock() {
     Vector3D p = Eye();
     Vector3I b = p.Floor();
     while ((Eye() - p).LengthSquared() < 5 * 5) {
-        if (System::world->GetBlock(b) == Block::Stone) {
+        if (System::world->GetBlock(b) != Block::Air) {
             pickedBlock = b;
             picked = true;
             return;
@@ -220,6 +220,7 @@ void Player::PickBlock() {
 }
 
 void Player::DoJump() {
+    if (noclip) return;
     if (!System::focus) {
         return;
     }
@@ -230,6 +231,7 @@ void Player::DoJump() {
 }
 
 void Player::DoCollision() {
+    if (noclip) return;
     bool X = true, Y = true, Z = true;
     if (System::world->Intersects(bb.Offset(pos + vel.X()))) {
         vel.x = 0;
@@ -305,8 +307,11 @@ void Player::DoInput() {
     up = right.Cross(dir);
 
     kvec = kdir * (Input::KeyPressed(Key::W) - Input::KeyPressed(Key::S))
-           + right * (Input::KeyPressed(Key::D) - Input::KeyPressed(Key::A))
-           + Vector3D::AXIS_Z * (Input::KeyPressed(Key::Q) - Input::KeyPressed(Key::E));
+           + right * (Input::KeyPressed(Key::D) - Input::KeyPressed(Key::A));
 
-    kvec = kvec.Normalize(1.0 / (Input::KeyPressed(Key::LControl) ? 200 : (Input::KeyPressed(Key::LShift) ? 25 : 50)));
+    if (noclip) {
+        kvec += Vector3D::AXIS_Z * ((Input::KeyPressed(Key::Q) || Input::KeyPressed(Key::Space)) - Input::KeyPressed(Key::E));
+    }
+
+    kvec = kvec.Normalize(1.0 / (Input::KeyPressed(Key::LControl) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(Key::LShift) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
 }

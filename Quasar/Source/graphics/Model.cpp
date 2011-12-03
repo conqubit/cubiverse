@@ -42,11 +42,14 @@ bool Model::Init(const ModelFactory& mf) {
         glVertexAttribPointer(i, mf.GetAttribute(i).size, GL_FLOAT, GL_FALSE, mf.VertexByteStride(), BUFFER_OFFSET(mf.GetAttribute(i).byteOffset));
     }
 
-    if(texture) {
-        glUniform1i(glGetUniformLocation(shader->program, "textureSampler"), 0);
-    }
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    if (texture) {
+        glUniform1i(glGetUniformLocation(shader->program, "textureSampler"), 0);
+        glActiveTexture(GL_TEXTURE0);
+        texture->Bind();
+        glBindSampler(0, texture->sampler);
+    }
 
     //glGenBuffers(1, &indexBuffer);
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -80,19 +83,12 @@ void Model::Render() {
                            glm::value_ptr(m));
     }
 
-    if (texture) {
-        glUniform1i(glGetUniformLocation(shader->program, "textureSampler"), 0);
-        glActiveTexture(GL_TEXTURE0);
-        texture->Bind();
-    }
-
     //if (topology != GL_QUADS && topology != GL_TRIANGLES) {
     //    glDrawElements(topology, indexCount, GL_INT, BUFFER_OFFSET(0));
     //} else {
     glDrawArrays(topology, 0, vertexCount);
     //}
 
-    if (texture) texture->Unbind();
     Unbind();
     shader->Unbind();
 }
