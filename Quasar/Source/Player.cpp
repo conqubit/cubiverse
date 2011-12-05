@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Window.h"
 #include "System.h"
 #include "Player.h"
 
@@ -24,7 +25,7 @@ void Player::Init(Vector3D p) {
     eyeHeight = height - eyeOffset;
 
     shader = new Shader();
-    shader->Init("res/color.v.glsl", "res/color.f.glsl");
+    shader->Init("res/color.c.v.glsl", "res/color.c.f.glsl");
 
     // Block picking outline.
     ModelFactory mf = ModelFactory();
@@ -80,11 +81,12 @@ void Player::Init(Vector3D p) {
 
     // Crappy cursor.
     mf.Clear();
-    mf.topology = GL_TRIANGLES;
+    mf.topology = GL_LINES;
 
-    mf.Next().Set("position", 0, 0, 0).Set("color", 1, 1, 1, 0.75);
-    mf.Next().Set("position", 0.02, -0.04, 0).Set("color", 1, 1, 1, 0.2);
-    mf.Next().Set("position", -0.02, -0.04, 0).Set("color", 1, 1, 1, 0.2);
+    mf.Next().Set("position", 0, 0, 0).Set("color", 1, 1, 1, 1);
+    mf.Next().Set("position", -0.02, -0.02, 0).Set("color", 1, 1, 1, 1);
+    mf.Next().Set("position", 0, 0, 0).Set("color", 1, 1, 1, 1);
+    mf.Next().Set("position", 0.02, -0.02, 0).Set("color", 1, 1, 1, 1);
     
     cursor = mf.Create();
     cursor->temp = true;
@@ -128,9 +130,13 @@ void Player::Render() {
             z1->world = m;
             z1->Render();
         }
-        glLineWidth(1);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
+    glLineWidth(2);
+    glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
     cursor->Render();
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glLineWidth(1);
 }
 
 void Player::Tick() {
@@ -159,7 +165,7 @@ void Player::UpdateVelocity() {
 void Player::DoBlockPicking() {
     PickBlock();
 
-    if (!System::focus || System::temp) {
+    if (!Window::focus || Window::temp) {
         return;
     }
 
@@ -221,9 +227,6 @@ void Player::PickBlock() {
 
 void Player::DoJump() {
     if (noclip) return;
-    if (!System::focus) {
-        return;
-    }
     if (!inAir && Input::KeyPressed(Key::Space)) {
         vel.z += 0.05;
         inAir = true;
@@ -232,7 +235,9 @@ void Player::DoJump() {
 
 void Player::DoCollision() {
     if (noclip) return;
-    bool X = true, Y = true, Z = true;
+    Vector3I up = System::world->GetUp(pos);
+    bool X, Y, Z;
+    X = Y = Z = true;
     if (System::world->Intersects(bb.Offset(pos + vel.X()))) {
         vel.x = 0;
         X = false;
@@ -285,9 +290,6 @@ double minPitch = -PI_2;
 double maxPitch =  PI_2;
 
 void Player::DoInput() {
-    if (!System::focus) {
-        return;
-    }
     yaw += Input::DeltaMx() / 300.0;
     pitch -= Input::DeltaMy() / 300.0;
 

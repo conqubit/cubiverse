@@ -40,7 +40,7 @@ bool Texture::Init(const string& file) {
 bool Texture::Init2DArray(int count, int width, int height, byte* ptr) {
     this->width = width;
     this->height = height;
-    type = GL_TEXTURE_2D_ARRAY;
+    type = GL_TEXTURE_3D;
     glGenTextures(1, &texture);
     Bind();
     glTexImage3D(type, 0, GL_RGBA8, width, height, count, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptr);

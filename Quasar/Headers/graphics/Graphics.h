@@ -2,15 +2,14 @@
 
 #include "graphics/IRender.h"
 
-class Graphics : public IRender {
+class Graphics {
 public:
-    Graphics();
-    ~Graphics();
-    bool Init();
-    void Shutdown();
-    void Render();
-    void SetProjection();
-    std::vector<IRender*> things;
+    static std::vector<IRender*> things;
+    static glm::mat4 proj;
+    static glm::mat4 ortho;
 
-    glm::mat4 proj;
+    static void Init();
+    static void Shutdown();
+    static void Render();
+    static void SetProjection();
 };

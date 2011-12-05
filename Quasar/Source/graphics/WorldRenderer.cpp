@@ -12,10 +12,12 @@ world(), visibleChunks(), shader(), texture() {
 WorldRenderer::~WorldRenderer() {
 }
 
+int numBlocks = 4;
+
 bool WorldRenderer::Init(World* w) {
     world = w;
     shader = new Shader();
-    if (!shader->Init("res/block.v.glsl", "res/block.f.glsl")) {
+    if (!shader->Init("res/block.c.v.glsl", "res/block.c.f.glsl")) {
         return false;
     }
 
@@ -26,7 +28,7 @@ bool WorldRenderer::Init(World* w) {
     }
 
     texture = new Texture();
-    texture->Init2DArray(4, image.GetWidth(), image.GetWidth(), (byte*)image.GetPixelsPtr());
+    texture->Init2DArray(numBlocks, image.GetWidth(), image.GetWidth(), (byte*)image.GetPixelsPtr());
 
     return true;
 }
@@ -131,7 +133,7 @@ void WorldRenderer::ConstructFace(ModelFactory& mf, int block, int side, int x, 
     Vector3F v = Vector3F(x, y, z);
     ColorF c(b, b, b);
 
-    int tz = GetSliceIndex(block, side);
+    float tz = (float)GetSliceIndex(block, side) / (float)numBlocks + 1.0f / ((float)numBlocks * 2.0f);
 
     // Degenerate.
     mf.Next().Set("position", v).Set("texcoord", 0, 0, tz);

@@ -13,26 +13,16 @@
 class System {
 public:
     static bool             running;
-    static sf::RenderWindow window;
-    static Graphics*        graphics;
     static Player*          player;
     static World*           world;
     static WorldRenderer*   worldRenderer;
-    static bool             focus;
-    static bool             temp;
 
     static bool Init();
+    static void Shutdown();
 
     static void Start();
     static void Stop();
 
-    static void Tick();
-
-    static void Shutdown();
-    static void DoEvents();
-
-    static HWND WindowHandle();
-    static void renderthread();
     static void DoTicks();
-    static void DoWindowDrawing();
+    static void Tick();
 };

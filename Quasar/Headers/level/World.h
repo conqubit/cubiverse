@@ -20,6 +20,18 @@ public:
     void Fill(int t, Vector3I a, Vector3I b);
     void Generate();
 
+    Vector3I GetUp(Vector3D p) {
+        p -= width / 2;
+        Vector3D a = p.Abs();
+        if (a.x > a.y && a.x > a.z) {
+            return Vector3I::AXIS_X * SIGN(a.x);
+        } else if (a.y > a.z) {
+            return Vector3I::AXIS_Y * SIGN(a.y);
+        } else {
+            return Vector3I::AXIS_Z * SIGN(a.z);
+        }
+    }
+
     bool Intersects(const BoundingBox& bb);
 
     int GetBlock(int x, int y, int z) {

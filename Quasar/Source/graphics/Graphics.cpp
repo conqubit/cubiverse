@@ -1,17 +1,13 @@
 #include "stdafx.h"
 
+#include "Window.h"
 #include "graphics/Graphics.h"
-#include "System.h"
 
-Graphics::Graphics() :
-things(),
-proj() {
-}
+std::vector<IRender*> Graphics::things;
+glm::mat4 Graphics::proj;
+glm::mat4 Graphics::ortho;
 
-Graphics::~Graphics() {
-}
-
-bool Graphics::Init() {
+void Graphics::Init() {
     glewInit(); 
     glClearDepth(1.0);
     glClearColor(0.5f, 0.7f, 0.9f, 1.0f);
@@ -25,8 +21,6 @@ bool Graphics::Init() {
     glCullFace(GL_BACK);
 
     SetProjection();
-
-    return true;
 }
 
 void Graphics::Shutdown() {
@@ -34,7 +28,9 @@ void Graphics::Shutdown() {
 }
 
 void Graphics::SetProjection() {
-    proj = glm::perspective(80.0f, (float)System::window.GetWidth() / System::window.GetHeight(), 0.05f, 250.0f);
+    double aspect = Window::AspectRatio();
+    proj = glm::perspective(80.0f, (float)aspect, 0.05f, 250.0f);
+    ortho = glm::ortho(-aspect, aspect, -1.0, 1.0, 0.01, -0.01);
 }
 
 void Graphics::Render() {

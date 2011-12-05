@@ -38,8 +38,9 @@ bool Model::Init(const ModelFactory& mf) {
     glBufferData(GL_ARRAY_BUFFER, mf.VertexDataByteSize(), mf.VertexData(), GL_STATIC_DRAW);
 
     for (int i = 0; i < mf.AttributeCount(); i++) {
-        glEnableVertexAttribArray(i);
-        glVertexAttribPointer(i, mf.GetAttribute(i).size, GL_FLOAT, GL_FALSE, mf.VertexByteStride(), BUFFER_OFFSET(mf.GetAttribute(i).byteOffset));
+        GLuint L = glGetAttribLocation(shader->program, mf.GetAttribute(i).name.c_str());
+        glEnableVertexAttribArray(L);
+        glVertexAttribPointer(L, mf.GetAttribute(i).size, GL_FLOAT, GL_FALSE, mf.VertexByteStride(), BUFFER_OFFSET(mf.GetAttribute(i).byteOffset));
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -75,10 +76,11 @@ void Model::Render() {
     glm::mat4 m;
 
     if (!temp) {
-        m = System::graphics->proj * System::player->View() * world;
+        m = Graphics::proj * System::player->View() * world;
         glUniformMatrix4fv(glGetUniformLocation(shader->program, "worldViewProjectionMat"), 1, GL_FALSE,
                            glm::value_ptr(m));
     } else {
+        m = Graphics::ortho;
         glUniformMatrix4fv(glGetUniformLocation(shader->program, "worldViewProjectionMat"), 1, GL_FALSE,
                            glm::value_ptr(m));
     }

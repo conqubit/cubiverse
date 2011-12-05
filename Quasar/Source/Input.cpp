@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Window.h"
 #include "Input.h"
 
 int Input::mx;
@@ -10,10 +11,12 @@ int Input::dmy;
 IDirectInput8W* Input::directInput;
 IDirectInputDevice8W* Input::mouse;
 
+bool Input::locked = false;
+
 bool Input::Init() {
     HRESULT r;
 
-    r = DirectInput8Create((HINSTANCE)GetWindowLong(System::WindowHandle(), GWL_HINSTANCE), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, NULL);
+    r = DirectInput8Create((HINSTANCE)GetWindowLong(Window::SystemHandle(), GWL_HINSTANCE), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, NULL);
     if (FAILED(r)) return false;
 
     r = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
@@ -22,7 +25,7 @@ bool Input::Init() {
     r = mouse->SetDataFormat(&c_dfDIMouse);
     if (FAILED(r)) return false;
 
-    r = mouse->SetCooperativeLevel(System::WindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+    r = mouse->SetCooperativeLevel(Window::SystemHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
     if (FAILED(r)) return false;
 
     r = mouse->Acquire();
@@ -31,15 +34,31 @@ bool Input::Init() {
     return true;
 }
 
+void Input::Shutdown() {
+    mouse->Unacquire();
+    mouse->Release();
+    directInput->Release();
+}
+
+void Input::Lock() {
+    locked = true;
+}
+
+void Input::Unlock() {
+    locked = false;
+}
+
 void Input::SetMousePosition(int x, int y) {
-    sf::Mouse::SetPosition(sf::Vector2i(x, y), System::window);
+    sf::Mouse::SetPosition(sf::Vector2i(x, y), Window::sfWindow);
 }
 
 bool Input::KeyPressed(Key key) {
+    if (locked) return false;
     return sf::Keyboard::IsKeyPressed(key);
 }
 
 bool Input::MouseLeft() {
+    if (locked) return false;
     return sf::Mouse::IsButtonPressed(sf::Mouse::Button::Left);
 }
 
@@ -56,10 +75,12 @@ int Input::My() {
 }
 
 int Input::DeltaMx() {
+    if (locked) return 0;
     return dmx;
 }
 
 int Input::DeltaMy() {
+    if (locked) return 0;
     return dmy;
 }
 
