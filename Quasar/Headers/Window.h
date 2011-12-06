@@ -7,6 +7,8 @@ public:
     static sf::RenderWindow sfWindow;
     static bool             temp;
     static bool             focus;
+    static int posX;
+    static int posY;
 
     static bool Init();
     static void Shutdown();
@@ -15,6 +17,9 @@ public:
 
     static int Width();
     static int Height();
+    static int PosX();
+    static int PosY();
+
     static double AspectRatio();
 
     static void DoEvents();
@@ -25,4 +30,11 @@ public:
 
     static void Unfocus();
     static void Focus();
+
+	static void Maximize();
+
+    static bool IsMaximized();
+    static bool IsMinimized();
+
+    static bool IsFullScreen();
 };

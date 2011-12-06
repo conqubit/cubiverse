@@ -22,8 +22,8 @@ bool System::Init() {
     srand((unsigned int)time(nullptr));
 
     Window::Init();
-
-    SendMessage(Window::SystemHandle(), WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+    Window::Maximize();
+    Window::sfWindow.Display();
 
     print("OpenGL version: " + str(glGetString(GL_VERSION)));
 
@@ -95,6 +95,7 @@ void System::Start() {
 
     while(running) {
         QueryPerformanceCounter((LARGE_INTEGER*)&newtime);
+
         delta = (newtime - oldtime);
         fpsTicks += delta;
         fpsCount++;

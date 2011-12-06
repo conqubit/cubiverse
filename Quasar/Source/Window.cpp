@@ -9,7 +9,6 @@ bool Window::temp = false;
 
 bool Window::focus = true;
 
-
 int anti = 0;
 int depth = 24;
 int stencil = 8;
@@ -31,6 +30,16 @@ sf::ContextSettings contextSettings;
 bool fs = false;
 
 sf::Font f;
+
+struct WindowState {
+    bool maximized;
+    int width;
+    int height;
+    int posX;
+    int posY;
+};
+
+WindowState stateBeforeFullscreen;
 
 bool Window::Init() {
     videoMode = sf::VideoMode(1366, 768, 24);
@@ -58,6 +67,22 @@ void Window::Unfocus() {
     focus = false;
 }
 
+void Window::Maximize() {
+    ShowWindow(SystemHandle(), SW_MAXIMIZE);
+}
+
+bool Window::IsMaximized() {
+    return IsZoomed(SystemHandle());
+}
+
+bool Window::IsMinimized() {
+    return IsIconic(SystemHandle());
+}
+
+bool Window::IsFullScreen() {
+    return fs;
+}
+
 sf::WindowHandle Window::SystemHandle() {
     return sfWindow.GetSystemHandle();
 }
@@ -68,6 +93,18 @@ int Window::Width() {
 
 int Window::Height() {
     return sfWindow.GetHeight();
+}
+
+int Window::PosX() {
+    RECT r;
+    GetWindowRect(SystemHandle(), &r);
+    return r.left;
+}
+
+int Window::PosY() {
+    RECT r;
+    GetWindowRect(SystemHandle(), &r);
+    return r.top;
 }
 
 double Window::AspectRatio() {
@@ -124,16 +161,28 @@ void Window::ToggleFullscreen() {
     System::worldRenderer->Shutdown();
     Graphics::Shutdown();
     Input::Shutdown();
-
+    resize = true;
     if (fs) {
+        stateBeforeFullscreen.maximized = IsMaximized();
+        stateBeforeFullscreen.posX = PosX();
+        stateBeforeFullscreen.posY = PosY();
         sfWindow.Create(sf::VideoMode::GetFullscreenModes()[0], title, sf::Style::Fullscreen, contextSettings);
     } else {
         sfWindow.Create(videoMode, title, style, contextSettings);
+
+        if (stateBeforeFullscreen.maximized) {
+            Maximize();
+        } else {
+            sfWindow.SetPosition(stateBeforeFullscreen.posX, stateBeforeFullscreen.posY);
+        }
     }
+
+    sfWindow.Display();
 
     sfWindow.SetFramerateLimit(limitFrameRate);
     sfWindow.EnableVerticalSync(vsync);
-    sfWindow.ShowMouseCursor(false);
+
+    sfWindow.ShowMouseCursor(Input::locked);
 
     Input::Init();
 
@@ -155,6 +204,10 @@ void Window::DoEvents() {
         switch (e.Type) {
         case EventType::Resized:
             resize = true;
+            if (!IsMaximized() && !IsFullScreen()) {
+                videoMode.Width = Width();
+                videoMode.Height = Height();
+            }
             break;
         case EventType::Closed:
             System::Stop();
@@ -185,10 +238,10 @@ void Window::DoEvents() {
         case EventType::LostFocus:
             Unfocus();
             Input::Lock();
+            sfWindow.ShowMouseCursor(true);
             break;
         case EventType::GainedFocus:
             Focus();
-            Input::Unlock();
             break;
         case EventType::MouseLeft:
             break;
