@@ -21,14 +21,14 @@ public:
     void Generate();
 
     Vector3I GetUp(Vector3D p) {
-        p -= width / 2;
+        p -= (width.ToDouble() / 2.0);
         Vector3D a = p.Abs();
         if (a.x > a.y && a.x > a.z) {
-            return Vector3I::AXIS_X * SIGN(a.x);
+            return Vector3I::AXIS_X * SIGN(p.x);
         } else if (a.y > a.z) {
-            return Vector3I::AXIS_Y * SIGN(a.y);
+            return Vector3I::AXIS_Y * SIGN(p.y);
         } else {
-            return Vector3I::AXIS_Z * SIGN(a.z);
+            return Vector3I::AXIS_Z * SIGN(p.z);
         }
     }
 

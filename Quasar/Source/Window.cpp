@@ -83,7 +83,7 @@ extern int64 freq;
 void Window::DoWindowDrawing() {
     sfWindow.SaveGLStates();
 
-    Vector3D p = System::player->noclip ? System::player->Eye() : System::player->pos;
+    Vector3D p = System::player->pos - System::world->width.ToDouble() / 2.0;
     sf::Text text("Position: " + p.ToString(), f, 24);
     text.SetPosition(5, 0);
     sfWindow.Draw(text);
@@ -96,6 +96,10 @@ void Window::DoWindowDrawing() {
 
     text.SetString("FPS: " + str(currentFPS * 2));
     text.SetPosition(5, 30);
+    sfWindow.Draw(text);
+
+    text.SetString("Up: " + System::player->playerUp.ToString());
+    text.SetPosition(5, 60);
     sfWindow.Draw(text);
 
     sfWindow.RestoreGLStates();

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "Window.h"
 #include "System.h"
+#include "Window.h"
 #include "Player.h"
 
 #include "graphics/ModelFactory.h"
@@ -18,6 +18,13 @@ double eyeOffset = 1.7 - PHI;
 Shader* shader;
 
 void Player::Init(Vector3D p) {
+
+    orientation[0] = glm::vec4(1, 0, 0, 0);
+    orientation[1] = glm::vec4(0, 1, 0, 0);
+    orientation[2] = glm::vec4(0, 0, 1, 0);
+
+    playerUp = Vector3I(0, 0, 1);
+
     pos = p;
 
     bb = BoundingBox(-0.3, -0.3, 0, 0.3, 0.3, 1.7);
@@ -130,7 +137,6 @@ void Player::Render() {
             z1->world = m;
             z1->Render();
         }
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
     glLineWidth(2);
     glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
@@ -141,25 +147,52 @@ void Player::Render() {
 
 void Player::Tick() {
     DoInput();
-    DoJump();
 
     UpdateVelocity();
     DoCollision();
     UpdatePosition();
+
+    DoJump();
+
+    DoOrient();
 
     DoBlockPicking();
 
     counter++;
 }
 
+void Player::DoOrient() {
+    Vector3I newUp = System::world->GetUp(pos + ToWorld(Vector3D(0, 0, 0.3)));
+    if (playerUp == newUp) {
+        return;
+    }
+
+    glm::dmat4 oldOrientation = orientation;
+
+    Vector3I rotationAxis = playerUp.Cross(newUp);
+    glm::dmat4 rot = glm::gtc::matrix_transform::rotate(glm::dmat4(), 90.0, glm::dvec3(rotationAxis.ToGlmVec3()));
+    orientation = rot * orientation;
+
+    if (System::world->Intersects(BBox())) {
+        orientation = oldOrientation;
+    } else {
+        playerUp = newUp;
+    }
+}
+
 void Player::UpdateVelocity() {
     if (!noclip) {
-        vel.z -= 0.0008;
+        vel -= System::world->GetUp(pos + ToWorld(Vector3D(0, 0, 0.3))).ToDouble() * 0.0008;
     }
+
+    Vector3D vel = FromWorld(this->vel);
+
     vel += kvec * (inAir && !noclip ? 0.02 : 0.10);
     vel.x *= (inAir && !noclip ? 0.99 : 0.94);
     vel.y *= (inAir && !noclip ? 0.99 : 0.94);
     vel.z *= noclip ? 0.95 : 0.999;
+
+    this->vel = ToWorld(vel);
 }
 
 void Player::DoBlockPicking() {
@@ -173,7 +206,7 @@ void Player::DoBlockPicking() {
         if (Input::MouseRight()) {
             int old = System::world->GetBlock(pickedBlock + side);
             System::world->SetBlock(pickedBlock + side, Block::Test);
-            if (BoundingBox::Block(pickedBlock + side).Intersects(bb.Offset(pos))) {
+            if (BoundingBox::Block(pickedBlock + side).Intersects(BBox())) {
                 System::world->SetBlock(pickedBlock + side, old);
             } else {
                 System::worldRenderer->UpdateBlock(pickedBlock + side);
@@ -196,6 +229,7 @@ void Player::DoBlockPicking() {
 void Player::PickBlock() {
     Vector3D p = Eye();
     Vector3I b = p.Floor();
+    Vector3D dir = ToWorld(this->dir);
     while ((Eye() - p).LengthSquared() < 5 * 5) {
         if (System::world->GetBlock(b) != Block::Air) {
             pickedBlock = b;
@@ -228,7 +262,7 @@ void Player::PickBlock() {
 void Player::DoJump() {
     if (noclip) return;
     if (!inAir && Input::KeyPressed(Key::Space)) {
-        vel.z += 0.05;
+        vel += ToWorld(Vector3D(0, 0, .05));
         inAir = true;
     }
 }
@@ -238,15 +272,18 @@ void Player::DoCollision() {
     Vector3I up = System::world->GetUp(pos);
     bool X, Y, Z;
     X = Y = Z = true;
-    if (System::world->Intersects(bb.Offset(pos + vel.X()))) {
+
+    Vector3D vel = FromWorld(this->vel);
+
+    if (System::world->Intersects(BBox().Offset(ToWorld(vel.X())))) {
         vel.x = 0;
         X = false;
     }
-    if (System::world->Intersects(bb.Offset(pos + vel.Y()))) {
+    if (System::world->Intersects(BBox().Offset(ToWorld(vel.Y())))) {
         vel.y = 0;
         Y = false;
     }
-    if (System::world->Intersects(bb.Offset(pos + vel.Z()))) {
+    if (System::world->Intersects(BBox().Offset(ToWorld(vel.Z())))) {
         inAir = vel.z > 0;
         vel.z = 0;
         Z = false;
@@ -254,28 +291,28 @@ void Player::DoCollision() {
         inAir = true;
     }
 
-    if (X && Y && System::world->Intersects(BBox().Offset(vel.XY()))) {
+    if (X && Y && System::world->Intersects(BBox().Offset(ToWorld(vel.XY())))) {
         if (vel.x < vel.y) {
             vel.x = 0;
         } else {
             vel.y = 0;
         }
     }
-    if (X && Z && System::world->Intersects(BBox().Offset(vel.XZ()))) {
+    if (X && Z && System::world->Intersects(BBox().Offset(ToWorld(vel.XZ())))) {
         if (vel.x < vel.z) {
             vel.x = 0;
         } else {
             vel.z = 0;
         }
     }
-    if (Y && Z && System::world->Intersects(BBox().Offset(vel.YZ()))) {
+    if (Y && Z && System::world->Intersects(BBox().Offset(ToWorld(vel.YZ())))) {
         if (vel.y < vel.z) {
             vel.y = 0;
         } else {
             vel.z = 0;
         }
     }
-    if (X && Y && Z && System::world->Intersects(BBox().Offset(vel))) {
+    if (X && Y && Z && System::world->Intersects(BBox().Offset(this->vel))) {
         if (vel.x < vel.y && vel.x < vel.z) {
             vel.x = 0;
         } else if (vel.y < vel.z) {
@@ -284,6 +321,8 @@ void Player::DoCollision() {
             vel.z = 0;
         }
     }
+
+    this->vel = ToWorld(vel);
 }
 
 double minPitch = -PI_2;
@@ -306,7 +345,7 @@ void Player::DoInput() {
 
     Vector3D right = kdir.Cross(Vector3D::AXIS_Z).Normalize();
 
-    up = right.Cross(dir);
+    cameraUp = right.Cross(dir);
 
     kvec = kdir * (Input::KeyPressed(Key::W) - Input::KeyPressed(Key::S))
            + right * (Input::KeyPressed(Key::D) - Input::KeyPressed(Key::A));

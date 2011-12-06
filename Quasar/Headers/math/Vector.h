@@ -44,8 +44,12 @@ struct Vector3 {
         return Vector3D(*this);
     }
 
-    glm::vec3 ToGlmVec() {
+    glm::vec3 ToGlmVec3() {
         return glm::vec3(x, y, z);
+    }
+
+    glm::vec3 ToGlmVec4() {
+        return glm::vec3(x, y, z, 1);
     }
 
     //---------------- Initializers ----------------
@@ -62,6 +66,10 @@ struct Vector3 {
     //---------------- Comparators ----------------
     bool IsZero()const {
         return x == 0 && y == 0 && z == 0;
+    }
+
+    bool operator==(Vector3<T> o) {
+        return x == o.x && y == o.y && z == o.z;
     }
     
     //---------------- Lengths ----------------

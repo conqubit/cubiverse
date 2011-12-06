@@ -3,6 +3,7 @@
 #include "System.h"
 #include "Window.h"
 #include "graphics/WorldRenderer.h"
+#include "Player.h"
 
 bool             System::running;
 Player*          System::player;
@@ -14,7 +15,6 @@ sf::Clock timer;
 std::ofstream Error;
 
 bool System::Init() {
-
     Error.open("error.txt");
     std::cerr.rdbuf(Error.rdbuf());
     sf::Err().rdbuf(std::cerr.rdbuf());
