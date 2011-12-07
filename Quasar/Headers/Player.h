@@ -10,8 +10,10 @@ private:
 public:
     Vector3D pos, dir, kvec, cameraUp;
     Vector3I playerUp;
+    Vector3D smoothUp;
 
     glm::dmat4 orientation;
+    glm::dmat4 smoothOrientation;
 
     bool noclip;
 
@@ -47,17 +49,27 @@ public:
     ~Player() {
     }
 
-    void Init(Vector3D p);
+    void Init();
     void Shutdown();
     void Tick();
 
     Vector3D ToWorld(Vector3D v) {
-        glm::dvec4 r = orientation * glm::dvec4(v.x, v.y, v.z, 1.0);
+        glm::dvec4 r = orientation * glm::dvec4(v.ToGlmVec4());
+        return Vector3D(r.x, r.y, r.z);
+    }
+
+    Vector3D ToWorldSmooth(Vector3D v) {
+        glm::dvec4 r = smoothOrientation * glm::dvec4(v.ToGlmVec4());
         return Vector3D(r.x, r.y, r.z);
     }
 
     Vector3D FromWorld(Vector3D v) {
         glm::dvec4 r = glm::core::function::matrix::inverse(orientation) * glm::dvec4(v.x, v.y, v.z, 1.0);
+        return Vector3D(r.x, r.y, r.z);
+    }
+
+    Vector3D FromWorldSmooth(Vector3D v) {
+        glm::dvec4 r = glm::core::function::matrix::inverse(smoothOrientation) * glm::dvec4(v.x, v.y, v.z, 1.0);
         return Vector3D(r.x, r.y, r.z);
     }
 
@@ -80,7 +92,7 @@ public:
     }*/
 
     glm::mat4 View() {
-        return glm::lookAt(Eye().ToGlmVec3(), (Eye() + ToWorld(dir)).ToGlmVec3(), ToWorld(cameraUp).ToGlmVec3());
+        return glm::lookAt(Eye().ToGlmVec3(), (Eye() + ToWorldSmooth(dir)).ToGlmVec3(), ToWorldSmooth(cameraUp).ToGlmVec3());
     }
 
     BoundingBox BBox() {
@@ -88,6 +100,6 @@ public:
     }
 
     Vector3D Eye() {
-        return pos + ToWorld(Vector3D(0, 0, eyeHeight));
+        return pos + ToWorldSmooth(Vector3D(0, 0, eyeHeight));
     }
 };

@@ -32,6 +32,29 @@ public:
         }
     }
 
+    Vector3D GetUpSmooth(Vector3D p) {
+        double radius = 8;
+        p -= (width.ToDouble() / 2.0);
+        Vector3D a = p.Abs();
+        int x = 0, y = 1, z = 2;
+        if (a.x > a.y && a.x > a.z) {
+            z = 0; x = 2;
+        } else if (a.y > a.z) {
+            z = 1; y = 2;
+        }
+        a[z] -= radius;
+        if (a[x] > a[z]) {
+            a[x] = a[z];
+        }
+        if (a[y] > a[z]) {
+            a[y] = a[z];
+        }
+        a[x] *= SIGN(p[x]);
+        a[y] *= SIGN(p[y]);
+        a[z] *= SIGN(p[z]);
+        return (p - a).Normalize();
+    }
+
     bool Intersects(const BoundingBox& bb);
 
     int GetBlock(int x, int y, int z) {

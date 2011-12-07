@@ -33,8 +33,6 @@ sf::Font f;
 
 struct WindowState {
     bool maximized;
-    int width;
-    int height;
     int posX;
     int posY;
 };
@@ -42,7 +40,10 @@ struct WindowState {
 WindowState stateBeforeFullscreen;
 
 bool Window::Init() {
-    videoMode = sf::VideoMode(1366, 768, 24);
+
+    sf::VideoMode d = sf::VideoMode::GetDesktopMode();
+
+    videoMode = sf::VideoMode((double)d.Width / PHI, (double)d.Height / PHI, 24);
 
     title = "Quasar";
 
@@ -191,7 +192,7 @@ void Window::ToggleFullscreen() {
     System::worldRenderer->Init(System::world);
     System::worldRenderer->ConstructVisibleChunks();
 
-    System::player->Init(System::player->pos);
+    System::player->Init();
 
     Graphics::things.push_back(System::worldRenderer);
     Graphics::things.push_back(System::player);

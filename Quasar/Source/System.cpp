@@ -59,9 +59,12 @@ bool System::Init() {
     worldRenderer->ConstructVisibleChunks();
 
     player = new Player();
-    Vector3D p = world->width.ToDouble() / 2.0;
-    p.z = world->width.z - 8;
-    player->Init(p);
+    player->pos = world->width.ToDouble() / 2.0;
+    player->pos.z = world->width.z - 8;
+    player->playerUp = Vector3I(0, 0, 1);
+    player->smoothUp = Vector3D(0, 0, 1);
+
+    player->Init();
 
     Graphics::things.push_back(worldRenderer);
     Graphics::things.push_back(player);

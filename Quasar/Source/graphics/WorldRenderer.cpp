@@ -49,16 +49,6 @@ void WorldRenderer::ConstructVisibleChunks() {
     }
 }
 
-enum Side {
-    X0 = 0,
-    X1 = 1,
-    Y0 = 2,
-    Y1 = 3,
-    Z0 = 4,
-    Z1 = 5
-};
-
-
 int inc = 0;
 
 VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
@@ -81,22 +71,22 @@ VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
             continue;
         }
         if (world->GetBlock(p.x + 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, b, Side::X1, p.x + 1, p.y, p.z, 0, 1, 2, 0.85);
+            ConstructFace(mf, b, Vector3I::AXIS_X, p, p.x + 1, p.y, p.z, 0, 1, 2, 0.85);
         }
         if (world->GetBlock(p.x - 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, b, Side::X0, p.x, p.y, p.z, 0, 2, 1, 0.7);
+            ConstructFace(mf, b, -Vector3I::AXIS_X, p, p.x, p.y, p.z, 0, 2, 1, 0.7);
         }
         if (world->GetBlock(p.x, p.y + 1, p.z) == Block::Air) {
-            ConstructFace(mf, b, Side::Y1, p.x, p.y + 1, p.z, 1, 2, 0, 0.8);
+            ConstructFace(mf, b, Vector3I::AXIS_Y, p, p.x, p.y + 1, p.z, 1, 2, 0, 0.8);
         }
         if (world->GetBlock(p.x, p.y - 1, p.z) == Block::Air) {
-            ConstructFace(mf, b, Side::Y0, p.x, p.y, p.z, 1, 0, 2, 0.75);
+            ConstructFace(mf, b, -Vector3I::AXIS_Y, p, p.x, p.y, p.z, 1, 0, 2, 0.75);
         }
         if (world->GetBlock(p.x, p.y, p.z + 1) == Block::Air) {
-            ConstructFace(mf, b, Side::Z1, p.x, p.y, p.z + 1, 2, 0, 1, 1.0);
+            ConstructFace(mf, b, Vector3I::AXIS_Z, p, p.x, p.y, p.z + 1, 2, 0, 1, 1.0);
         }
         if (world->GetBlock(p.x, p.y, p.z - 1) == Block::Air) {
-            ConstructFace(mf, b, Side::Z0, p.x, p.y, p.z, 2, 1, 0, 0.5);
+            ConstructFace(mf, b, -Vector3I::AXIS_Z, p, p.x, p.y, p.z, 2, 1, 0, 0.5);
         }
         numVisibleBlocks += inc;
     }
@@ -113,14 +103,14 @@ VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
     return nullptr;
 }
 
-int GetSliceIndex(int block, int side) {
+int GetTextureIndex(int block, const Vector3I& side, const Vector3I& up) {
     switch (block) {
     case Block::Stone:
         return 0;
     case Block::Dirt:
         return 1;
     case Block::Grass:
-        if (side == Side::Z1) {
+        if (side == up) {
             return 2;
         }
         return 1;
@@ -129,11 +119,12 @@ int GetSliceIndex(int block, int side) {
     }
 }
 
-void WorldRenderer::ConstructFace(ModelFactory& mf, int block, int side, int x, int y, int z, int xi, int yi, int zi, double b) {
+void WorldRenderer::ConstructFace(ModelFactory& mf, int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b) {
     Vector3F v = Vector3F(x, y, z);
+    Vector3I up = System::world->GetUp(p.ToDouble().Offset(0.5) + side.ToDouble() / 2.0);
     ColorF c(b, b, b);
 
-    float tz = (float)GetSliceIndex(block, side) / (float)numBlocks + 1.0f / ((float)numBlocks * 2.0f);
+    float tz = (float)GetTextureIndex(block, side, up) / (float)numBlocks + 1.0f / ((float)numBlocks * 2.0f);
 
     // Degenerate.
     mf.Next().Set("position", v).Set("texcoord", 0, 0, tz);

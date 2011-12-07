@@ -48,8 +48,8 @@ struct Vector3 {
         return glm::vec3(x, y, z);
     }
 
-    glm::vec3 ToGlmVec4() {
-        return glm::vec3(x, y, z, 1);
+    glm::vec4 ToGlmVec4() {
+        return glm::vec4(x, y, z, 1);
     }
 
     //---------------- Initializers ----------------
@@ -68,8 +68,12 @@ struct Vector3 {
         return x == 0 && y == 0 && z == 0;
     }
 
-    bool operator==(Vector3<T> o) {
+    bool operator==(Vector3<T> o)const {
         return x == o.x && y == o.y && z == o.z;
+    }
+
+    bool operator!=(Vector3<T> o)const {
+        return x != o.x || y != o.y || z != o.z;
     }
     
     //---------------- Lengths ----------------
@@ -117,6 +121,10 @@ struct Vector3 {
     }
     
     //---------------- Unitary ----------------
+    Vector3<T> operator+()const {
+        return Vector3<T>(x, y, z);
+    }
+
     Vector3<T> operator-()const {
         return Vector3<T>(-x, -y, -z);
     }
@@ -168,6 +176,15 @@ struct Vector3 {
     }
 
     //---------------- Utilities ----------------
+    double InsideAngle(Vector3<T> v) {
+        return acos(Dot(v) / (Length() * v.Length()));
+    }
+
+    template <typename U>
+    Vector3<T> Offset(U s) {
+        return Vector3<T>(x + s, y + s, z + s);
+    }
+
     Vector3<T> X() {
         return Vector3<T>(x, 0, 0);
     }

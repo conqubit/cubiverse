@@ -44,9 +44,11 @@ void World::Fill(int t, Vector3I a, Vector3I b) {
 }
 
 void World::Generate() {
-    Fill(Block::Stone, Vector3I(16, 16, 16), Vector3I(width.x - 17, width.y - 17, width.z - 17));
-    //Fill(Block::Dirt, Vector3I(16, 16, 81), Vector3I(width.x - 17, width.y - 17, 85));
-    Fill(Block::Grass, Vector3I(16, 16, width.z - 17),Vector3I(width.x - 17, width.y - 17, width.z - 17));
+    Vector3I min(0, 0, 0);
+    Vector3I max = width.Offset(-1);
+    Fill(Block::Grass, min.Offset(32), max.Offset(-32));
+    Fill(Block::Dirt, min.Offset(33), max.Offset(-33));
+    Fill(Block::Stone, min.Offset(37), max.Offset(-37));
 }
 
 bool World::Intersects(const BoundingBox& bb) {

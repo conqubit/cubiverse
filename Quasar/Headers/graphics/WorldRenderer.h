@@ -14,7 +14,7 @@ public:
     void Shutdown();
     void ConstructVisibleChunks();
     VisibleChunk* ConstructVisibleChunk(Chunk* c);
-    static void ConstructFace(ModelFactory& mf, int block, int side, int x, int y, int z, int xi, int yi, int zi, double b);
+    static void ConstructFace(ModelFactory& mf, int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b);
     void UpdateBlock(Vector3I p);
     void UpdateChunk(Chunk* c);
     void Render();

@@ -26,13 +26,12 @@ public:
     static void DoWindowDrawing();
     static void DoResize();
 
+    static void Maximize();
     static void ToggleFullscreen();
 
-    static void Unfocus();
     static void Focus();
-
-	static void Maximize();
-
+    static void Unfocus();
+	
     static bool IsMaximized();
     static bool IsMinimized();
 
