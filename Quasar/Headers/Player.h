@@ -99,7 +99,5 @@ public:
         return BoundingBox(ToWorld(bb.Min()), ToWorld(bb.Max())).Offset(pos);
     }
 
-    Vector3D Eye() {
-        return pos + ToWorldSmooth(Vector3D(0, 0, eyeHeight));
-    }
+    Vector3D Eye();
 };

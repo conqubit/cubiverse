@@ -30,12 +30,24 @@ void Graphics::Shutdown() {
 void Graphics::SetProjection() {
     double aspect = Window::AspectRatio();
     proj = glm::perspective(80.0f, (float)aspect, 0.05f, 250.0f);
-    ortho = glm::ortho(-aspect, aspect, -1.0, 1.0, 0.01, -0.01);
+    ortho = glm::ortho(-aspect, aspect, -1.0, 1.0, 1.0, -1.0);
 }
 
 void Graphics::Render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ClearAll();
     for (int i = 0; i < things.size(); i++) {
         things[i]->Render();
     }
+}
+
+void Graphics::ClearAll() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Graphics::ClearColor() {
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Graphics::ClearDepth() {
+    glClear(GL_DEPTH_BUFFER_BIT);
 }

@@ -13,7 +13,10 @@ public:
     bool Init(World* w);
     void Shutdown();
     void ConstructVisibleChunks();
-    VisibleChunk* ConstructVisibleChunk(Chunk* c);
+    ModelFactory ConstructChunkModelData(Chunk* c);
+
+    VisibleChunk* ConstructNewVisibleChunk(Chunk* c);
+
     static void ConstructFace(ModelFactory& mf, int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b);
     void UpdateBlock(Vector3I p);
     void UpdateChunk(Chunk* c);

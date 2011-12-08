@@ -9,7 +9,6 @@
 
 Model::Model() :
 temp(),
-world(),
 texture(),
 shader(),
 vertexCount(),
@@ -23,11 +22,12 @@ topology(GL_TRIANGLES) {
 Model::~Model() {
 }
 
-bool Model::Init(const ModelFactory& mf) {
+bool Model::Init(const ModelFactory& mf, int buffExtra = 0) {
     shader = mf.shader;
     texture = mf.texture;
     vertexCount = mf.VertexCount();
     indexCount = mf.IndexCount();
+    vertexBufferByteSize = mf.VertexDataByteSize() + buffExtra;
 
     glGenVertexArrays(1, &vertexArrayObject);
 
@@ -35,7 +35,7 @@ bool Model::Init(const ModelFactory& mf) {
 
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mf.VertexDataByteSize(), mf.VertexData(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexBufferByteSize, mf.VertexData(), GL_DYNAMIC_DRAW);
 
     for (int i = 0; i < mf.AttributeCount(); i++) {
         GLuint L = glGetAttribLocation(shader->program, mf.GetAttribute(i).name.c_str());
@@ -59,6 +59,20 @@ bool Model::Init(const ModelFactory& mf) {
     Unbind();
 
     return vertexBuffer /*indexBuffer*/ && shader && vertexArrayObject;
+}
+
+bool Model::Update(const ModelFactory& mf) {
+    if (mf.VertexDataByteSize() <= vertexBufferByteSize) {
+        shader = mf.shader;
+        texture = mf.texture;
+        vertexCount = mf.VertexCount();
+        indexCount = mf.IndexCount();
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataByteSize(), mf.VertexData());
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        return true;
+    }
+    return false;
 }
 
 void Model::Bind() {
@@ -96,6 +110,7 @@ void Model::Render() {
 }
 
 void Model::Shutdown() {
-    glDeleteBuffers(1, &indexBuffer);
+    //glDeleteBuffers(1, &indexBuffer);
     glDeleteBuffers(1, &vertexBuffer);
+    glDeleteVertexArrays(1, &vertexArrayObject);
 }

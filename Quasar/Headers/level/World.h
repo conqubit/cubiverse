@@ -33,7 +33,7 @@ public:
     }
 
     Vector3D GetUpSmooth(Vector3D p) {
-        double radius = 8;
+        double radius = 8.0;
         p -= (width.ToDouble() / 2.0);
         Vector3D a = p.Abs();
         int x = 0, y = 1, z = 2;

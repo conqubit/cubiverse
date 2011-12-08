@@ -32,11 +32,11 @@ public:
     ~BoundingBox() {
     }
 
-    Vector3D Min()const {
+    const Vector3D& Min()const {
         return min;
     }
 
-    Vector3D Max()const {
+    const Vector3D& Max()const {
         return max;
     }
 

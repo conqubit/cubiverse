@@ -45,15 +45,26 @@ void WorldRenderer::Shutdown() {
 
 void WorldRenderer::ConstructVisibleChunks() {
     for (int i = 0; i < world->numChunks; i++) {
-        visibleChunks.push_back(ConstructVisibleChunk(world->chunks[i]));
+        VisibleChunk* vs = ConstructNewVisibleChunk(world->chunks[i]);
+        if (vs) {
+            visibleChunks.push_back(vs);
+        }
     }
 }
 
-int inc = 0;
+VisibleChunk* WorldRenderer::ConstructNewVisibleChunk(Chunk* c) {
+    if (c == nullptr) return nullptr;
+    ModelFactory mf = ConstructChunkModelData(c);
+    if (mf.VertexCount() > 0) {
+        VisibleChunk* vs = new VisibleChunk();
+        vs->chunk = c;
+        vs->UpdateModel(mf);
+        return vs;
+    }
+    return nullptr;
+}
 
-VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
-    if (!c) return nullptr;
-
+ModelFactory WorldRenderer::ConstructChunkModelData(Chunk* c) {
     ModelFactory mf = ModelFactory();
     mf.shader = shader;
     mf.texture = texture;
@@ -61,9 +72,6 @@ VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
     mf.AddAttribute("position", 3);
     mf.AddAttribute("color", 4);
     mf.AddAttribute("texcoord", 3);
-
-    int numVisibleBlocks = 0;
-    inc = 0;
 
     VEC3_RANGE_OFFSET(c->pos, Chunk::DIM_VEC) {
         int b = world->GetBlock(p);
@@ -88,19 +96,8 @@ VisibleChunk* WorldRenderer::ConstructVisibleChunk(Chunk* c) {
         if (world->GetBlock(p.x, p.y, p.z - 1) == Block::Air) {
             ConstructFace(mf, b, -Vector3I::AXIS_Z, p, p.x, p.y, p.z, 2, 1, 0, 0.5);
         }
-        numVisibleBlocks += inc;
     }
-    if (numVisibleBlocks > 0) {
-        Model* m = mf.Create();
-        if (!m) {
-            return nullptr;
-        }
-        VisibleChunk* vc = new VisibleChunk();
-        vc->chunk = c;
-        vc->model = m;
-        return vc;
-    }
-    return nullptr;
+    return mf;
 }
 
 int GetTextureIndex(int block, const Vector3I& side, const Vector3I& up) {
@@ -140,8 +137,6 @@ void WorldRenderer::ConstructFace(ModelFactory& mf, int block, const Vector3I& s
 
     // Degenerate.
     mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi]).Set("texcoord", 0, 0, tz);
-
-    inc = 1;
 }
 
 void WorldRenderer::UpdateBlock(Vector3I p) {
@@ -161,17 +156,19 @@ void WorldRenderer::UpdateChunk(Chunk* c) {
     int i;
     for (i = 0; i < visibleChunks.size(); i++) {
         VisibleChunk* vc = visibleChunks[i];
-        if (!vc) continue;
 
-        if (vc->chunk != c) continue;
-        vc->Shutdown();
-        delete vc;
+        if (!vc || vc->chunk != c) continue;
 
-        visibleChunks[i] = ConstructVisibleChunk(c);
+        ModelFactory mf = ConstructChunkModelData(c);
+        vc->UpdateModel(mf);
+
         return;
     }
     if (i == visibleChunks.size()) {
-        visibleChunks.push_back(ConstructVisibleChunk(c));
+        VisibleChunk* vs = ConstructNewVisibleChunk(c);
+        if (vs) {
+            visibleChunks.push_back(vs);
+        }
     }
 }
 

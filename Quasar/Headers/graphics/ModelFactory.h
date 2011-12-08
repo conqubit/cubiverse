@@ -32,11 +32,8 @@ public:
     GLenum topology;
 
     ModelFactory() :
-    vertexData(),
-    indices(),
     stride(),
     pos(),
-    attributes(),
 
     shader(),
     texture(),
@@ -104,11 +101,12 @@ public:
         return *this;
     }
 
-    ModelFactory& Set(const string& name, const Vector3F& v) {
+    template <typename U>
+    ModelFactory& Set(const string& name, const Vector3<U>& v) {
         const Attribute& attr = GetAttribute(name);
-        vertexData[pos + attr.offset + 0] = v.x;
-        vertexData[pos + attr.offset + 1] = v.y;
-        vertexData[pos + attr.offset + 2] = v.z;
+        vertexData[pos + attr.offset + 0] = (float)v.x;
+        vertexData[pos + attr.offset + 1] = (float)v.y;
+        vertexData[pos + attr.offset + 2] = (float)v.z;
         return *this;
     }
 
@@ -160,10 +158,10 @@ public:
         return (int*)indices.data();
     }
 
-    Model* Create()const {
+    Model* Create(int buffExtra = 0)const {
         Model* m = new Model();
         m->topology = topology;
-        if (!m->Init(*this)) {
+        if (!m->Init(*this, buffExtra)) {
             delete m;
             return nullptr;
         }
@@ -174,5 +172,53 @@ public:
         vertexData.clear();
         indices.clear();
         pos = -stride;
+    }
+
+    static Model* CreateWireframeDebugBox(const BoundingBox& b, const ColorF& color, Shader* shader) {
+        ModelFactory mf;
+        mf.shader = shader;
+        mf.topology = GL_LINES;
+        mf.AddAttribute("position", 3);
+        mf.AddAttribute("color", 4);
+
+        mf.Next().Set("position", b.Min()).Set("color", color);
+        mf.Next().Set("position", b.Max().x, b.Min().y, b.Min().z).Set("color", color);
+
+        mf.Next().Set("position", b.Max().x, b.Min().y, b.Min().z).Set("color", color);
+        mf.Next().Set("position", b.Max().x, b.Max().y, b.Min().z).Set("color", color);
+
+        mf.Next().Set("position", b.Max().x, b.Max().y, b.Min().z).Set("color", color);
+        mf.Next().Set("position", b.Min().x, b.Max().y, b.Min().z).Set("color", color);
+
+        mf.Next().Set("position", b.Min().x, b.Max().y, b.Min().z).Set("color", color);
+        mf.Next().Set("position", b.Min()).Set("color", color);
+
+
+        mf.Next().Set("position", b.Min().x, b.Min().y, b.Max().z).Set("color", color);
+        mf.Next().Set("position", b.Max().x, b.Min().y, b.Max().z).Set("color", color);
+
+        mf.Next().Set("position", b.Max().x, b.Min().y, b.Max().z).Set("color", color);
+        mf.Next().Set("position", b.Max().x, b.Max().y, b.Max().z).Set("color", color);
+
+        mf.Next().Set("position", b.Max().x, b.Max().y, b.Max().z).Set("color", color);
+        mf.Next().Set("position", b.Min().x, b.Max().y, b.Max().z).Set("color", color);
+
+        mf.Next().Set("position", b.Min().x, b.Max().y, b.Max().z).Set("color", color);
+        mf.Next().Set("position", b.Min().x, b.Min().y, b.Max().z).Set("color", color);
+
+
+        mf.Next().Set("position", b.Min()).Set("color", color);
+        mf.Next().Set("position", b.Min().x, b.Min().y, b.Max().z).Set("color", color);
+
+        mf.Next().Set("position", b.Max().x, b.Min().y, b.Min().z).Set("color", color);
+        mf.Next().Set("position", b.Max().x, b.Min().y, b.Max().z).Set("color", color);
+
+        mf.Next().Set("position", b.Max().x, b.Max().y, b.Min().z).Set("color", color);
+        mf.Next().Set("position", b.Max().x, b.Max().y, b.Max().z).Set("color", color);
+
+        mf.Next().Set("position", b.Min().x, b.Max().y, b.Min().z).Set("color", color);
+        mf.Next().Set("position", b.Min().x, b.Max().y, b.Max().z).Set("color", color);
+        
+        return mf.Create();
     }
 };

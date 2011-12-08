@@ -176,12 +176,12 @@ struct Vector3 {
     }
 
     //---------------- Utilities ----------------
-    double InsideAngle(Vector3<T> v) {
+    double InsideAngle(Vector3<T> v)const {
         return acos(Dot(v) / (Length() * v.Length()));
     }
 
     template <typename U>
-    Vector3<T> Offset(U s) {
+    Vector3<T> Offset(U s)const {
         return Vector3<T>(x + s, y + s, z + s);
     }
 
@@ -189,35 +189,35 @@ struct Vector3 {
         return Vector3<T>(x, 0, 0);
     }
 
-    Vector3<T> Y() {
+    Vector3<T> Y()const {
         return Vector3<T>(0, y, 0);
     }
 
-    Vector3<T> Z() {
+    Vector3<T> Z()const {
         return Vector3<T>(0, 0, z);
     }
 
-    Vector3<T> XY() {
+    Vector3<T> XY()const {
         return Vector3<T>(x, y, 0);
     }
 
-    Vector3<T> YZ() {
+    Vector3<T> YZ()const {
         return Vector3<T>(0, y, z);
     }
 
-    Vector3<T> XZ() {
+    Vector3<T> XZ()const {
         return Vector3<T>(x, 0, z);
     }
 
-    Vector3I Floor() {
+    Vector3I Floor()const {
         return Vector3I(floor(x), floor(y), floor(z));
     }
 
-    Vector3I Ceil() {
+    Vector3I Ceil()const {
         return Vector3I(ceil(x), ceil(y), ceil(z));
     }
 
-    Vector3<T> Abs() {
+    Vector3<T> Abs()const {
         return Vector3<T>(abs(x), abs(y), abs(z));
     }
 };
@@ -237,19 +237,19 @@ const Vector3<T> Vector3<T>::AXIS[3] = { Vector3<T>::AXIS_X,
 
 // Vector3I looping macros for convenience and readability.
 #define VEC3_RANGE(vec) \
-    Vector3I p, _v = vec; \
+    Vector3I p, const& _v = vec; \
     for(p.x = 0; p.x < _v.x; p.x++) \
     for(p.y = 0; p.y < _v.y; p.y++) \
     for(p.z = 0; p.z < _v.z; p.z++)
 
 #define VEC3_RANGE_AB(start, end) \
-    Vector3I p, _s = start, _e = end; \
+    Vector3I p, const& _s = start, const&  _e = end; \
     for(p.x = _s.x; p.x <= _e.x; p.x++) \
     for(p.y = _s.y; p.y <= _e.y; p.y++) \
     for(p.z = _s.z; p.z <= _e.z; p.z++)
 
 #define VEC3_RANGE_OFFSET(off, vec) \
-    Vector3I p, _o = off, _v = _o + vec; \
+    Vector3I p, const& _o = off, const& _v = _o + vec; \
     for(p.x = _o.x; p.x < _v.x; p.x++) \
     for(p.y = _o.y; p.y < _v.y; p.y++) \
     for(p.z = _o.z; p.z < _v.z; p.z++)

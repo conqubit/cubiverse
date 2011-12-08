@@ -17,6 +17,8 @@ double eyeOffset = 1.7 - PHI;
 
 Shader* shader;
 
+Model* wireframe;
+
 void Player::Init() {
     bb = BoundingBox(-0.3, -0.3, 0, 0.3, 0.3, 1.7);
     height = 1.7;
@@ -88,6 +90,8 @@ void Player::Init() {
     
     cursor = mf.Create();
     cursor->temp = true;
+
+    wireframe = ModelFactory::CreateWireframeDebugBox(bb, ColorF(1, 0, 0, 1), shader);
 }
 
 void Player::Shutdown() {
@@ -130,10 +134,18 @@ void Player::Render() {
             z1->Render();
         }
     }
+
+    glLineWidth(4);
+    wireframe->world = glm::translate(glm::mat4(), pos.ToGlmVec3()) * glm::mat4(orientation);
+    //wireframe->Render();
+
+    Graphics::ClearDepth();
+
     glLineWidth(2);
     glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
     cursor->Render();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glLineWidth(1);
 }
 
@@ -150,11 +162,11 @@ void Player::Tick() {
 
     DoBlockPicking();
 
-    counter++;
+    counter += 5;
 }
 
 void Player::DoOrient() {
-    if (noclip) return;
+    //if (noclip) return;
     Vector3I newUp = System::world->GetUp(pos);
 
     if (playerUp != newUp) {
@@ -186,7 +198,6 @@ void Player::DoOrient() {
 
 void Player::UpdateVelocity() {
     if (!noclip) {
-        print(inAir);
         if (inAir && System::world->GetUp(pos) == playerUp) {
             vel -= (System::world->GetUpSmooth(pos).ToDouble() * 0.0008);
         } else {
@@ -194,7 +205,7 @@ void Player::UpdateVelocity() {
         }
     }
 
-    vel += ToWorldSmooth(kvec * (inAir && !noclip ? 0.02 : 0.10));
+    vel += ToWorldSmooth(kvec * (inAir && !noclip ? 0.015 : 0.10));
 
     Vector3D vel = FromWorld(this->vel);
 
@@ -301,31 +312,31 @@ void Player::DoCollision() {
         inAir = true;
     }
 
-    if (X && Y && System::world->Intersects(BBox().Offset(ToWorld(vel.XY())))) {
-        if (vel.x < vel.y) {
-            vel.x = 0;
-        } else {
-            vel.y = 0;
-        }
-    }
-    if (X && Z && System::world->Intersects(BBox().Offset(ToWorld(vel.XZ())))) {
-        if (vel.x < vel.z) {
-            vel.x = 0;
-        } else {
-            vel.z = 0;
-        }
-    }
-    if (Y && Z && System::world->Intersects(BBox().Offset(ToWorld(vel.YZ())))) {
-        if (vel.y < vel.z) {
-            vel.y = 0;
-        } else {
-            vel.z = 0;
-        }
-    }
+    Vector3D avel = vel.Abs();
+
+
     if (X && Y && Z && System::world->Intersects(BBox().Offset(this->vel))) {
-        if (vel.x < vel.y && vel.x < vel.z) {
+        if (avel.x < avel.y && avel.x < avel.z) {
             vel.x = 0;
-        } else if (vel.y < vel.z) {
+        } else if (avel.y < avel.z) {
+            vel.y = 0;
+        } else {
+            vel.z = 0;
+        }
+    } else if (X && Y && System::world->Intersects(BBox().Offset(ToWorld(vel.XY())))) {
+        if (avel.x < avel.y) {
+            vel.x = 0;
+        } else {
+            vel.y = 0;
+        }
+    } else if (X && Z && System::world->Intersects(BBox().Offset(ToWorld(vel.XZ())))) {
+        if (avel.x < avel.z) {
+            vel.x = 0;
+        } else {
+            vel.z = 0;
+        }
+    } else if (Y && Z && System::world->Intersects(BBox().Offset(ToWorld(vel.YZ())))) {
+        if (avel.y < avel.z) {
             vel.y = 0;
         } else {
             vel.z = 0;
@@ -365,4 +376,19 @@ void Player::DoInput() {
     }
 
     kvec = kvec.Normalize(1.0 / (Input::KeyPressed(Key::LControl) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(Key::LShift) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
+}
+
+Vector3D Player::Eye() {
+    return pos + ToWorldSmooth(Vector3D(0, 0, eyeHeight));
+    /*BoundingBox bb = BoundingBox(-0.3, -0.3, -0.3, 0.3, 0.3, 0.3);
+
+    if (System::world->Intersects(bb.Offset(eye))) {
+        Vector3D delta = ((pos + ToWorld(Vector3D(0, 0, eyeHeight))) - eye);
+        double lenSq = delta.LengthSquared();
+        Vector3D step = delta / 500.0;
+        Vector3D stepper;
+        while (System::world->Intersects(bb.Offset(eye + (stepper += step))) && stepper.LengthSquared() < lenSq);
+        eye += stepper;
+    }
+    return eye;*/
 }

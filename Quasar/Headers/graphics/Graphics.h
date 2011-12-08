@@ -12,4 +12,8 @@ public:
     static void Shutdown();
     static void Render();
     static void SetProjection();
+
+    static void ClearAll();
+    static void ClearColor();
+    static void ClearDepth();
 };
