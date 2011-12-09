@@ -12,8 +12,9 @@ IDirectInput8W* Input::directInput;
 IDirectInputDevice8W* Input::mouse;
 
 bool Input::locked = false;
+bool Input::directInputInitialized = false;
 
-bool Input::Init() {
+bool Input::InitDirectInput() {
     HRESULT r;
 
     r = DirectInput8Create((HINSTANCE)GetWindowLong(Window::SystemHandle(), GWL_HINSTANCE), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, NULL);
@@ -31,6 +32,8 @@ bool Input::Init() {
     r = mouse->Acquire();
     if (FAILED(r)) return false;
 
+
+    directInputInitialized = true;
     return true;
 }
 
@@ -38,6 +41,8 @@ void Input::Shutdown() {
     mouse->Unacquire();
     mouse->Release();
     directInput->Release();
+
+    directInputInitialized = false;
 }
 
 void Input::Lock() {
@@ -87,6 +92,10 @@ int Input::DeltaMy() {
 DIMOUSESTATE mouseState;
 
 bool Input::ReadMouse() {
+    if (!directInputInitialized && !InitDirectInput()) {
+        return false;
+    }
+
     HRESULT r;
 
     r = mouse->GetDeviceState(sizeof(mouseState), (void*)&mouseState);

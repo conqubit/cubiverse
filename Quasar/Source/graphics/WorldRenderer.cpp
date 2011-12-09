@@ -6,13 +6,15 @@
 #include "graphics/WorldRenderer.h"
 
 WorldRenderer::WorldRenderer() :
-world(), visibleChunks(), shader(), texture() {
+world(), shader(), texture() {
 }
 
 WorldRenderer::~WorldRenderer() {
 }
 
 int numBlocks = 4;
+
+ModelFactory mf;
 
 bool WorldRenderer::Init(World* w) {
     world = w;
@@ -29,6 +31,13 @@ bool WorldRenderer::Init(World* w) {
 
     texture = new Texture();
     texture->Init2DArray(numBlocks, image.GetWidth(), image.GetWidth(), (byte*)image.GetPixelsPtr());
+
+    mf.shader = shader;
+    mf.texture = texture;
+    mf.topology = GL_TRIANGLE_STRIP;
+    mf.AddAttribute("position", 3);
+    mf.AddAttribute("color", 4);
+    mf.AddAttribute("texcoord", 3);
 
     return true;
 }
@@ -53,8 +62,8 @@ void WorldRenderer::ConstructVisibleChunks() {
 }
 
 VisibleChunk* WorldRenderer::ConstructNewVisibleChunk(Chunk* c) {
-    if (c == nullptr) return nullptr;
-    ModelFactory mf = ConstructChunkModelData(c);
+    if (!c) return nullptr;
+    ConstructChunkModelData(c);
     if (mf.VertexCount() > 0) {
         VisibleChunk* vs = new VisibleChunk();
         vs->chunk = c;
@@ -64,15 +73,8 @@ VisibleChunk* WorldRenderer::ConstructNewVisibleChunk(Chunk* c) {
     return nullptr;
 }
 
-ModelFactory WorldRenderer::ConstructChunkModelData(Chunk* c) {
-    ModelFactory mf = ModelFactory();
-    mf.shader = shader;
-    mf.texture = texture;
-    mf.topology = GL_TRIANGLE_STRIP;
-    mf.AddAttribute("position", 3);
-    mf.AddAttribute("color", 4);
-    mf.AddAttribute("texcoord", 3);
-
+void WorldRenderer::ConstructChunkModelData(Chunk* c) {
+    mf.Clear();
     VEC3_RANGE_OFFSET(c->pos, Chunk::DIM_VEC) {
         int b = world->GetBlock(p);
         if (b == Block::Air) {
@@ -97,7 +99,6 @@ ModelFactory WorldRenderer::ConstructChunkModelData(Chunk* c) {
             ConstructFace(mf, b, -Vector3I::AXIS_Z, p, p.x, p.y, p.z, 2, 1, 0, 0.5);
         }
     }
-    return mf;
 }
 
 int GetTextureIndex(int block, const Vector3I& side, const Vector3I& up) {
@@ -114,6 +115,7 @@ int GetTextureIndex(int block, const Vector3I& side, const Vector3I& up) {
     case Block::Test:
         return 3;
     }
+    return 0;
 }
 
 void WorldRenderer::ConstructFace(ModelFactory& mf, int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b) {
@@ -124,7 +126,7 @@ void WorldRenderer::ConstructFace(ModelFactory& mf, int block, const Vector3I& s
     float tz = (float)GetTextureIndex(block, side, up) / (float)numBlocks + 1.0f / ((float)numBlocks * 2.0f);
 
     // Degenerate.
-    mf.Next().Set("position", v).Set("texcoord", 0, 0, tz);
+    mf.Next().Set("position", v);
 
     mf.Next().Set("position", v)
              .Set("color", c).Set("texcoord", 0, 0, tz);
@@ -136,7 +138,7 @@ void WorldRenderer::ConstructFace(ModelFactory& mf, int block, const Vector3I& s
              .Set("color", c).Set("texcoord", 1, 1, tz);
 
     // Degenerate.
-    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi]).Set("texcoord", 0, 0, tz);
+    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi]);
 }
 
 void WorldRenderer::UpdateBlock(Vector3I p) {
@@ -159,7 +161,7 @@ void WorldRenderer::UpdateChunk(Chunk* c) {
 
         if (!vc || vc->chunk != c) continue;
 
-        ModelFactory mf = ConstructChunkModelData(c);
+        ConstructChunkModelData(c);
         vc->UpdateModel(mf);
 
         return;

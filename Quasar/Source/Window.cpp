@@ -185,8 +185,6 @@ void Window::ToggleFullscreen() {
 
     sfWindow.ShowMouseCursor(Input::locked);
 
-    Input::Init();
-
     Graphics::Init();
 
     System::worldRenderer->Init(System::world);

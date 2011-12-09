@@ -13,7 +13,7 @@ public:
     bool Init(World* w);
     void Shutdown();
     void ConstructVisibleChunks();
-    ModelFactory ConstructChunkModelData(Chunk* c);
+    void ConstructChunkModelData(Chunk* c);
 
     VisibleChunk* ConstructNewVisibleChunk(Chunk* c);
 

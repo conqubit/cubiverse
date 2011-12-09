@@ -14,8 +14,12 @@ sf::Clock timer;
 
 std::ofstream Error;
 
+#include "btBulletDynamicsCommon.h"
+
 bool System::Init() {
-    Error.open("error.txt");
+    btBoxShape b = btBoxShape(btVector3(1, 1, 1));
+
+    Error.open("error.txt", std::ios::app);
     std::cerr.rdbuf(Error.rdbuf());
     sf::Err().rdbuf(std::cerr.rdbuf());
 
@@ -36,11 +40,6 @@ bool System::Init() {
     }
 
     Graphics::Init();
-
-    if (!Input::Init()) {
-        printerr("DirectInput failed to acquire mouse.");
-        return false;
-    }
 
     Window::sfWindow.ShowMouseCursor(false);
 

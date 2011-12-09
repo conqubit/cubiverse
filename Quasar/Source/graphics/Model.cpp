@@ -35,7 +35,8 @@ bool Model::Init(const ModelFactory& mf, int buffExtra = 0) {
 
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertexBufferByteSize, mf.VertexData(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexBufferByteSize, nullptr, GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataByteSize(), mf.VertexData());
 
     for (int i = 0; i < mf.AttributeCount(); i++) {
         GLuint L = glGetAttribLocation(shader->program, mf.GetAttribute(i).name.c_str());

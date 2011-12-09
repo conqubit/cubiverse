@@ -9,7 +9,7 @@
 
 class Input {
 public:
-    static bool Init();
+    static bool InitDirectInput();
     static void Shutdown();
     static void SetMousePosition(int x, int y);
     static bool KeyPressed(Key key);
@@ -26,6 +26,8 @@ public:
     static int mx, my;
     static int dmx, dmy;
     static bool locked;
+
+    static bool directInputInitialized;
 
     static IDirectInput8W* directInput;
     static IDirectInputDevice8W* mouse;

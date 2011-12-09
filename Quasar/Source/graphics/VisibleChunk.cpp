@@ -21,7 +21,7 @@ void VisibleChunk::UpdateModel(const ModelFactory& mf) {
     }
 
     if (!model->Update(mf)) {
-        model->Shutdown();
+        if (model) model->Shutdown();
         model = mf.Create(buffExtra);
     }
 }

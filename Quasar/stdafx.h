@@ -49,13 +49,13 @@ string str(T x) {
 // General purpose stdout printing function.
 template <typename T>
 void print(T x) {
-    std::cout << x << '\n';
+    std::cout << x << std::endl;
 }
 
 // General purpose stderr printing function.
 template <typename T>
 void printerr(T x) {
-    std::cerr << x << '\n';
+    std::cerr << x << std::endl;
 }
 
 // Custom math header file.

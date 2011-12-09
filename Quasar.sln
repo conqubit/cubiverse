@@ -2,17 +2,58 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quasar", "Quasar\Quasar.vcxproj", "{60B677E0-0C69-4211-8563-B2E3F32D9A61}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F436EA04-8535-40B6-99CC-C0494E586380} = {F436EA04-8535-40B6-99CC-C0494E586380}
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739} = {3A7C531C-F13E-4662-AFD1-F6B9121F6739}
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301} = {2C11A8BD-3074-4701-BCE5-E073B28BC301}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinearMath", "..\bullet-2.79\lib\src\LinearMath\LinearMath.vcxproj", "{F436EA04-8535-40B6-99CC-C0494E586380}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletDynamics", "..\bullet-2.79\lib\src\BulletDynamics\BulletDynamics.vcxproj", "{3A7C531C-F13E-4662-AFD1-F6B9121F6739}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletCollision", "..\bullet-2.79\lib\src\BulletCollision\BulletCollision.vcxproj", "{2C11A8BD-3074-4701-BCE5-E073B28BC301}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		MinSizeRel|Win32 = MinSizeRel|Win32
 		Release|Win32 = Release|Win32
+		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.Debug|Win32.ActiveCfg = Debug|Win32
 		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.Debug|Win32.Build.0 = Debug|Win32
+		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.MinSizeRel|Win32.Build.0 = Release|Win32
 		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.Release|Win32.ActiveCfg = Release|Win32
 		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.Release|Win32.Build.0 = Release|Win32
+		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{60B677E0-0C69-4211-8563-B2E3F32D9A61}.RelWithDebInfo|Win32.Build.0 = Release|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.Debug|Win32.Build.0 = Debug|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.Release|Win32.ActiveCfg = Release|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.Release|Win32.Build.0 = Release|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{F436EA04-8535-40B6-99CC-C0494E586380}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.Debug|Win32.Build.0 = Debug|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.Release|Win32.ActiveCfg = Release|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.Release|Win32.Build.0 = Release|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{3A7C531C-F13E-4662-AFD1-F6B9121F6739}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.Debug|Win32.Build.0 = Debug|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.Release|Win32.ActiveCfg = Release|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.Release|Win32.Build.0 = Release|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{2C11A8BD-3074-4701-BCE5-E073B28BC301}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
