@@ -106,6 +106,7 @@
     <ClInclude Include="Headers\level\Block.h" />
     <ClInclude Include="Headers\level\Chunk.h" />
     <ClInclude Include="Headers\level\World.h" />
+    <ClInclude Include="Headers\Logger.h" />
     <ClInclude Include="Headers\math\BoundingBox.h" />
     <ClInclude Include="Headers\math\Color.h" />
     <ClInclude Include="Headers\math\Math.h" />

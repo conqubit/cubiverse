@@ -9,6 +9,7 @@
 #include "level/World.h"
 #include "Input.h"
 #include "Player.h"
+#include "Logger.h"
 
 class System {
 public:
@@ -16,6 +17,7 @@ public:
     static Player*          player;
     static World*           world;
     static WorldRenderer*   worldRenderer;
+    static FileLogger       errorLog;
 
     static bool Init();
     static void Shutdown();

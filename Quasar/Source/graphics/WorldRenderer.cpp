@@ -25,12 +25,13 @@ bool WorldRenderer::Init(World* w) {
 
     sf::Image image;
 
-    if (!image.LoadFromFile("res/blocks2.png")) {
+    if (!image.LoadFromFile("res/blocks.png")) {
         return false;
     }
 
-    texture = new Texture();
-    texture->Init2DArray(numBlocks, image.GetWidth(), image.GetWidth(), (byte*)image.GetPixelsPtr());
+    int dim = image.GetWidth();
+
+    texture = Texture::Create3DTexture(dim, dim, image.GetHeight() / dim, (byte*)image.GetPixelsPtr());
 
     mf.shader = shader;
     mf.texture = texture;

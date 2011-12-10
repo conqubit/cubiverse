@@ -4,6 +4,7 @@ class Texture {
 public:
     int width;
     int height;
+    int depth;
 
     GLenum type;
     GLuint texture;
@@ -12,10 +13,11 @@ public:
     Texture();
     ~Texture();
 
-    bool Init(const string& file);
     void Shutdown();
 
     void Bind();
     void Unbind();
-    bool Init2DArray(int count, int width, int height, byte* ptr);
+
+    static Texture* Create2DTexture(const string& file);
+    static Texture* Create3DTexture(int count, int width, int height, byte* data);
 };

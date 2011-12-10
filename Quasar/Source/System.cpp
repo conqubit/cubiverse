@@ -9,19 +9,22 @@ bool             System::running;
 Player*          System::player;
 World*           System::world;
 WorldRenderer*   System::worldRenderer;
+FileLogger       System::errorLog;
 
 sf::Clock timer;
 
-std::ofstream Error;
+#include "Logger.h"
 
 #include "btBulletDynamicsCommon.h"
 
 bool System::Init() {
     btBoxShape b = btBoxShape(btVector3(1, 1, 1));
 
-    Error.open("error.txt", std::ios::app);
-    std::cerr.rdbuf(Error.rdbuf());
-    sf::Err().rdbuf(std::cerr.rdbuf());
+    errorLog.SetPath("error.txt");
+    errorLog.EnableAppend();
+
+    errorLog.AddInput(std::cerr);
+    errorLog.AddInput(sf::Err());
 
     srand((unsigned int)time(nullptr));
 
