@@ -171,8 +171,8 @@ struct Vector3 {
         return x /= s, y /= s, z /= s, *this;
     }
 
-    string ToString()const {
-        return '{' + str(x) + ", " + str(y) + ", " + str(z) + '}';
+    string ToString(int prec = -1)const {
+        return '{' + str(x, prec) + ", " + str(y, prec) + ", " + str(z, prec) + '}';
     }
 
     //---------------- Utilities ----------------

@@ -50,6 +50,7 @@ public:
     }
 
     void Init();
+    void InitGraphics();
     void Shutdown();
     void Tick();
 

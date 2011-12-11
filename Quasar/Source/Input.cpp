@@ -17,7 +17,7 @@ bool Input::directInputInitialized = false;
 bool Input::InitDirectInput() {
     HRESULT r;
 
-    r = DirectInput8Create((HINSTANCE)GetWindowLong(Window::SystemHandle(), GWL_HINSTANCE), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, NULL);
+    r = DirectInput8Create((HINSTANCE)GetWindowLongPtr(Window::SystemHandle(), GWLP_HINSTANCE), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, NULL);
     if (FAILED(r)) return false;
 
     r = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);

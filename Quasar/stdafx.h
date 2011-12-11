@@ -8,7 +8,6 @@
 #include <time.h>
 #include <malloc.h>
 #include <memory.h>
-#include <stdint.h>
 
 // C++ header files.
 #include <string>
@@ -16,6 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cstdint>
 
 #include <GL/glew.h>
 
@@ -25,12 +25,16 @@
 #include <SFML/Graphics.hpp>
 
 // Integer typedefs for convenience and readability.
-typedef uint8_t  byte;
-typedef int8_t   sbyte;
-typedef uint16_t ushort;
-typedef uint32_t uint;
-typedef int64_t  int64;
-typedef uint64_t uint64;
+typedef unsigned char          byte;
+typedef unsigned short         ushort;
+typedef unsigned int           uint;
+
+typedef std::int16_t           int16;
+typedef std::uint16_t          uint16;
+typedef std::int32_t           int32;
+typedef std::uint32_t          uint32;
+typedef std::int64_t           int64;
+typedef std::uint64_t          uint64;
 
 // Miscellaneous typedefs for convenience and readability.
 typedef std::string string;
@@ -39,9 +43,9 @@ typedef sf::Event::EventType EventType;
 
 // General purpose string conversion.
 template <typename T>
-string str(T x) {
+string str(T x, int prec = -1) {
     std::stringstream ss;
-    ss.precision(2);
+    if (prec != -1) ss.precision(prec);
     ss << std::fixed << x;
     return ss.str();
 }

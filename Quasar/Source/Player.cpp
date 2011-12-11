@@ -19,16 +19,49 @@ Shader* shader;
 
 Model* wireframe;
 
+#include <btBulletDynamicsCommon.h>
+
+btCollisionShape* blockShape;
+btRigidBody::btRigidBodyConstructionInfo* blockBodyInfo;
+
+btRigidBody* body;
+btMotionState* playerMotionState;
+btDynamicsWorld* dynamicsWorld;
+
 void Player::Init() {
     bb = BoundingBox(-0.3, -0.3, 0, 0.3, 0.3, 1.7);
     height = 1.7;
     eyeHeight = height - eyeOffset;
 
+    btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+ 
+    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+ 
+    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+
+    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+ 
+    btCollisionShape* playerShape = new btCylinderShapeZ(btVector3(0.3, 0.3, height));
+    playerShape->calculateLocalInertia(1.0, btVector3(0, 0, 0));
+
+    playerMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(pos.x, pos.y, pos.z)));
+
+    btRigidBody::btRigidBodyConstructionInfo playerRigidBodyCI(1.0, playerMotionState, playerShape);
+
+    body = new btRigidBody(playerRigidBodyCI);
+
+    body->setAngularFactor(0);
+
+    dynamicsWorld->addRigidBody(body);
+}
+
+void Player::InitGraphics() {
     shader = new Shader();
     shader->Init("res/color.c.v.glsl", "res/color.c.f.glsl");
 
     // Block picking outline.
-    ModelFactory mf = ModelFactory();
+    ModelFactory mf;
     mf.AddAttribute("position", 3);
     mf.AddAttribute("color", 4);
 

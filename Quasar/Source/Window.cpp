@@ -121,9 +121,11 @@ extern int64 freq;
 void Window::DoWindowDrawing() {
     sfWindow.SaveGLStates();
 
+    double factor = (double)Height() / 800.0;
+
     Vector3D p = System::player->pos - System::world->width.ToDouble() / 2.0;
-    sf::Text text("Position: " + p.ToString(), f, 24);
-    text.SetPosition(5, 0);
+    sf::Text text("Position: " + p.ToString(2), f, 20 * factor);
+    text.SetPosition(5 * factor, 0);
     sfWindow.Draw(text);
 
     if (fpsTicks >= freq / 2) {
@@ -133,11 +135,11 @@ void Window::DoWindowDrawing() {
     }
 
     text.SetString("FPS: " + str(currentFPS * 2));
-    text.SetPosition(5, 30);
+    text.SetPosition(5 * factor, 30 * factor);
     sfWindow.Draw(text);
 
     text.SetString("Up: " + System::player->playerUp.ToString());
-    text.SetPosition(5, 60);
+    text.SetPosition(5 * factor, 60 * factor);
     sfWindow.Draw(text);
 
     sfWindow.RestoreGLStates();
@@ -163,6 +165,7 @@ void Window::ToggleFullscreen() {
     Graphics::Shutdown();
     Input::Shutdown();
     resize = true;
+
     if (fs) {
         stateBeforeFullscreen.maximized = IsMaximized();
         stateBeforeFullscreen.posX = PosX();
@@ -170,7 +173,6 @@ void Window::ToggleFullscreen() {
         sfWindow.Create(sf::VideoMode::GetFullscreenModes()[0], title, sf::Style::Fullscreen, contextSettings);
     } else {
         sfWindow.Create(videoMode, title, style, contextSettings);
-
         if (stateBeforeFullscreen.maximized) {
             Maximize();
         } else {
@@ -190,7 +192,7 @@ void Window::ToggleFullscreen() {
     System::worldRenderer->Init(System::world);
     System::worldRenderer->ConstructVisibleChunks();
 
-    System::player->Init();
+    System::player->InitGraphics();
 
     Graphics::things.push_back(System::worldRenderer);
     Graphics::things.push_back(System::player);

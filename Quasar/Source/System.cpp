@@ -67,6 +67,7 @@ bool System::Init() {
     player->smoothUp = Vector3D(0, 0, 1);
 
     player->Init();
+    player->InitGraphics();
 
     Graphics::things.push_back(worldRenderer);
     Graphics::things.push_back(player);
@@ -91,7 +92,7 @@ int64 freq;
 void System::Start() {
     if (running) return;
     running = true;
-
+    print(sizeof(long int));
     QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
     QueryPerformanceCounter((LARGE_INTEGER*)&oldtime);
 

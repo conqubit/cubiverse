@@ -33,9 +33,11 @@ bool WorldRenderer::Init(World* w) {
 
     texture = Texture::Create3DTexture(dim, dim, image.GetHeight() / dim, (byte*)image.GetPixelsPtr());
 
+    mf = ModelFactory();
+
     mf.shader = shader;
     mf.texture = texture;
-    mf.topology = GL_TRIANGLE_STRIP;
+    mf.topology = GL_TRIANGLES;
     mf.AddAttribute("position", 3);
     mf.AddAttribute("color", 4);
     mf.AddAttribute("texcoord", 3);
@@ -45,11 +47,19 @@ bool WorldRenderer::Init(World* w) {
 
 void WorldRenderer::Shutdown() {
     for (int i = 0; i < visibleChunks.size(); i++) {
-        if (!visibleChunks[i]) continue;
-        visibleChunks[i]->Shutdown();
-        delete visibleChunks[i];
+        if (visibleChunks[i]) {
+            visibleChunks[i]->Shutdown();
+            delete visibleChunks[i];
+        }
     }
     visibleChunks.clear();
+
+    texture->Shutdown();
+    shader->Shutdown();
+
+    delete texture;
+    delete shader;
+
     world = nullptr;
 }
 
@@ -82,22 +92,22 @@ void WorldRenderer::ConstructChunkModelData(Chunk* c) {
             continue;
         }
         if (world->GetBlock(p.x + 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, b, Vector3I::AXIS_X, p, p.x + 1, p.y, p.z, 0, 1, 2, 0.85);
+            ConstructFace(mf, b, Vector3I::AXIS_X, p, p.x + 1, p.y, p.z, 1, 2, 0, 0.85);
         }
         if (world->GetBlock(p.x - 1, p.y, p.z) == Block::Air) {
-            ConstructFace(mf, b, -Vector3I::AXIS_X, p, p.x, p.y, p.z, 0, 2, 1, 0.7);
+            ConstructFace(mf, b, -Vector3I::AXIS_X, p, p.x, p.y, p.z, 2, 1, 0, 0.7);
         }
         if (world->GetBlock(p.x, p.y + 1, p.z) == Block::Air) {
-            ConstructFace(mf, b, Vector3I::AXIS_Y, p, p.x, p.y + 1, p.z, 1, 2, 0, 0.8);
+            ConstructFace(mf, b, Vector3I::AXIS_Y, p, p.x, p.y + 1, p.z, 2, 0, 1, 0.8);
         }
         if (world->GetBlock(p.x, p.y - 1, p.z) == Block::Air) {
-            ConstructFace(mf, b, -Vector3I::AXIS_Y, p, p.x, p.y, p.z, 1, 0, 2, 0.75);
+            ConstructFace(mf, b, -Vector3I::AXIS_Y, p, p.x, p.y, p.z, 0, 2, 1, 0.75);
         }
         if (world->GetBlock(p.x, p.y, p.z + 1) == Block::Air) {
-            ConstructFace(mf, b, Vector3I::AXIS_Z, p, p.x, p.y, p.z + 1, 2, 0, 1, 1.0);
+            ConstructFace(mf, b, Vector3I::AXIS_Z, p, p.x, p.y, p.z + 1, 0, 1, 2, 1.0);
         }
         if (world->GetBlock(p.x, p.y, p.z - 1) == Block::Air) {
-            ConstructFace(mf, b, -Vector3I::AXIS_Z, p, p.x, p.y, p.z, 2, 1, 0, 0.5);
+            ConstructFace(mf, b, -Vector3I::AXIS_Z, p, p.x, p.y, p.z, 1, 0, 2, 0.5);
         }
     }
 }
@@ -126,20 +136,13 @@ void WorldRenderer::ConstructFace(ModelFactory& mf, int block, const Vector3I& s
 
     float tz = (float)GetTextureIndex(block, side, up) / (float)numBlocks + 1.0f / ((float)numBlocks * 2.0f);
 
-    // Degenerate.
-    mf.Next().Set("position", v);
+    mf.Next().Set("position", v).Set("color", c).Set("texcoord", 0, 0, tz);
+    mf.Next().Set("position", v + Vector3F::AXIS[yi]).Set("color", c).Set("texcoord", 0, 1, tz);
+    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[xi]).Set("color", c).Set("texcoord", 1, 1, tz);
 
-    mf.Next().Set("position", v)
-             .Set("color", c).Set("texcoord", 0, 0, tz);
-    mf.Next().Set("position", v + Vector3F::AXIS[yi])
-             .Set("color", c).Set("texcoord", 0, 1, tz);
-    mf.Next().Set("position", v + Vector3F::AXIS[zi])
-             .Set("color", c).Set("texcoord", 1, 0, tz);
-    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi])
-             .Set("color", c).Set("texcoord", 1, 1, tz);
-
-    // Degenerate.
-    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[zi]);
+    mf.Next().Set("position", v + Vector3F::AXIS[yi] + Vector3F::AXIS[xi]).Set("color", c).Set("texcoord", 1, 1, tz);
+    mf.Next().Set("position", v + Vector3F::AXIS[xi]).Set("color", c).Set("texcoord", 1, 0, tz);
+    mf.Next().Set("position", v).Set("color", c).Set("texcoord", 0, 0, tz);
 }
 
 void WorldRenderer::UpdateBlock(Vector3I p) {
