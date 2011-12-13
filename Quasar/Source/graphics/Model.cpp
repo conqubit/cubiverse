@@ -16,18 +16,19 @@ indexCount(),
 vertexBuffer(),
 indexBuffer(),
 vertexArrayObject(),
+vertexBufferSize(),
 topology(GL_TRIANGLES) {
 }
 
 Model::~Model() {
 }
 
-bool Model::Init(const ModelFactory& mf, int buffExtra = 0) {
+bool Model::Init(const ModelFactory& mf, int buffExtra) {
     shader = mf.shader;
     texture = mf.texture;
     vertexCount = mf.VertexCount();
     indexCount = mf.IndexCount();
-    vertexBufferByteSize = mf.VertexDataByteSize() + buffExtra;
+    vertexBufferSize = mf.VertexDataSize() + buffExtra;
 
     glGenVertexArrays(1, &vertexArrayObject);
 
@@ -35,13 +36,14 @@ bool Model::Init(const ModelFactory& mf, int buffExtra = 0) {
 
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertexBufferByteSize, nullptr, GL_DYNAMIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataByteSize(), mf.VertexData());
+    glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, nullptr, GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataSize(), mf.VertexData());
 
     for (int i = 0; i < mf.AttributeCount(); i++) {
+        if (mf.GetAttribute(i).hidden) continue;
         GLuint L = glGetAttribLocation(shader->program, mf.GetAttribute(i).name.c_str());
         glEnableVertexAttribArray(L);
-        glVertexAttribPointer(L, mf.GetAttribute(i).size, GL_FLOAT, GL_FALSE, mf.VertexByteStride(), BUFFER_OFFSET(mf.GetAttribute(i).byteOffset));
+        glVertexAttribPointer(L, mf.GetAttribute(i).count, GL_FLOAT, GL_FALSE, mf.VertexStride(), BUFFER_OFFSET(mf.GetAttribute(i).offset));
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -63,13 +65,13 @@ bool Model::Init(const ModelFactory& mf, int buffExtra = 0) {
 }
 
 bool Model::Update(const ModelFactory& mf) {
-    if (mf.VertexDataByteSize() <= vertexBufferByteSize) {
+    if (mf.VertexDataSize() <= vertexBufferSize) {
         shader = mf.shader;
         texture = mf.texture;
         vertexCount = mf.VertexCount();
         indexCount = mf.IndexCount();
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataByteSize(), mf.VertexData());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataSize(), mf.VertexData());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         return true;
     }
@@ -82,6 +84,16 @@ void Model::Bind() {
 
 void Model::Unbind() {
     glBindVertexArray(0);
+}
+
+byte* Model::Map(GLenum access) {
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    return (byte*)glMapBuffer(GL_ARRAY_BUFFER, access);
+}
+
+void Model::Unmap() {
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Model::Render() {

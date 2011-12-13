@@ -161,7 +161,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessToFile>false</PreprocessToFile>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -194,6 +194,7 @@
     <ClInclude Include="Headers\math\Math.h" />
     <ClInclude Include="Headers\math\Vector.h" />
     <ClInclude Include="Headers\Player.h" />
+    <ClInclude Include="Headers\StaticInit.h" />
     <ClInclude Include="Headers\System.h" />
     <ClInclude Include="Headers\Window.h" />
     <ClInclude Include="stdafx.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="Source\graphics\VisibleChunk.cpp" />
     <ClCompile Include="Source\graphics\WorldRenderer.cpp" />
     <ClCompile Include="Source\Input.cpp" />
+    <ClCompile Include="Source\level\Block.cpp" />
     <ClCompile Include="Source\level\Chunk.cpp" />
     <ClCompile Include="Source\level\World.cpp" />
     <ClCompile Include="Source\Player.cpp" />

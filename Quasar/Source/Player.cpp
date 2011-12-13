@@ -62,8 +62,8 @@ void Player::InitGraphics() {
 
     // Block picking outline.
     ModelFactory mf;
-    mf.AddAttribute("position", 3);
-    mf.AddAttribute("color", 4);
+    mf.AddAttribute<float>("position", 3);
+    mf.AddAttribute<float>("color", 4);
 
     mf.shader = shader;
     mf.topology = GL_LINE_LOOP;
@@ -285,7 +285,7 @@ void Player::PickBlock() {
     Vector3I b = p.Floor();
     Vector3D dir = ToWorldSmooth(this->dir);
     while ((Eye() - p).LengthSquared() < 5 * 5) {
-        if (System::world->GetBlock(b) != Block::Air) {
+        if (Block::Solid(System::world->GetBlock(b))) {
             pickedBlock = b;
             picked = true;
             return;
@@ -315,7 +315,7 @@ void Player::PickBlock() {
 
 void Player::DoJump() {
     if (noclip) return;
-    if (!inAir && Input::KeyPressed(Key::Space)) {
+    if (!inAir && Input::KeyPressed(DIK_SPACE)) {
         vel += ToWorldSmooth(Vector3D(0, 0, .05));
         inAir = true;
     }
@@ -401,14 +401,14 @@ void Player::DoInput() {
 
     cameraUp = right.Cross(dir);
 
-    kvec = kdir * (Input::KeyPressed(Key::W) - Input::KeyPressed(Key::S))
-           + right * (Input::KeyPressed(Key::D) - Input::KeyPressed(Key::A));
+    kvec = kdir * (Input::KeyPressed(DIK_W) - Input::KeyPressed(DIK_S))
+           + right * (Input::KeyPressed(DIK_D) - Input::KeyPressed(DIK_A));
 
     if (noclip) {
-        kvec += Vector3D::AXIS_Z * ((Input::KeyPressed(Key::Q) || Input::KeyPressed(Key::Space)) - Input::KeyPressed(Key::E));
+        kvec += Vector3D::AXIS_Z * ((Input::KeyPressed(DIK_Q) || Input::KeyPressed(DIK_SPACE)) - Input::KeyPressed(DIK_E));
     }
 
-    kvec = kvec.Normalize(1.0 / (Input::KeyPressed(Key::LControl) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(Key::LShift) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
+    kvec = kvec.Normalize(1.0 / (Input::KeyPressed(DIK_LCONTROL) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(DIK_LSHIFT) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
 }
 
 Vector3D Player::Eye() {

@@ -218,7 +218,7 @@ struct Vector3 {
     }
 
     Vector3<T> Abs()const {
-        return Vector3<T>(abs(x), abs(y), abs(z));
+        return Vector3<T>(ABS(x), ABS(y), ABS(z));
     }
 };
 

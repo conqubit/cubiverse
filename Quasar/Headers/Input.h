@@ -12,13 +12,14 @@ public:
     static bool InitDirectInput();
     static void Shutdown();
     static void SetMousePosition(int x, int y);
-    static bool KeyPressed(Key key);
+    static bool KeyPressed(int key);
     static bool MouseLeft();
     static bool MouseRight();
     static int Mx();
     static int My();
     static int DeltaMx();
     static int DeltaMy();
+    static bool ReadKeyboard();
 	static bool ReadMouse();
     static void Lock();
     static void Unlock();
@@ -30,5 +31,6 @@ public:
     static bool directInputInitialized;
 
     static IDirectInput8W* directInput;
+    static IDirectInputDevice8W* keyboard;
     static IDirectInputDevice8W* mouse;
 };

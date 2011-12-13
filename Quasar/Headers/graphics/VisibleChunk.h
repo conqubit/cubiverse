@@ -7,8 +7,23 @@
 
 class VisibleChunk {
 public:
+    struct VisibleBlock {
+        int location;
+        short size;
+
+        VisibleBlock() :
+        location(), size() {
+        }
+        VisibleBlock(int location, short size) :
+        location(location), size(size) {
+        }
+    };
+
     VisibleChunk();
-    ~VisibleChunk();
+
+    void UpdateBlock(ushort index, ModelFactory& mf);
+
+    void AppendBlock(ushort index, ModelFactory& mf);
 
     void UpdateModel(const ModelFactory& mf);
 
@@ -16,4 +31,6 @@ public:
 
     Model* model;
     Chunk* chunk;
+
+    std::map<ushort, VisibleBlock> visibleBlocks;
 };

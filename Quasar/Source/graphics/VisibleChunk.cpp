@@ -7,13 +7,63 @@ model(),
 chunk() {
 }
 
-VisibleChunk::~VisibleChunk() {
+void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
+    if (visibleBlocks.count(index) == 0 && mf.VertexCount() > 0) {
+        AppendBlock(index, mf);
+        return;
+    }
+
+    const VisibleBlock& b = visibleBlocks[index];
+
+    if (mf.VertexDataSize() == b.size) {
+        glBindBuffer(GL_ARRAY_BUFFER, model->vertexBuffer);
+        glBufferSubData(GL_ARRAY_BUFFER, b.location, mf.VertexDataSize(), mf.VertexData());
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        return;
+    }
+
+    byte* bufferLocation = model->Map(GL_READ_WRITE) + b.location;
+    memmove(bufferLocation, bufferLocation + b.size, model->vertexCount * mf.VertexStride() - (b.location + b.size));
+    model->Unmap();
+    for (auto i = visibleBlocks.begin(); i != visibleBlocks.end(); i++) {
+        if (i->second.location > b.location) {
+            i->second.location -= b.size;
+        }
+    }
+
+    model->vertexCount -= b.size / mf.VertexStride();
+    if (mf.VertexCount() > 0) {
+        AppendBlock(index, mf);
+    } else {
+        visibleBlocks.erase(index);
+    }
+}
+
+void VisibleChunk::AppendBlock(ushort index, ModelFactory& mf) {
+    int vertexDataSize = model->vertexCount * mf.VertexStride();
+    VisibleBlock& b = visibleBlocks[index];
+    b.location = vertexDataSize;
+    b.size = mf.VertexDataSize();
+    model->vertexCount += b.size / mf.VertexStride();
+    if (b.location + mf.VertexDataSize() <= model->vertexBufferSize) {
+        glBindBuffer(GL_ARRAY_BUFFER, model->vertexBuffer);
+        glBufferSubData(GL_ARRAY_BUFFER, b.location, b.size, mf.VertexData());
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    } else {
+        byte* buffer = (byte*)malloc(vertexDataSize + mf.VertexDataSize());
+        memcpy(buffer, model->Map(GL_READ_ONLY), vertexDataSize);
+        model->Unmap();
+        memcpy(buffer + vertexDataSize, mf.VertexData(), mf.VertexDataSize());
+        mf.dataOverride = buffer;
+        mf.sizeOverride = vertexDataSize + mf.VertexDataSize();
+        UpdateModel(mf);
+        free(buffer);
+    }
 }
 
 void VisibleChunk::UpdateModel(const ModelFactory& mf) {
-
-    int buffExtra = mf.VertexByteStride() * 6 /*vertices per face*/
-                                          * 64 /*num faces to buffer*/ ;
+    int buffExtra = mf.VertexStride() * 6 /*vertices per face*/
+                                      * 64 /*num faces to buffer*/ ;
 
     if (!model) {
         model = mf.Create(buffExtra);
@@ -21,7 +71,10 @@ void VisibleChunk::UpdateModel(const ModelFactory& mf) {
     }
 
     if (!model->Update(mf)) {
-        if (model) model->Shutdown();
+        if (model) {
+            model->Shutdown();
+            delete model;
+        }
         model = mf.Create(buffExtra);
     }
 }

@@ -73,11 +73,11 @@ void Window::Maximize() {
 }
 
 bool Window::IsMaximized() {
-    return IsZoomed(SystemHandle());
+    return IsZoomed(SystemHandle()) != 0;
 }
 
 bool Window::IsMinimized() {
-    return IsIconic(SystemHandle());
+    return IsIconic(SystemHandle()) != 0;
 }
 
 bool Window::IsFullScreen() {
@@ -255,5 +255,6 @@ void Window::DoEvents() {
     if (!Input::locked) {
         Input::SetMousePosition(Width() / 2, Height() / 2);
     }
+    Input::ReadKeyboard();
     Input::ReadMouse();
 }

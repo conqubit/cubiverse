@@ -7,17 +7,17 @@ class ModelFactory {
 public:
     struct Attribute {
         string name;
-        int size;
+        int count;
         int offset;
-        int byteOffset;
+        bool hidden;
 
-        Attribute(const string& name, int size, int offset) :
-        name(name), size(size), offset(offset), byteOffset(offset * sizeof(float)) {
+        Attribute(const string& name, int count, int offset, bool hidden = false) :
+        name(name), count(count), offset(offset), hidden(hidden) {
         }
     };
 
 private:
-    std::vector<float> vertexData;
+    std::vector<byte> vertexData;
     std::vector<int> indices;
 
     int stride;
@@ -25,9 +25,17 @@ private:
 
     std::vector<Attribute> attributes;
 
+    template <typename I>
+    byte* GetAttributePtr(const I& ident) {
+        return &vertexData[pos + GetAttribute(ident).offset];
+    }
+
 public:
     Shader* shader;
     Texture* texture;
+
+    byte* dataOverride;
+    int sizeOverride;
 
     GLenum topology;
 
@@ -37,16 +45,21 @@ public:
 
     shader(),
     texture(),
+    dataOverride(),
+    sizeOverride(-1),
     topology(GL_TRIANGLES) {
     }
 
     ~ModelFactory() {
     }
 
-    void AddAttribute(const string& name, int size) {
-        attributes.push_back(Attribute(name, size, stride));
-        stride += size;
+    template <typename T>
+    int AddAttribute(const string& name, int count, bool hidden = false) {
+        int index = (int)attributes.size();
+        attributes.push_back(Attribute(name, count, stride, hidden));
+        stride += sizeof(T) * count;
         pos = -stride;
+        return index;
     }
 
     const Attribute& GetAttribute(const string& name)const {
@@ -71,52 +84,69 @@ public:
         return *this;
     }
 
-    ModelFactory& Set(const string& name, float x) {
-        const Attribute& attr = GetAttribute(name);
-        vertexData[pos + attr.offset + 0] = x;
+    template <typename I, typename T>
+    ModelFactory& Set(const I& ident, T x) {
+        float* data = (float*)GetAttributePtr(ident);
+        data[0] = (float)x;
         return *this;
     }
 
-    ModelFactory& Set(const string& name, float x, float y) {
-        const Attribute& attr = GetAttribute(name);
-        vertexData[pos + attr.offset + 0] = x;
-        vertexData[pos + attr.offset + 1] = y;
+    template <typename I, typename T, typename U>
+    ModelFactory& Set(const I& ident, T x, U y) {
+        float* data = (float*)GetAttributePtr(ident);
+        data[0] = (float)x;
+        data[1] = (float)y;
         return *this;
     }
 
-    ModelFactory& Set(const string& name, float x, float y, float z) {
-        const Attribute& attr = GetAttribute(name);
-        vertexData[pos + attr.offset + 0] = x;
-        vertexData[pos + attr.offset + 1] = y;
-        vertexData[pos + attr.offset + 2] = z;
+    template <typename I, typename T, typename U, typename V>
+    ModelFactory& Set(const I& ident, T x, U y, V z) {
+        float* data = (float*)GetAttributePtr(ident);
+        data[0] = (float)x;
+        data[1] = (float)y;
+        data[2] = (float)z;
         return *this;
     }
 
-    ModelFactory& Set(const string& name, float x, float y, float z, float w) {
-        const Attribute& attr = GetAttribute(name);
-        vertexData[pos + attr.offset + 0] = x;
-        vertexData[pos + attr.offset + 1] = y;
-        vertexData[pos + attr.offset + 2] = z;
-        vertexData[pos + attr.offset + 3] = w;
+    template <typename I, typename T, typename U, typename V, typename W>
+    ModelFactory& Set(const I& ident, T x, U y, V z, W w) {
+        float* data = (float*)GetAttributePtr(ident);
+        data[0] = (float)x;
+        data[1] = (float)y;
+        data[2] = (float)z;
+        data[3] = (float)w;
         return *this;
     }
 
-    template <typename U>
-    ModelFactory& Set(const string& name, const Vector3<U>& v) {
-        const Attribute& attr = GetAttribute(name);
-        vertexData[pos + attr.offset + 0] = (float)v.x;
-        vertexData[pos + attr.offset + 1] = (float)v.y;
-        vertexData[pos + attr.offset + 2] = (float)v.z;
+    template <typename I, typename T>
+    ModelFactory& Set(const I& ident, const Vector3<T>& v) {
+        float* data = (float*)GetAttributePtr(ident);
+        data[0] = (float)v.x;
+        data[1] = (float)v.y;
+        data[2] = (float)v.z;
         return *this;
     }
 
-    ModelFactory& Set(const string& name, const ColorF& c) {
-        const Attribute& attr = GetAttribute(name);
-        vertexData[pos + attr.offset + 0] = c.r;
-        vertexData[pos + attr.offset + 1] = c.g;
-        vertexData[pos + attr.offset + 2] = c.b;
-        vertexData[pos + attr.offset + 3] = c.a;
+    template <typename I, typename T>
+    ModelFactory& Set(const I& ident, const Color<T>& c) {
+        float* data = (float*)GetAttributePtr(ident);
+        data[0] = (float)c.r;
+        data[1] = (float)c.g;
+        data[2] = (float)c.b;
+        data[3] = (float)c.a;
         return *this;
+    }
+
+    template <typename I, typename T>
+    ModelFactory& SetShort(const I& ident, T x) {
+        short* data = (short*)GetAttributePtr(ident);
+        data[0] = (short)x;
+    }
+
+    template <typename I, typename T>
+    ModelFactory& SetUShort(const I& ident, T x) {
+        ushort* data = (ushort*)GetAttributePtr(ident);
+        data[0] = (ushort)x;
     }
 
     void AddTriangle(int a, int b, int c) {
@@ -131,27 +161,32 @@ public:
     }
 
     int VertexCount()const {
+        if (sizeOverride != -1) {
+            return sizeOverride / stride;
+        }
         return (int)vertexData.size() / stride;
     }
 
-    int VertexByteStride()const {
-        return stride * sizeof(float);
+    int VertexStride()const {
+        return stride;
     }
 
-    int VertexDataByteSize()const {
-        return vertexData.size() * sizeof(float);
-    }
-
-    int VertexDataFloatSize()const {
-        return vertexData.size();
+    int VertexDataSize()const {
+        if (sizeOverride != -1) {
+            return sizeOverride;
+        }
+        return (int)vertexData.size();
     }
 
     int IndexCount()const {
         return (int)indices.size();
     }
 
-    float* VertexData()const {
-        return (float*)vertexData.data();
+    byte* VertexData()const {
+        if (dataOverride) {
+            return dataOverride;
+        }
+        return (byte*)vertexData.data();
     }
 
     int* IndexData()const {
@@ -170,16 +205,18 @@ public:
 
     void Clear() {
         vertexData.clear();
-        indices.clear();
+        //indices.clear();
         pos = -stride;
+        dataOverride = nullptr;
+        sizeOverride = -1;
     }
 
     static Model* CreateWireframeDebugBox(const BoundingBox& b, const ColorF& color, Shader* shader) {
         ModelFactory mf;
         mf.shader = shader;
         mf.topology = GL_LINES;
-        mf.AddAttribute("position", 3);
-        mf.AddAttribute("color", 4);
+        mf.AddAttribute<float>("position", 3);
+        mf.AddAttribute<float>("color", 4);
 
         mf.Next().Set("position", b.Min()).Set("color", color);
         mf.Next().Set("position", b.Max().x, b.Min().y, b.Min().z).Set("color", color);

@@ -30,4 +30,8 @@ public:
     static int GetIndex(int x, int y, int z) {
         return (x & MASK) + (y & MASK) * DIM + (z & MASK) * DIM * DIM;
     }
+
+    static int GetIndex(const Vector3I& p) {
+        return (p.x & MASK) + (p.y & MASK) * DIM + (p.z & MASK) * DIM * DIM;
+    }
 };

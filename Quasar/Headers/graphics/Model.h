@@ -13,14 +13,19 @@ class Model : public IRender {
 public:
     Model();
     ~Model();
-    bool Init(const ModelFactory& mf, int buffExtra);
+    bool Init(const ModelFactory& mf, int buffExtra = 0);
+
     void Render();
 
     bool Update(const ModelFactory& mf);
 
     void Shutdown();
+
     void Bind();
     void Unbind();
+
+    byte* Map(GLenum access);
+    void Unmap();
 
     bool temp;
 
@@ -32,7 +37,7 @@ public:
     int vertexCount;
     int indexCount;
 
-    int vertexBufferByteSize;
+    int vertexBufferSize;
 
     GLenum topology;
     GLuint vertexBuffer;

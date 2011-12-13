@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDKDDKVer.h>
+#include <windows.h>
 
 // C header files.
 #include <stdlib.h>
@@ -14,8 +15,11 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <cstdint>
+
+#include <vector>
+#include <set>
+#include <map>
 
 #include <GL/glew.h>
 
@@ -69,3 +73,11 @@ void printerr(T x) {
 
 // Rudimentary macro to print out how much time a block of code takes to run.
 #define MEASURE(tag, code) {clock_t t=clock();{code}t=clock()-t;printf("%s: %d ms\n",tag,t);}
+
+// Rudimentary macro to print out how much time a block of code takes to run.
+#define ACCURATE_MEASURE(tag, code) {int64 _s, _e, _f; \
+                                     QueryPerformanceFrequency((LARGE_INTEGER*)&_f); \
+                                     QueryPerformanceCounter((LARGE_INTEGER*)&_s); \
+                                     {code} \
+                                     QueryPerformanceCounter((LARGE_INTEGER*)&_e); \
+                                     printf("%s: %f ms\n", tag, (double)(_e-_s)/_f*1000);}

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "stdafx.h"
-
-#include <windows.h>
+//#include "stdafx.h"
 
 #include "graphics/Graphics.h"
 #include "graphics/WorldRenderer.h"

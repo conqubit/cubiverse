@@ -58,7 +58,7 @@ public:
     bool Intersects(const BoundingBox& bb);
 
     int GetBlock(int x, int y, int z) {
-        if (!InBlockBounds(x, y, z)) return Block::Air;
+        if (!InBlockBounds(x, y, z)) return Block::Undefined;
         return GetChunk(x, y, z)->GetBlock(x, y, z);
     }
 

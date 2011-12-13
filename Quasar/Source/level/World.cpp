@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "level/Block.h"
 #include "level/World.h"
 
 World::World() :
@@ -53,7 +52,7 @@ void World::Generate() {
 
 bool World::Intersects(const BoundingBox& bb) {
     VEC3_RANGE_AB(bb.Min().Floor(), bb.Max().Floor()) {
-        if (GetBlock(p) != Block::Air) {
+        if (Block::Solid(GetBlock(p))) {
             return true;
         }
     }

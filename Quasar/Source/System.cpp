@@ -15,11 +15,7 @@ sf::Clock timer;
 
 #include "Logger.h"
 
-#include "btBulletDynamicsCommon.h"
-
 bool System::Init() {
-    btBoxShape b = btBoxShape(btVector3(1, 1, 1));
-
     errorLog.SetPath("error.txt");
     errorLog.EnableAppend();
 
@@ -92,7 +88,7 @@ int64 freq;
 void System::Start() {
     if (running) return;
     running = true;
-    print(sizeof(long int));
+
     QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
     QueryPerformanceCounter((LARGE_INTEGER*)&oldtime);
 
