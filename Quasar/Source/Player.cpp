@@ -15,8 +15,6 @@ Model* z1;
 
 double eyeOffset = 1.7 - PHI;
 
-Shader* shader;
-
 Model* wireframe;
 
 #include <btBulletDynamicsCommon.h>
@@ -57,15 +55,12 @@ void Player::Init() {
 }
 
 void Player::InitGraphics() {
-    shader = new Shader();
-    shader->Init("res/color.c.v.glsl", "res/color.c.f.glsl");
-
     // Block picking outline.
     ModelFactory mf;
     mf.AddAttribute<float>("position", 3);
     mf.AddAttribute<float>("color", 4);
 
-    mf.shader = shader;
+    mf.shader = Res::GetShader("color");
     mf.topology = GL_LINE_LOOP;
     ColorF c(0, 0, 0, 0.5);
 
@@ -124,18 +119,16 @@ void Player::InitGraphics() {
     cursor = mf.Create();
     cursor->EnableOrtho();
 
-    wireframe = ModelFactory::CreateWireframeDebugBox(bb, ColorF(1, 0, 0, 1), shader);
+    wireframe = ModelFactory::CreateWireframeDebugBox(bb, ColorF(1, 0, 0, 1));
 }
 
 void Player::Shutdown() {
-    cursor->Shutdown();
     x0->Shutdown();
     x1->Shutdown();
     Y0->Shutdown();
     Y1->Shutdown();
     z0->Shutdown();
     z1->Shutdown();
-    shader->Shutdown();
 }
 
 void Player::Render() {

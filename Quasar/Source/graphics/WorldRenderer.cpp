@@ -6,7 +6,7 @@
 #include "graphics/WorldRenderer.h"
 
 WorldRenderer::WorldRenderer() :
-world(), shader(), texture() {
+world() {
 }
 
 WorldRenderer::~WorldRenderer() {
@@ -21,25 +21,11 @@ int vTex;
 
 bool WorldRenderer::Init(World* w) {
     world = w;
-    shader = new Shader();
-    if (!shader->Init("res/block.c.v.glsl", "res/block.c.f.glsl")) {
-        return false;
-    }
-
-    sf::Image image;
-
-    if (!image.LoadFromFile("res/blocks.png")) {
-        return false;
-    }
-
-    int dim = image.GetWidth();
-
-    texture = Texture::Create3DTexture(dim, dim, image.GetHeight() / dim, (byte*)image.GetPixelsPtr());
 
     mf = ModelFactory();
 
-    mf.shader = shader;
-    mf.texture = texture;
+    mf.shader = Res::GetShader("block");
+    mf.texture = Res::GetTexture("blocks");
     mf.topology = GL_TRIANGLES;
     vPos = mf.AddAttribute<float>("position", 3);
     vCol = mf.AddAttribute<byte>("color", 4, true);
@@ -56,13 +42,6 @@ void WorldRenderer::Shutdown() {
         }
     }
     visibleChunks.clear();
-
-    texture->Shutdown();
-    shader->Shutdown();
-
-    delete texture;
-    delete shader;
-
     world = nullptr;
 }
 

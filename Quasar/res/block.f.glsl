@@ -1,14 +1,10 @@
-#version 330
-// Enable this for texture2D arrays.
-// #extension GL_EXT_gpu_shader4 : enable
+#version 120
 
 uniform sampler3D textureSampler;
 
-smooth in vec4 fcolor;
-smooth in vec3 ftexcoord;
-
-out vec4 colorOut;
+varying vec4 fcolor;
+varying vec3 ftexcoord;
 
 void main() {
-    colorOut = texture(textureSampler, ftexcoord) * fcolor;
+    gl_FragColor = texture3D(textureSampler, ftexcoord) * fcolor;
 }

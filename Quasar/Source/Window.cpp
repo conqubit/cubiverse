@@ -164,6 +164,7 @@ void Window::ToggleFullscreen() {
     System::worldRenderer->Shutdown();
     Graphics::Shutdown();
     Input::Shutdown();
+    Res::Shutdown();
     resize = true;
 
     if (fs) {
@@ -188,6 +189,7 @@ void Window::ToggleFullscreen() {
     sfWindow.ShowMouseCursor(Input::locked);
 
     Graphics::Init();
+    Res::Init();
 
     System::worldRenderer->Init(System::world);
     System::worldRenderer->ConstructVisibleChunks();

@@ -1,11 +1,11 @@
-#version 330
+#version 120
 
 uniform mat4 worldViewProjectionMat;
 
-layout(location = 0) in vec4 position;
-layout(location = 1) in vec4 color;
+attribute vec4 position;
+attribute vec4 color;
 
-smooth out vec4 fcolor;
+varying vec4 fcolor;
 
 void main() {
     gl_Position = worldViewProjectionMat * position;

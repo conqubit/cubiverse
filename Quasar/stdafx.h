@@ -66,9 +66,6 @@ void printerr(T x) {
     std::cerr << x << std::endl;
 }
 
-// Custom math header file.
-#include "math/Math.h"
-
 #define ZeroStruct(s) memset(&(s), 0, sizeof(s))
 
 // Rudimentary macro to print out how much time a block of code takes to run.
@@ -81,3 +78,7 @@ void printerr(T x) {
                                      {code} \
                                      QueryPerformanceCounter((LARGE_INTEGER*)&_e); \
                                      printf("%s: %f ms\n", tag, (double)(_e-_s)/_f*1000);}
+
+// Common.
+#include "math/Math.h"
+#include "Res.h"

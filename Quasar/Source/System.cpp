@@ -24,6 +24,7 @@ bool System::Init() {
 
     srand((unsigned int)time(nullptr));
 
+
     Window::Init();
     Window::Maximize();
     Window::sfWindow.Display();
@@ -41,6 +42,8 @@ bool System::Init() {
     Graphics::Init();
 
     Window::sfWindow.ShowMouseCursor(false);
+
+    if (!Res::Init()) return false;
 
     world = new World();
     world->Init(4, 4, 4);
@@ -130,5 +133,9 @@ void System::Stop() {
 }
 
 void System::Shutdown() {
+    player->Shutdown();
+    worldRenderer->Shutdown();
+    world->Shutdown();
     Graphics::Shutdown();
+    Res::Shutdown();
 }

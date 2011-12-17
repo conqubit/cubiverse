@@ -25,6 +25,4 @@ public:
     void UpdateMesh(const Vector3I& p);
     std::vector<VisibleChunk*> visibleChunks;
     World* world;
-    Shader* shader;
-    Texture* texture;
 };

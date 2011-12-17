@@ -11,7 +11,7 @@ program() {
 Shader::~Shader() {
 }
 
-bool Shader::Init(string vertexShaderFile, string fragmentShaderFile) {
+bool Shader::Init(const string& vertexShaderFile, const string& fragmentShaderFile) {
     GLuint vertexShader = MakeShader(GL_VERTEX_SHADER, vertexShaderFile);
     if (!vertexShader) return false;
 
@@ -48,7 +48,7 @@ void Shader::ShowInfoLog(GLuint object, PFNGLGETSHADERIVPROC glGetiv, PFNGLGETSH
     free(log);
 }
 
-GLuint Shader::MakeShader(GLenum type, string filename) {
+GLuint Shader::MakeShader(GLenum type, const string& filename) {
     GLuint shader = 0;
 
     FILE* f = fopen(filename.c_str(), "rb");

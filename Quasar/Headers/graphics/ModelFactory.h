@@ -240,9 +240,9 @@ public:
         sizeOverride = -1;
     }
 
-    static Model* CreateWireframeDebugBox(const BoundingBox& b, const ColorF& color, Shader* shader) {
+    static Model* CreateWireframeDebugBox(const BoundingBox& b, const ColorF& color) {
         ModelFactory mf;
-        mf.shader = shader;
+        mf.shader = Res::GetShader("color");
         mf.topology = GL_LINES;
         mf.AddAttribute<float>("position", 3);
         mf.AddAttribute<float>("color", 4);
