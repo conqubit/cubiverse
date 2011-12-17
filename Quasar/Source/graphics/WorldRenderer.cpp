@@ -42,7 +42,7 @@ bool WorldRenderer::Init(World* w) {
     mf.texture = texture;
     mf.topology = GL_TRIANGLES;
     vPos = mf.AddAttribute<float>("position", 3);
-    vCol = mf.AddAttribute<float>("color", 4);
+    vCol = mf.AddAttribute<byte>("color", 4, true);
     vTex = mf.AddAttribute<float>("texcoord", 3);
 
     return true;
@@ -148,7 +148,7 @@ int GetTextureIndex(int block, const Vector3I& side, const Vector3I& up) {
 void WorldRenderer::ConstructFace(int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b) {
     Vector3F v = Vector3F(x, y, z);
     Vector3I up = System::world->GetUp(p.ToDouble().Offset(0.5) + side.ToDouble() / 2.0);
-    ColorF c(b, b, b);
+    ColorB c = ColorD(b, b, b, 1.0).ToByte();
 
     float tz = (float)GetTextureIndex(block, side, up) / (float)numBlocks + 1.0f / ((float)numBlocks * 2.0f);
 
@@ -161,7 +161,7 @@ void WorldRenderer::ConstructFace(int block, const Vector3I& side, const Vector3
     mf.Next().Set(vPos, v).Set(vCol, c).Set(vTex, 0, 0, tz);
 }
 
-void WorldRenderer::blahblah(const Vector3I& p) {
+void WorldRenderer::UpdateMesh(const Vector3I& p) {
     Chunk* c = System::world->GetChunk(p);
     if (!c) return;
     int i;
@@ -185,13 +185,11 @@ void WorldRenderer::blahblah(const Vector3I& p) {
 }
 
 void WorldRenderer::UpdateBlock(const Vector3I& p) {
-    ACCURATE_MEASURE("update block",
-        blahblah(p);
-        SIDES(
-            if (Block::Visible(System::world->GetBlock(p + s))) {
-                blahblah(p + s);
-            }
-        );
+    UpdateMesh(p);
+    SIDES(
+        if (Block::Visible(System::world->GetBlock(p + s))) {
+            UpdateMesh(p + s);
+        }
     );
 }
 
@@ -205,7 +203,6 @@ void WorldRenderer::UpdateChunk(Chunk* c, const Vector3I& p) {
 
         ConstructChunkModelData(c, vc);
         vc->UpdateModel(mf);
-
         return;
     }
     if (i == visibleChunks.size()) {

@@ -194,6 +194,7 @@
     <ClInclude Include="Headers\math\Math.h" />
     <ClInclude Include="Headers\math\Vector.h" />
     <ClInclude Include="Headers\Player.h" />
+    <ClInclude Include="Headers\Res.h" />
     <ClInclude Include="Headers\StaticInit.h" />
     <ClInclude Include="Headers\System.h" />
     <ClInclude Include="Headers\Window.h" />

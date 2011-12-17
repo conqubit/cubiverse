@@ -122,7 +122,7 @@ void Player::InitGraphics() {
     mf.Next().Set("position", 0.02, -0.02, 0).Set("color", 1, 1, 1, 1);
     
     cursor = mf.Create();
-    cursor->temp = true;
+    cursor->EnableOrtho();
 
     wireframe = ModelFactory::CreateWireframeDebugBox(bb, ColorF(1, 0, 0, 1), shader);
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "System.h"
 #include "Window.h"
 #include "graphics/Graphics.h"
 
@@ -31,6 +32,14 @@ void Graphics::SetProjection() {
     double aspect = Window::AspectRatio();
     proj = glm::perspective(80.0f, (float)aspect, 0.05f, 250.0f);
     ortho = glm::ortho(-aspect, aspect, -1.0, 1.0, 1.0, -1.0);
+}
+
+const glm::mat4& Graphics::GetOrtho() {
+    return ortho;
+}
+
+const glm::mat4& Graphics::GetViewProj() {
+    return proj * System::player->View();
 }
 
 void Graphics::Render() {

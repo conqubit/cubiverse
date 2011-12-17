@@ -22,7 +22,7 @@ public:
     void UpdateChunk(Chunk* c, const Vector3I& p);
     void Render();
     void ConstructBlock(const Vector3I& p);
-    void blahblah(const Vector3I& p);
+    void UpdateMesh(const Vector3I& p);
     std::vector<VisibleChunk*> visibleChunks;
     World* world;
     Shader* shader;

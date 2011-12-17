@@ -8,7 +8,7 @@
 #define BUFFER_OFFSET(i) ((void*)(i))
 
 Model::Model() :
-temp(),
+orthographic(),
 texture(),
 shader(),
 vertexCount(),
@@ -40,10 +40,11 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
     glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataSize(), mf.VertexData());
 
     for (int i = 0; i < mf.AttributeCount(); i++) {
-        if (mf.GetAttribute(i).hidden) continue;
-        GLuint L = glGetAttribLocation(shader->program, mf.GetAttribute(i).name.c_str());
+        const ModelFactory::Attribute& attr = mf.GetAttribute(i);
+        if (attr.hidden) continue;
+        GLuint L = glGetAttribLocation(shader->program, attr.name.c_str());
         glEnableVertexAttribArray(L);
-        glVertexAttribPointer(L, mf.GetAttribute(i).count, GL_FLOAT, GL_FALSE, mf.VertexStride(), BUFFER_OFFSET(mf.GetAttribute(i).offset));
+        glVertexAttribPointer(L, attr.count, attr.glType, attr.normalized, mf.VertexStride(), BUFFER_OFFSET(attr.offset));
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -62,6 +63,10 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
     Unbind();
 
     return vertexBuffer /*indexBuffer*/ && shader && vertexArrayObject;
+}
+
+void Model::EnableOrtho(bool ortho) {
+    orthographic = ortho;
 }
 
 bool Model::Update(const ModelFactory& mf) {
@@ -101,22 +106,15 @@ void Model::Render() {
     Bind();
 
     glm::mat4 m;
-
-    if (!temp) {
-        m = Graphics::proj * System::player->View() * world;
-        glUniformMatrix4fv(glGetUniformLocation(shader->program, "worldViewProjectionMat"), 1, GL_FALSE,
-                           glm::value_ptr(m));
+    if (orthographic) {
+        m = Graphics::GetOrtho() * world;
     } else {
-        m = Graphics::ortho;
-        glUniformMatrix4fv(glGetUniformLocation(shader->program, "worldViewProjectionMat"), 1, GL_FALSE,
-                           glm::value_ptr(m));
+        m = Graphics::GetViewProj() * world;
     }
 
-    //if (topology != GL_QUADS && topology != GL_TRIANGLES) {
-    //    glDrawElements(topology, indexCount, GL_INT, BUFFER_OFFSET(0));
-    //} else {
+    glUniformMatrix4fv(glGetUniformLocation(shader->program, "worldViewProjectionMat"), 1, GL_FALSE, glm::value_ptr(m));
+
     glDrawArrays(topology, 0, vertexCount);
-    //}
 
     Unbind();
     shader->Unbind();

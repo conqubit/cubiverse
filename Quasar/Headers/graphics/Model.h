@@ -21,13 +21,15 @@ public:
 
     void Shutdown();
 
+    void EnableOrtho(bool ortho = true);
+
     void Bind();
     void Unbind();
 
     byte* Map(GLenum access);
     void Unmap();
 
-    bool temp;
+    bool orthographic;
 
     glm::mat4 world;
 

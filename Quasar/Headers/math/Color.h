@@ -1,6 +1,13 @@
 #pragma once
 
 template <typename T>
+struct Color;
+
+typedef Color<byte>          ColorB;
+typedef Color<float>         ColorF;
+typedef Color<double>        ColorD;
+
+template <typename T>
 struct Color {
     T r, g, b, a;
 
@@ -18,8 +25,18 @@ struct Color {
     Color(U r, V g, W b) :
     r((T)r), g((T)g), b((T)b), a(1) {
     }
-};
 
-typedef Color<byte>          ColorI;
-typedef Color<float>         ColorF;
-typedef Color<double>        ColorD;
+    ColorB ToByte() {
+        return ColorB(GetClampedByte(r), GetClampedByte(g), GetClampedByte(b), GetClampedByte(a));
+    }
+
+    static byte GetClampedByte(double x) {
+        int ret = (int)(x * 256.0);
+        if (ret > 255) {
+            ret = 255;
+        } else if (ret < 0) {
+            ret = 0;
+        }
+        return ret;
+    }
+};

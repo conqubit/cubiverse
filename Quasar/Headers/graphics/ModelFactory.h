@@ -9,11 +9,9 @@ public:
         string name;
         int count;
         int offset;
+        GLenum glType;
+        bool normalized;
         bool hidden;
-
-        Attribute(const string& name, int count, int offset, bool hidden = false) :
-        name(name), count(count), offset(offset), hidden(hidden) {
-        }
     };
 
 private:
@@ -54,9 +52,30 @@ public:
     }
 
     template <typename T>
-    int AddAttribute(const string& name, int count, bool hidden = false) {
+    GLenum GetGLType() { return 0; }
+
+    template <> GLenum GetGLType<char>() { return GL_BYTE; }
+    template <> GLenum GetGLType<byte>() { return GL_UNSIGNED_BYTE; }
+    template <> GLenum GetGLType<short>() { return GL_SHORT; }
+    template <> GLenum GetGLType<ushort>() { return GL_UNSIGNED_SHORT; }
+    template <> GLenum GetGLType<int>() { return GL_INT; }
+    template <> GLenum GetGLType<uint>() { return GL_UNSIGNED_INT; }
+    template <> GLenum GetGLType<float>() { return GL_FLOAT; }
+    template <> GLenum GetGLType<double>() { return GL_DOUBLE; }
+
+    template <typename T>
+    int AddAttribute(const string& name, int count, bool normalized = false, bool hidden = false) {
         int index = (int)attributes.size();
-        attributes.push_back(Attribute(name, count, stride, hidden));
+
+        Attribute a;
+        a.name = name;
+        a.count = count;
+        a.offset = stride;
+        a.glType = GetGLType<T>();
+        a.normalized = normalized;
+        a.hidden = hidden;
+        attributes.push_back(a);
+
         stride += sizeof(T) * count;
         pos = -stride;
         return index;
@@ -134,6 +153,16 @@ public:
         data[1] = (float)c.g;
         data[2] = (float)c.b;
         data[3] = (float)c.a;
+        return *this;
+    }
+
+    template <typename I>
+    ModelFactory& Set(const I& ident, const ColorB& c) {
+        byte* data = GetAttributePtr(ident);
+        data[0] = c.r;
+        data[1] = c.g;
+        data[2] = c.b;
+        data[3] = c.a;
         return *this;
     }
 
