@@ -4,7 +4,7 @@
 #include "graphics/Model.h"
 #include "graphics/IRender.h"
 
-class Player : public IRender {
+class Player : public IRenderObject {
 private:
     Vector3D vel;
 public:
@@ -30,8 +30,6 @@ public:
     int counter;
     bool inAir, mouseStateLastTick;
 
-    Model* cursor;
-
     Player() :
     noclip(),
     yaw(), pitch(),
@@ -41,17 +39,15 @@ public:
     picked(),
 
     counter(),
-    inAir(), mouseStateLastTick(),
-    
-    cursor() {
-    }
-
-    ~Player() {
+    inAir(), mouseStateLastTick() {
     }
 
     void Init();
-    void InitGraphics();
     void Shutdown();
+
+    virtual void InitGraphics();
+    virtual void ShutdownGraphics();
+
     void Tick();
 
     Vector3D ToWorld(Vector3D v) {
@@ -74,7 +70,7 @@ public:
         return Vector3D(r.x, r.y, r.z);
     }
 
-    void Render();
+    virtual void Render();
     void PickBlock();
 
     void DoInput();
@@ -93,7 +89,9 @@ public:
     }*/
 
     glm::mat4 View() {
-        return glm::lookAt(Eye().ToGlmVec3(), (Eye() + ToWorldSmooth(dir)).ToGlmVec3(), ToWorldSmooth(cameraUp).ToGlmVec3());
+        return glm::lookAt(Eye().ToGlmVec3(), //
+                           (Eye() + ToWorldSmooth(dir)).ToGlmVec3(), //
+                           ToWorldSmooth(cameraUp).ToGlmVec3());
     }
 
     BoundingBox BBox() {

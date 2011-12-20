@@ -138,9 +138,9 @@ void Window::DoWindowDrawing() {
     text.SetPosition(5 * factor, 30 * factor);
     sfWindow.Draw(text);
 
-    text.SetString("Up: " + System::player->playerUp.ToString());
-    text.SetPosition(5 * factor, 60 * factor);
-    sfWindow.Draw(text);
+    //text.SetString("Up: " + System::player->playerUp.ToString());
+    //text.SetPosition(5 * factor, 60 * factor);
+    //sfWindow.Draw(text);
 
     sfWindow.RestoreGLStates();
 }
@@ -160,11 +160,12 @@ void Window::DoResize() {
 void Window::ToggleFullscreen() {
     fs = !fs;
 
-    System::player->Shutdown();
-    System::worldRenderer->Shutdown();
-    Graphics::Shutdown();
+    System::player->ShutdownGraphics();
+    System::worldRenderer->ShutdownGraphics();
+
     Input::Shutdown();
     Res::Shutdown();
+
     resize = true;
 
     if (fs) {
@@ -191,9 +192,7 @@ void Window::ToggleFullscreen() {
     Graphics::Init();
     Res::Init();
 
-    System::worldRenderer->Init(System::world);
-    System::worldRenderer->ConstructVisibleChunks();
-
+    System::worldRenderer->InitGraphics();
     System::player->InitGraphics();
 
     Graphics::things.push_back(System::worldRenderer);

@@ -3,8 +3,26 @@
 #include "graphics/VisibleChunk.h"
 
 VisibleChunk::VisibleChunk() :
-model(),
-chunk() {
+model(nullptr), chunk(nullptr) {
+}
+
+void VisibleChunk::Render() {
+    model->Render();
+}
+
+void VisibleChunk::Shutdown() {
+    ShutdownGraphics();
+    delete this;
+}
+
+void VisibleChunk::InitGraphics() {
+}
+
+void VisibleChunk::ShutdownGraphics() {
+    if (model) {
+        model->Shutdown();
+        model = nullptr;
+    }
 }
 
 void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
@@ -73,16 +91,7 @@ void VisibleChunk::UpdateModel(const ModelFactory& mf) {
     if (!model->Update(mf)) {
         if (model) {
             model->Shutdown();
-            delete model;
         }
         model = mf.Create(buffExtra);
-    }
-}
-
-void VisibleChunk::Shutdown() {
-    if (model) {
-        model->Shutdown();
-        delete model;
-        model = nullptr;
     }
 }

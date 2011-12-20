@@ -13,6 +13,7 @@ Texture::~Texture() {
 void Texture::Shutdown() {
     glDeleteTextures(1, &texture);
     glDeleteSamplers(1, &sampler);
+    delete this;
 }
 
 void Texture::Bind() {

@@ -2,8 +2,6 @@
 
 #include "System.h"
 #include "Window.h"
-#include "graphics/WorldRenderer.h"
-#include "Player.h"
 
 bool             System::running;
 Player*          System::player;
@@ -34,7 +32,7 @@ bool System::Init() {
     uint majorv = Window::sfWindow.GetSettings().MajorVersion;
     uint minorv = Window::sfWindow.GetSettings().MinorVersion;
 
-    if (majorv < 2 || majorv == 2 && minorv < 1) {
+    if (majorv < 2 || (majorv == 2 && minorv < 1)) {
         printerr("OpenGL 2.1+ is required. Version found on this computer: " + str(glGetString(GL_VERSION)));
         return false;
     }
@@ -57,7 +55,7 @@ bool System::Init() {
         return false;
     }
 
-    worldRenderer->ConstructVisibleChunks();
+    worldRenderer->InitGraphics();
 
     player = new Player();
     player->pos = world->width.ToDouble() / 2.0;

@@ -34,7 +34,6 @@ bool Res::Init() {
 void Res::AddShader(const string& name, Shader* shader) {
     if (shaders.count(name)) {
         shaders[name]->Shutdown();
-        delete shaders[name];
     }
 
     shaders[name] = shader;
@@ -43,7 +42,6 @@ void Res::AddShader(const string& name, Shader* shader) {
 void Res::AddTexture(const string& name, Texture* texture) {
     if (textures.count(name)) {
         textures[name]->Shutdown();
-        delete textures[name];
     }
 
     textures[name] = texture;
@@ -52,11 +50,9 @@ void Res::AddTexture(const string& name, Texture* texture) {
 void Res::Shutdown() {
     for (auto i = shaders.begin(); i != shaders.end(); i++) {
         i->second->Shutdown();
-        delete i->second;
     }
     for (auto i = textures.begin(); i != textures.end(); i++) {
         i->second->Shutdown();
-        delete i->second;
     }
     shaders.clear();
     textures.clear();

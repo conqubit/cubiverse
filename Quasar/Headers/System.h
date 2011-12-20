@@ -6,7 +6,7 @@
 #include "graphics/WorldRenderer.h"
 #include "level/World.h"
 #include "Input.h"
-#include "Player.h"
+#include "player/Player.h"
 #include "Logger.h"
 
 class System {

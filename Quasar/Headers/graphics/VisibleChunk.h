@@ -5,7 +5,7 @@
 #include "graphics/Model.h"
 #include "graphics/ModelFactory.h"
 
-class VisibleChunk {
+class VisibleChunk : IRenderObject {
 public:
     struct VisibleBlock {
         int location;
@@ -19,18 +19,20 @@ public:
         }
     };
 
+    std::map<ushort, VisibleBlock> visibleBlocks;
+
     VisibleChunk();
-
-    void UpdateBlock(ushort index, ModelFactory& mf);
-
-    void AppendBlock(ushort index, ModelFactory& mf);
-
-    void UpdateModel(const ModelFactory& mf);
 
     void Shutdown();
 
+    virtual void Render();
+    virtual void InitGraphics();
+    virtual void ShutdownGraphics();
+
+    void UpdateBlock(ushort index, ModelFactory& mf);
+    void AppendBlock(ushort index, ModelFactory& mf);
+    void UpdateModel(const ModelFactory& mf);
+
     Model* model;
     Chunk* chunk;
-
-    std::map<ushort, VisibleBlock> visibleBlocks;
 };

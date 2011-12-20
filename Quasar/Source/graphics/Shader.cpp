@@ -29,6 +29,7 @@ bool Shader::Init(const string& vertexShaderFile, const string& fragmentShaderFi
 
 void Shader::Shutdown() {
     glDeleteProgram(program);
+    delete this;
 }
 
 void Shader::Bind() {

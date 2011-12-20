@@ -20,9 +20,6 @@ vertexBufferSize(),
 topology(GL_TRIANGLES) {
 }
 
-Model::~Model() {
-}
-
 bool Model::Init(const ModelFactory& mf, int buffExtra) {
     shader = mf.shader;
     texture = mf.texture;
@@ -63,6 +60,13 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
     Unbind();
 
     return vertexBuffer /*indexBuffer*/ && shader && vertexArrayObject;
+}
+
+void Model::Shutdown() {
+    //glDeleteBuffers(1, &indexBuffer);
+    glDeleteBuffers(1, &vertexBuffer);
+    glDeleteVertexArrays(1, &vertexArrayObject);
+    delete this;
 }
 
 void Model::EnableOrtho(bool ortho) {
@@ -120,10 +124,4 @@ void Model::Render() {
 
     Unbind();
     shader->Unbind();
-}
-
-void Model::Shutdown() {
-    //glDeleteBuffers(1, &indexBuffer);
-    glDeleteBuffers(1, &vertexBuffer);
-    glDeleteVertexArrays(1, &vertexArrayObject);
 }

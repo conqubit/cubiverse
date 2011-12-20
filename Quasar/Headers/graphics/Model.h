@@ -12,14 +12,13 @@ class ModelFactory;
 class Model : public IRender {
 public:
     Model();
-    ~Model();
-    bool Init(const ModelFactory& mf, int buffExtra = 0);
 
-    void Render();
+    bool Init(const ModelFactory& mf, int buffExtra = 0);
+    void Shutdown();
+
+    virtual void Render();
 
     bool Update(const ModelFactory& mf);
-
-    void Shutdown();
 
     void EnableOrtho(bool ortho = true);
 

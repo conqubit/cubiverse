@@ -2,16 +2,11 @@
 
 #include "System.h"
 #include "Window.h"
-#include "Player.h"
+#include "player/Player.h"
 
 #include "graphics/ModelFactory.h"
-
-Model* x0;
-Model* x1;
-Model* Y0;
-Model* Y1;
-Model* z0;
-Model* z1;
+#include "player/Crosshair.h"
+#include "player/PickOutline.h"
 
 double eyeOffset = 1.7 - PHI;
 
@@ -25,6 +20,10 @@ btRigidBody::btRigidBodyConstructionInfo* blockBodyInfo;
 btRigidBody* body;
 btMotionState* playerMotionState;
 btDynamicsWorld* dynamicsWorld;
+
+
+Crosshair crosshair;
+PickOutline pickoutline;
 
 void Player::Init() {
     bb = BoundingBox(-0.3, -0.3, 0, 0.3, 0.3, 1.7);
@@ -55,110 +54,28 @@ void Player::Init() {
 }
 
 void Player::InitGraphics() {
-    // Block picking outline.
-    ModelFactory mf;
-    mf.AddAttribute<float>("position", 3);
-    mf.AddAttribute<float>("color", 4);
-
-    mf.shader = Res::GetShader("color");
-    mf.topology = GL_LINE_LOOP;
-    ColorF c(0, 0, 0, 0.5);
-
-    double d = 0.0025;
-
-    mf.Next().Set("position", 0 - d, 1 - d, 0 + d).Set("color", c);
-    mf.Next().Set("position", 0 - d, 1 - d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 0 - d, 0 + d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 0 - d, 0 + d, 0 + d).Set("color", c);
-    x0 = mf.Create();
-
-    mf.Clear();
-    mf.Next().Set("position", 1 + d, 0 + d, 0 + d).Set("color", c);
-    mf.Next().Set("position", 1 + d, 0 + d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 1 + d, 1 - d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 1 + d, 1 - d, 0 + d).Set("color", c);
-    x1 = mf.Create();
-
-    mf.Clear();
-    mf.Next().Set("position", 0 + d, 0 - d, 0 + d).Set("color", c);
-    mf.Next().Set("position", 0 + d, 0 - d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 1 - d, 0 - d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 1 - d, 0 - d, 0 + d).Set("color", c);
-    Y0 = mf.Create();
-
-    mf.Clear();
-    mf.Next().Set("position", 1 - d, 1 + d, 0 + d).Set("color", c);
-    mf.Next().Set("position", 1 - d, 1 + d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 0 + d, 1 + d, 1 - d).Set("color", c);
-    mf.Next().Set("position", 0 + d, 1 + d, 0 + d).Set("color", c);
-    Y1 = mf.Create();
-
-    mf.Clear();
-    mf.Next().Set("position", 1 - d, 0 + d, 0 - d).Set("color", c);
-    mf.Next().Set("position", 1 - d, 1 - d, 0 - d).Set("color", c);
-    mf.Next().Set("position", 0 + d, 1 - d, 0 - d).Set("color", c);
-    mf.Next().Set("position", 0 + d, 0 + d, 0 - d).Set("color", c);
-    z0 = mf.Create();
-
-    mf.Clear();
-    mf.Next().Set("position", 0 + d, 0 + d, 1 + d).Set("color", c);
-    mf.Next().Set("position", 0 + d, 1 - d, 1 + d).Set("color", c);
-    mf.Next().Set("position", 1 - d, 1 - d, 1 + d).Set("color", c);
-    mf.Next().Set("position", 1 - d, 0 + d, 1 + d).Set("color", c);
-    z1 = mf.Create();
-
-    // Crappy cursor.
-    mf.Clear();
-    mf.topology = GL_LINES;
-
-    mf.Next().Set("position", 0, 0, 0).Set("color", 1, 1, 1, 1);
-    mf.Next().Set("position", -0.02, -0.02, 0).Set("color", 1, 1, 1, 1);
-    mf.Next().Set("position", 0, 0, 0).Set("color", 1, 1, 1, 1);
-    mf.Next().Set("position", 0.02, -0.02, 0).Set("color", 1, 1, 1, 1);
-    
-    cursor = mf.Create();
-    cursor->EnableOrtho();
+    crosshair.InitGraphics();
+    pickoutline.InitGraphics();
 
     wireframe = ModelFactory::CreateWireframeDebugBox(bb, ColorF(1, 0, 0, 1));
 }
 
+void Player::ShutdownGraphics() {
+    crosshair.ShutdownGraphics();
+    pickoutline.ShutdownGraphics();
+
+    wireframe->Shutdown();
+}
+
 void Player::Shutdown() {
-    x0->Shutdown();
-    x1->Shutdown();
-    Y0->Shutdown();
-    Y1->Shutdown();
-    z0->Shutdown();
-    z1->Shutdown();
+    ShutdownGraphics();
 }
 
 void Player::Render() {
     if (picked) {
-        glLineWidth(3);
-        glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(pickedBlock.x, pickedBlock.y, pickedBlock.z));
-        if (side.x == -1) {
-            x0->world = m;
-            x0->Render();
-        }
-        if (side.x == 1) {
-            x1->world = m;
-            x1->Render();
-        }
-        if (side.y == -1) {
-            Y0->world = m;
-            Y0->Render();
-        }
-        if (side.y == 1) {
-            Y1->world = m;
-            Y1->Render();
-        }
-        if (side.z == -1) {
-            z0->world = m;
-            z0->Render();
-        }
-        if (side.z == 1) {
-            z1->world = m;
-            z1->Render();
-        }
+        pickoutline.pos = pickedBlock;
+        pickoutline.side = side;
+        pickoutline.Render();
     }
 
     glLineWidth(4);
@@ -166,13 +83,7 @@ void Player::Render() {
     //wireframe->Render();
 
     Graphics::ClearDepth();
-
-    glLineWidth(2);
-    glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-    cursor->Render();
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glLineWidth(1);
+    crosshair.Render();
 }
 
 void Player::Tick() {
