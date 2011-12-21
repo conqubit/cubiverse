@@ -23,7 +23,6 @@ public:
     static double AspectRatio();
 
     static void DoEvents();
-    static void DoWindowDrawing();
     static void DoResize();
 
     static void Maximize();
@@ -36,4 +35,6 @@ public:
     static bool IsMinimized();
 
     static bool IsFullScreen();
+
+    static void Display();
 };

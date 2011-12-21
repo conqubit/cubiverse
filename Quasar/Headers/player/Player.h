@@ -1,8 +1,9 @@
 #pragma once
 
 #include "math/Math.h"
-#include "graphics/Model.h"
 #include "graphics/IRender.h"
+
+class Model;
 
 class Player : public IRenderObject {
 private:

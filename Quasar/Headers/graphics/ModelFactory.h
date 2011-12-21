@@ -84,16 +84,16 @@ public:
         return index;
     }
 
+    const Attribute& GetAttribute(int index)const {
+        return attributes[index];
+    }
+
     const Attribute& GetAttribute(const string& name)const {
         for (int i = 0; i < attributes.size(); i++) {
             if (name == attributes[i].name) {
                 return attributes[i];
             }
         }
-    }
-
-    const Attribute& GetAttribute(int index)const {
-        return attributes[index];
     }
 
     int AttributeCount()const {

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "System.h"
+#include "Game.h"
 #include "graphics/Model.h"
 #include "graphics/ModelFactory.h"
 #include "graphics/WorldRenderer.h"
@@ -34,8 +35,6 @@ void WorldRenderer::Shutdown() {
     for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
         i->second->Shutdown();
     }
-    visibleChunks.clear();
-    world = nullptr;
     delete this;
 }
 
@@ -125,7 +124,7 @@ void WorldRenderer::ReconstructChunkModelData(Chunk* c) {
 
 
 void WorldRenderer::UpdateMesh(const Vector3I& p) {
-    Chunk* c = System::world->GetChunk(p);
+    Chunk* c = Game::world->GetChunk(p);
     if (!c) return;
     if (visibleChunks.count(c) != 0) {
         mf.Clear();
@@ -140,7 +139,7 @@ void WorldRenderer::UpdateMesh(const Vector3I& p) {
 void WorldRenderer::UpdateBlock(const Vector3I& p) {
     UpdateMesh(p);
     SIDES(
-        if (Block::Visible(System::world->GetBlock(p + s))) {
+        if (Block::Visible(world->GetBlock(p + s))) {
             UpdateMesh(p + s);
         }
     );

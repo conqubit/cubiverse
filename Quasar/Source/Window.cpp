@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Input.h"
+#include "Game.h"
 #include "graphics/Graphics.h"
 #include "Window.h"
 #include "System.h"
@@ -29,8 +31,6 @@ sf::ContextSettings contextSettings;
 
 bool fs = false;
 
-sf::Font f;
-
 struct WindowState {
     bool maximized;
     int posX;
@@ -55,7 +55,15 @@ bool Window::Init() {
     sfWindow.SetFramerateLimit(limitFrameRate);
     sfWindow.EnableVerticalSync(vsync);
 
-    f.LoadFromFile("res/consola.ttf");
+    print("OpenGL version: " + str(glGetString(GL_VERSION)));
+
+    uint majorv = Window::sfWindow.GetSettings().MajorVersion;
+    uint minorv = Window::sfWindow.GetSettings().MinorVersion;
+
+    if (majorv < 2 || (majorv == 2 && minorv < 1)) {
+        printerr("OpenGL 2.1+ is required. Version found on this computer: " + str(glGetString(GL_VERSION)));
+        return false;
+    }
 
     return true;
 }
@@ -118,36 +126,9 @@ extern int currentFPS;
 
 extern int64 freq;
 
-void Window::DoWindowDrawing() {
-    sfWindow.SaveGLStates();
-
-    double factor = (double)Height() / 800.0;
-
-    Vector3D p = System::player->pos - System::world->width.ToDouble() / 2.0;
-    sf::Text text("Position: " + p.ToString(2), f, 20 * factor);
-    text.SetPosition(5 * factor, 0);
-    sfWindow.Draw(text);
-
-    if (fpsTicks >= freq / 2) {
-        currentFPS = fpsCount;
-        fpsTicks = 0;
-        fpsCount = 0;
-    }
-
-    text.SetString("FPS: " + str(currentFPS * 2));
-    text.SetPosition(5 * factor, 30 * factor);
-    sfWindow.Draw(text);
-
-    //text.SetString("Up: " + System::player->playerUp.ToString());
-    //text.SetPosition(5 * factor, 60 * factor);
-    //sfWindow.Draw(text);
-
-    sfWindow.RestoreGLStates();
-}
-
 void Window::DoResize() {
     if (resize) {
-        // Update OpenGL size.
+        // Update OpenGL viewport.
         glViewport(0, 0, Width(), Height());
         // Adjust projection matrix, for potential changes in aspect ratio.
         Graphics::SetProjection();
@@ -160,13 +141,10 @@ void Window::DoResize() {
 void Window::ToggleFullscreen() {
     fs = !fs;
 
-    System::player->ShutdownGraphics();
-    System::worldRenderer->ShutdownGraphics();
+    Graphics::ShutdownGraphics();
 
     Input::Shutdown();
-
     Res::Shutdown();
-    Graphics::Shutdown();
 
     resize = true;
 
@@ -194,11 +172,7 @@ void Window::ToggleFullscreen() {
     Graphics::Init();
     Res::Init();
 
-    System::worldRenderer->InitGraphics();
-    System::player->InitGraphics();
-
-    Graphics::things.push_back(System::worldRenderer);
-    Graphics::things.push_back(System::player);
+    Graphics::InitGraphics();
 }
 
 sf::Event e;
@@ -226,7 +200,7 @@ void Window::DoEvents() {
                 ToggleFullscreen();
                 break;
             case Key::Z:
-                System::player->noclip = !System::player->noclip;
+                Game::player->noclip = !Game::player->noclip;
                 break;
             }
             break;
@@ -260,4 +234,9 @@ void Window::DoEvents() {
     }
     Input::ReadKeyboard();
     Input::ReadMouse();
+    Window::DoResize();
+}
+
+void Window::Display() {
+    sfWindow.Display();
 }

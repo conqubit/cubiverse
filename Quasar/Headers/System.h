@@ -1,20 +1,10 @@
 #pragma once
 
-//#include "stdafx.h"
-
-#include "graphics/Graphics.h"
-#include "graphics/WorldRenderer.h"
-#include "level/World.h"
-#include "Input.h"
-#include "player/Player.h"
 #include "Logger.h"
 
 class System {
 public:
     static bool             running;
-    static Player*          player;
-    static World*           world;
-    static WorldRenderer*   worldRenderer;
     static FileLogger       errorLog;
 
     static bool Init();

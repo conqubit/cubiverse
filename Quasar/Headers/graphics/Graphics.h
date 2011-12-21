@@ -4,7 +4,7 @@
 
 class Graphics {
 public:
-    static std::vector<IRender*> things;
+    static std::vector<IRenderObject*> things;
     static glm::mat4 proj;
     static glm::mat4 ortho;
 
@@ -12,6 +12,9 @@ public:
     static void Shutdown();
     static void Render();
     static void SetProjection();
+
+    static void InitGraphics();
+    static void ShutdownGraphics();
 
     static const glm::mat4&  GetOrtho();
     static glm::mat4 GetViewProj();

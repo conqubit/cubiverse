@@ -2,9 +2,10 @@
 
 #include "System.h"
 #include "Window.h"
+#include "Game.h"
 #include "graphics/Graphics.h"
 
-std::vector<IRender*> Graphics::things;
+std::vector<IRenderObject*> Graphics::things;
 glm::mat4 Graphics::proj;
 glm::mat4 Graphics::ortho;
 
@@ -28,6 +29,18 @@ void Graphics::Shutdown() {
     things.clear();
 }
 
+void Graphics::InitGraphics() {
+    for (int i = 0; i < things.size(); i++) {
+        things[i]->InitGraphics();
+    }
+}
+
+void Graphics::ShutdownGraphics() {
+    for (int i = 0; i < things.size(); i++) {
+        things[i]->ShutdownGraphics();
+    }
+}
+
 void Graphics::SetProjection() {
     double aspect = Window::AspectRatio();
     proj = glm::perspective(80.0f, (float)aspect, 0.05f, 250.0f);
@@ -39,7 +52,7 @@ const glm::mat4& Graphics::GetOrtho() {
 }
 
 glm::mat4 Graphics::GetViewProj() {
-    return proj * System::player->View();
+    return proj * Game::player->View();
 }
 
 void Graphics::Render() {
