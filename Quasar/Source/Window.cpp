@@ -164,7 +164,9 @@ void Window::ToggleFullscreen() {
     System::worldRenderer->ShutdownGraphics();
 
     Input::Shutdown();
+
     Res::Shutdown();
+    Graphics::Shutdown();
 
     resize = true;
 

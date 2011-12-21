@@ -10,20 +10,25 @@ extern int numBlocks;
 
 BlockRenderer::BlockRenderer() :
 wr(nullptr), world(nullptr), mf(nullptr),
-vPos(0), vCol(1), vTex(2) {
+vPos(0), vCol(1), vTex(2),
+numVertices(0) {
 }
 
 
 BlockRenderer::BlockRenderer(WorldRenderer& wr) :
 wr(&wr), world(wr.world), mf(&wr.mf),
-vPos(wr.vPos), vCol(wr.vCol), vTex(wr.vTex) {
+vPos(wr.vPos), vCol(wr.vCol), vTex(wr.vTex),
+numVertices(0) {
 }
 
 
-void BlockRenderer::ConstructBlock(const Vector3I& p) {
+int BlockRenderer::ConstructBlock(const Vector3I& p) {
     pos = p;
     block = world->GetBlock(p);
-    if (block == Block::Air) return;
+
+    if (block == Block::Air) return 0;
+
+    numVertices = 0;
 
     if (!Block::Opaque(world->GetBlock(p.x + 1, p.y, p.z))) {
         side = Vector3I(1, 0, 0);
@@ -49,6 +54,14 @@ void BlockRenderer::ConstructBlock(const Vector3I& p) {
         side = Vector3I(0, 0, -1);
         ConstructFace(p, 1, 0, 2, 0.5f);
     }
+
+    return numVertices * mf->VertexStride();
+}
+
+
+inline ModelFactory& BlockRenderer::NextVertex() {
+    numVertices++;
+    return mf->Next();
 }
 
 
@@ -57,13 +70,13 @@ void BlockRenderer::ConstructFace(const Vector3I& v, int xi, int yi, int zi, flo
     ColorB c = ColorF(b, b, b).ToByte();
     float tz = GetTextureFloatIndex();
 
-    mf->Next().Set(vPos, v).Set(vCol, c).Set(vTex, 0, 0, tz);
-    mf->Next().Set(vPos, v + Vector3I::AXIS[yi]).Set(vCol, c).Set(vTex, 0, 1, tz);
-    mf->Next().Set(vPos, v + Vector3I::AXIS[yi] + Vector3I::AXIS[xi]).Set(vCol, c).Set(vTex, 1, 1, tz);
+    NextVertex().Set(vPos, v).Set(vCol, c).Set(vTex, 0, 0, tz);
+    NextVertex().Set(vPos, v + Vector3I::AXIS[yi]).Set(vCol, c).Set(vTex, 0, 1, tz);
+    NextVertex().Set(vPos, v + Vector3I::AXIS[yi] + Vector3I::AXIS[xi]).Set(vCol, c).Set(vTex, 1, 1, tz);
 
-    mf->Next().Set(vPos, v + Vector3I::AXIS[yi] + Vector3I::AXIS[xi]).Set(vCol, c).Set(vTex, 1, 1, tz);
-    mf->Next().Set(vPos, v + Vector3I::AXIS[xi]).Set(vCol, c).Set(vTex, 1, 0, tz);
-    mf->Next().Set(vPos, v).Set(vCol, c).Set(vTex, 0, 0, tz);
+    NextVertex().Set(vPos, v + Vector3I::AXIS[yi] + Vector3I::AXIS[xi]).Set(vCol, c).Set(vTex, 1, 1, tz);
+    NextVertex().Set(vPos, v + Vector3I::AXIS[xi]).Set(vCol, c).Set(vTex, 1, 0, tz);
+    NextVertex().Set(vPos, v).Set(vCol, c).Set(vTex, 0, 0, tz);
 }
 
 

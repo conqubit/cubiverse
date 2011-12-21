@@ -4,13 +4,6 @@
 #include "graphics/Shader.h"
 #include "graphics/Model.h"
 
-Shader::Shader() :
-program() {
-}
-
-Shader::~Shader() {
-}
-
 bool Shader::Init(const string& vertexShaderFile, const string& fragmentShaderFile) {
     GLuint vertexShader = MakeShader(GL_VERTEX_SHADER, vertexShaderFile);
     if (!vertexShader) return false;

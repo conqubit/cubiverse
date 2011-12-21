@@ -33,7 +33,7 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, nullptr, mf.usage);
     glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataSize(), mf.VertexData());
 
     for (int i = 0; i < mf.AttributeCount(); i++) {
@@ -48,7 +48,6 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 
     if (texture) {
         glUniform1i(glGetUniformLocation(shader->program, "textureSampler"), 0);
-        glActiveTexture(GL_TEXTURE0);
         texture->Bind();
         glBindSampler(0, texture->sampler);
     }
@@ -107,11 +106,12 @@ void Model::Unmap() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+glm::mat4 m;
+
 void Model::Render() {
     shader->Bind();
     Bind();
 
-    glm::mat4 m;
     if (orthographic) {
         m = Graphics::GetOrtho() * world;
     } else {
@@ -122,6 +122,6 @@ void Model::Render() {
 
     glDrawArrays(topology, 0, vertexCount);
 
-    Unbind();
+    //Unbind();
     shader->Unbind();
 }

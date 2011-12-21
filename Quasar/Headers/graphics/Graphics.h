@@ -14,7 +14,7 @@ public:
     static void SetProjection();
 
     static const glm::mat4&  GetOrtho();
-    static const glm::mat4&  GetViewProj();
+    static glm::mat4 GetViewProj();
 
     static void ClearAll();
     static void ClearColor();

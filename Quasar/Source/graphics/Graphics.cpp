@@ -38,7 +38,7 @@ const glm::mat4& Graphics::GetOrtho() {
     return ortho;
 }
 
-const glm::mat4& Graphics::GetViewProj() {
+glm::mat4 Graphics::GetViewProj() {
     return proj * System::player->View();
 }
 

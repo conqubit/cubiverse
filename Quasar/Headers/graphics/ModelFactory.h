@@ -35,17 +35,20 @@ public:
     byte* dataOverride;
     int sizeOverride;
 
+    GLenum usage;
+
     GLenum topology;
 
     ModelFactory() :
-    stride(),
-    pos(),
+    stride(0),
+    pos(0),
 
-    shader(),
-    texture(),
-    dataOverride(),
+    shader(nullptr),
+    texture(nullptr),
+    dataOverride(nullptr),
     sizeOverride(-1),
-    topology(GL_TRIANGLES) {
+    topology(GL_TRIANGLES),
+    usage(GL_STATIC_DRAW) {
     }
 
     ~ModelFactory() {

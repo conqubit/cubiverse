@@ -3,10 +3,10 @@
 #include "graphics/VisibleChunk.h"
 
 VisibleChunk::VisibleChunk() :
-model(nullptr), chunk(nullptr) {
+model(nullptr) {
 }
 
-void VisibleChunk::Render() {
+inline void VisibleChunk::Render() {
     model->Render();
 }
 

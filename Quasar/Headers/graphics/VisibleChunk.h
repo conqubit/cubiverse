@@ -14,12 +14,14 @@ public:
         VisibleBlock() :
         location(), size() {
         }
+
         VisibleBlock(int location, short size) :
         location(location), size(size) {
         }
     };
 
     std::map<ushort, VisibleBlock> visibleBlocks;
+    Model* model;
 
     VisibleChunk();
 
@@ -32,7 +34,4 @@ public:
     void UpdateBlock(ushort index, ModelFactory& mf);
     void AppendBlock(ushort index, ModelFactory& mf);
     void UpdateModel(const ModelFactory& mf);
-
-    Model* model;
-    Chunk* chunk;
 };

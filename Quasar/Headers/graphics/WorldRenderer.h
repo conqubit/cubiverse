@@ -9,7 +9,7 @@
 
 class WorldRenderer : public IRenderObject {
 public:
-    std::vector<VisibleChunk*> visibleChunks;
+    std::map<Chunk*, VisibleChunk*> visibleChunks;
     World* world;
     ModelFactory mf;
 
@@ -25,9 +25,11 @@ public:
     virtual void InitGraphics();
     virtual void ShutdownGraphics();
 
-    void ConstructChunkModelData(Chunk* c, VisibleChunk* vs);
+    void ConstructChunkModelData(Chunk* c);
+    void ReconstructChunkModelData(Chunk* c);
 
-    VisibleChunk* ConstructNewVisibleChunk(Chunk* c);
+    void ConstructNewVisibleChunk(Chunk* c);
+    void ReconstructVisibleChunk(Chunk* c);
 
     static void ConstructFace(int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b);
     void ConstructBlock(const Vector3I& p);

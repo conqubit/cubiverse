@@ -16,8 +16,7 @@ int numBlocks = 4;
 bool WorldRenderer::Init(World* w) {
     world = w;
 
-    mf.shader = Res::GetShader("block");
-    mf.texture = Res::GetTexture("blocks");
+    mf.usage = GL_DYNAMIC_COPY;
     mf.topology = GL_TRIANGLES;
 
     vPos = mf.AddAttribute<float>("position", 3);
@@ -32,88 +31,108 @@ bool WorldRenderer::Init(World* w) {
 
 void WorldRenderer::Shutdown() {
     ShutdownGraphics();
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+        i->second->Shutdown();
+    }
+    visibleChunks.clear();
     world = nullptr;
     delete this;
 }
 
 
 void WorldRenderer::Render() {
-    for (int i = 0; i < visibleChunks.size(); i++) {
-        if (!visibleChunks[i]) continue;
-        visibleChunks[i]->model->Render();
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+        i->second->Render();
     }
 }
 
 
 void WorldRenderer::InitGraphics() {
+    mf.shader = Res::GetShader("block");
+    mf.texture = Res::GetTexture("blocks");
+
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+        ReconstructVisibleChunk(i->first);
+    }
+
     for (int i = 0; i < world->numChunks; i++) {
-        VisibleChunk* vs = ConstructNewVisibleChunk(world->chunks[i]);
-        if (vs) {
-            visibleChunks.push_back(vs);
+        if (visibleChunks.count(world->chunks[i]) == 0) {
+            ConstructNewVisibleChunk(world->chunks[i]);
         }
     }
 }
 
 
 void WorldRenderer::ShutdownGraphics() {
-    for (int i = 0; i < visibleChunks.size(); i++) {
-        if (visibleChunks[i]) {
-            visibleChunks[i]->Shutdown();
-        }
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+        i->second->ShutdownGraphics();
     }
-    visibleChunks.clear();
 }
 
 
-VisibleChunk* WorldRenderer::ConstructNewVisibleChunk(Chunk* c) {
-    if (!c) return nullptr;
-    VisibleChunk* vs = new VisibleChunk();
-    ConstructChunkModelData(c, vs);
+void WorldRenderer::ConstructNewVisibleChunk(Chunk* c) {
+    if (!c) return;
+    VisibleChunk* vc = new VisibleChunk();
+    visibleChunks[c] = vc;
+    ConstructChunkModelData(c);
     if (mf.VertexCount() > 0) {
-        vs->chunk = c;
-        vs->UpdateModel(mf);
-        return vs;
+        vc->UpdateModel(mf);
+    } else {
+        visibleChunks.erase(c);
+        delete vc;
     }
-    delete vs;
-    return nullptr;
 }
 
 
-void WorldRenderer::ConstructChunkModelData(Chunk* c,  VisibleChunk* vs) {
+void WorldRenderer::ReconstructVisibleChunk(Chunk* c) {
+    if (!c) return;
+    ReconstructChunkModelData(c);
+    if (mf.VertexCount() > 0) {
+        visibleChunks[c]->UpdateModel(mf);
+    } else {
+        visibleChunks.erase(c);
+    }
+}
+
+
+void WorldRenderer::ConstructChunkModelData(Chunk* c) {
     mf.Clear();
+    VisibleChunk* vc = visibleChunks[c];
     VEC3_RANGE_OFFSET(c->pos, Chunk::DIM_VEC) {
-        int stiz = mf.VertexDataSize();
-        br.ConstructBlock(p);
-        stiz = mf.VertexDataSize() - stiz;
-        if (stiz > 0) {
-            VisibleChunk::VisibleBlock& vb = vs->visibleBlocks[Chunk::GetIndex(p)];
-            vb.location = mf.VertexDataSize() - stiz;
-            vb.size = stiz;
+        int size = br.ConstructBlock(p);
+        if (size != 0) {
+            VisibleChunk::VisibleBlock& vb = vc->visibleBlocks[Chunk::GetIndex(p)];
+            vb.location = mf.VertexDataSize() - size;
+            vb.size = size;
         }
     }
 }
+
+
+void WorldRenderer::ReconstructChunkModelData(Chunk* c) {
+    if (!c) return;
+    VisibleChunk* vc = visibleChunks[c];
+    mf.Clear();
+    for (auto i = vc->visibleBlocks.begin(); i != vc->visibleBlocks.end(); i++) {
+        int size = br.ConstructBlock(c->GetWorldPositionFromIndex(i->first));
+
+        VisibleChunk::VisibleBlock& vb = vc->visibleBlocks[i->first];
+        vb.location = mf.VertexDataSize() - size;
+        vb.size = size;
+    }
+}
+
 
 
 void WorldRenderer::UpdateMesh(const Vector3I& p) {
     Chunk* c = System::world->GetChunk(p);
     if (!c) return;
-    int i;
-    for (i = 0; i < visibleChunks.size(); i++) {
-        VisibleChunk* vc = visibleChunks[i];
-
-        if (!vc || vc->chunk != c) continue;
-
+    if (visibleChunks.count(c) != 0) {
         mf.Clear();
         br.ConstructBlock(p);
-        vc->UpdateBlock(Chunk::GetIndex(p), mf);
-
-        return;
-    }
-    if (i == visibleChunks.size()) {
-        VisibleChunk* vs = ConstructNewVisibleChunk(c);
-        if (vs) {
-            visibleChunks.push_back(vs);
-        }
+        visibleChunks[c]->UpdateBlock(Chunk::GetIndex(p), mf);
+    } else {
+        ConstructNewVisibleChunk(c);
     }
 }
 
@@ -130,20 +149,10 @@ void WorldRenderer::UpdateBlock(const Vector3I& p) {
 
 void WorldRenderer::UpdateChunk(Chunk* c, const Vector3I& p) {
     if (c == nullptr) return;
-    int i;
-    for (i = 0; i < visibleChunks.size(); i++) {
-        VisibleChunk* vc = visibleChunks[i];
-
-        if (!vc || vc->chunk != c) continue;
-
-        ConstructChunkModelData(c, vc);
-        vc->UpdateModel(mf);
-        return;
-    }
-    if (i == visibleChunks.size()) {
-        VisibleChunk* vs = ConstructNewVisibleChunk(c);
-        if (vs) {
-            visibleChunks.push_back(vs);
-        }
+    if (visibleChunks.count(c) != 0) {
+        ConstructChunkModelData(c);
+        visibleChunks[c]->UpdateModel(mf);
+    } else {
+        ConstructNewVisibleChunk(c);
     }
 }

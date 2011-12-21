@@ -8,8 +8,10 @@ class Shader {
 public:
     GLuint program;
 
-    Shader();
-    ~Shader();
+    Shader() :
+    program(0) {
+    }
+
     bool Init(const string& vertexShaderFile, const string& fragmentShaderFile);
     void Shutdown();
     void Bind();
