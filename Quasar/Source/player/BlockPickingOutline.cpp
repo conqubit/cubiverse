@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "player/PickOutline.h"
+#include "player/BlockPickingOutline.h"
 #include "graphics/Model.h"
 #include "graphics/ModelFactory.h"
 

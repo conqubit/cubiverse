@@ -1,15 +1,10 @@
 #pragma once
 
-#include "System.h"
-
 #include <dinput.h>
-
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
 
 class Input {
 public:
-    static bool InitDirectInput();
+    static bool Init();
     static void Shutdown();
     static void SetMousePosition(int x, int y);
     static bool KeyPressed(int key);

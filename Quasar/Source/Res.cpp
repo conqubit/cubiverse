@@ -48,10 +48,10 @@ void Res::AddTexture(const string& name, Texture* texture) {
 }
 
 void Res::Shutdown() {
-    for (auto i = shaders.begin(); i != shaders.end(); i++) {
+    for (auto i = shaders.begin(); i != shaders.end(); ++i) {
         i->second->Shutdown();
     }
-    for (auto i = textures.begin(); i != textures.end(); i++) {
+    for (auto i = textures.begin(); i != textures.end(); ++i) {
         i->second->Shutdown();
     }
     shaders.clear();

@@ -32,7 +32,7 @@ bool WorldRenderer::Init(World* w) {
 
 void WorldRenderer::Shutdown() {
     ShutdownGraphics();
-    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); ++i) {
         i->second->Shutdown();
     }
     delete this;
@@ -40,7 +40,7 @@ void WorldRenderer::Shutdown() {
 
 
 void WorldRenderer::Render() {
-    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); ++i) {
         i->second->Render();
     }
 }
@@ -50,20 +50,21 @@ void WorldRenderer::InitGraphics() {
     mf.shader = Res::GetShader("block");
     mf.texture = Res::GetTexture("blocks");
 
-    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); ++i) {
         ReconstructVisibleChunk(i->first);
     }
 
-    for (int i = 0; i < world->numChunks; i++) {
-        if (visibleChunks.count(world->chunks[i]) == 0) {
-            ConstructNewVisibleChunk(world->chunks[i]);
+    VEC3_RANGE_AB(world->cmin, world->cmax) {
+        Chunk* c = world->GetChunk(p * Chunk::DIM);
+        if (visibleChunks.count(c) == 0) {
+            ConstructNewVisibleChunk(c);
         }
     }
 }
 
 
 void WorldRenderer::ShutdownGraphics() {
-    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); i++) {
+    for (auto i = visibleChunks.begin(); i != visibleChunks.end(); ++i) {
         i->second->ShutdownGraphics();
     }
 }
@@ -97,7 +98,7 @@ void WorldRenderer::ReconstructVisibleChunk(Chunk* c) {
 void WorldRenderer::ConstructChunkModelData(Chunk* c) {
     mf.Clear();
     VisibleChunk* vc = visibleChunks[c];
-    VEC3_RANGE_OFFSET(c->pos, Chunk::DIM_VEC) {
+    VEC3_RANGE_OFFSET(c->Pos(), Chunk::DIM_VEC) {
         int size = br.ConstructBlock(p);
         if (size != 0) {
             VisibleChunk::VisibleBlock& vb = vc->visibleBlocks[Chunk::GetIndex(p)];
@@ -112,7 +113,7 @@ void WorldRenderer::ReconstructChunkModelData(Chunk* c) {
     if (!c) return;
     VisibleChunk* vc = visibleChunks[c];
     mf.Clear();
-    for (auto i = vc->visibleBlocks.begin(); i != vc->visibleBlocks.end(); i++) {
+    for (auto i = vc->visibleBlocks.begin(); i != vc->visibleBlocks.end(); ++i) {
         int size = br.ConstructBlock(c->GetWorldPositionFromIndex(i->first));
 
         VisibleChunk::VisibleBlock& vb = vc->visibleBlocks[i->first];

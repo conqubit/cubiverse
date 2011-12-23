@@ -43,7 +43,7 @@ void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
     byte* bufferLocation = model->Map(GL_READ_WRITE) + b.location;
     memmove(bufferLocation, bufferLocation + b.size, model->vertexCount * mf.VertexStride() - (b.location + b.size));
     model->Unmap();
-    for (auto i = visibleBlocks.begin(); i != visibleBlocks.end(); i++) {
+    for (auto i = visibleBlocks.begin(); i != visibleBlocks.end(); ++i) {
         if (i->second.location > b.location) {
             i->second.location -= b.size;
         }

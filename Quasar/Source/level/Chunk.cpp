@@ -10,8 +10,8 @@ Chunk::Chunk() : pos() {
 Chunk::~Chunk() {
 }
 
-void Chunk::Init(int t, int cx, int cy, int cz) {
-    pos = Vector3I(cx, cy, cz) * Chunk::DIM;
+void Chunk::Init(int t, const Vector3I& p) {
+    pos = p;
     Fill(t);
 }
 

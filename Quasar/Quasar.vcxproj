@@ -191,13 +191,14 @@
     <ClInclude Include="Headers\Input.h" />
     <ClInclude Include="Headers\level\Block.h" />
     <ClInclude Include="Headers\level\Chunk.h" />
+    <ClInclude Include="Headers\level\Level.h" />
     <ClInclude Include="Headers\level\World.h" />
     <ClInclude Include="Headers\Logger.h" />
     <ClInclude Include="Headers\math\BoundingBox.h" />
     <ClInclude Include="Headers\math\Color.h" />
     <ClInclude Include="Headers\math\Math.h" />
     <ClInclude Include="Headers\math\Vector.h" />
-    <ClInclude Include="Headers\player\PickOutline.h" />
+    <ClInclude Include="Headers\player\BlockPickingOutline.h" />
     <ClInclude Include="Headers\player\Player.h" />
     <ClInclude Include="Headers\player\Crosshair.h" />
     <ClInclude Include="Headers\Res.h" />
@@ -220,7 +221,7 @@
     <ClCompile Include="Source\level\Block.cpp" />
     <ClCompile Include="Source\level\Chunk.cpp" />
     <ClCompile Include="Source\level\World.cpp" />
-    <ClCompile Include="Source\player\PickOutline.cpp" />
+    <ClCompile Include="Source\player\BlockPickingOutline.cpp" />
     <ClCompile Include="Source\player\Player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\player\Crosshair.cpp" />

@@ -10,7 +10,7 @@
 
 #include "graphics/ModelFactory.h"
 #include "player/Crosshair.h"
-#include "player/PickOutline.h"
+#include "player/BlockPickingOutline.h"
 
 double eyeOffset = 1.7 - PHI;
 

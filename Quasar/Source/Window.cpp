@@ -171,6 +171,7 @@ void Window::ToggleFullscreen() {
 
     Graphics::Init();
     Res::Init();
+    Input::Init();
 
     Graphics::InitGraphics();
 }

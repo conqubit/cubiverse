@@ -17,11 +17,7 @@ struct Vector3 {
 
     T x, y, z;
 
-    //---------------- Constructors / Destructors ----------------
     Vector3() : x(), y(), z() {
-    }
-
-    ~Vector3() {
     }
 
     template <typename U>
@@ -148,6 +144,14 @@ struct Vector3 {
     Vector3<T> operator/(U s)const {
         return Vector3<T>(x / s, y / s, z / s);
     }
+
+    Vector3I operator<<(int s)const {
+        return Vector3I(x << s, y << s, z << s);
+    }
+
+    Vector3I operator>>(int s)const {
+        return Vector3I(x >> s, y >> s, z >> s);
+    }
     
     //---------------- Vector-Vector Assignment ----------------
     template <typename U>
@@ -239,25 +243,25 @@ const Vector3<T> Vector3<T>::AXIS[3] = { Vector3<T>::AXIS_X,
 #define VEC3_RANGE(vec) \
     Vector3I p; \
     const Vector3I& _v = vec; \
-    for(p.x = 0; p.x < _v.x; p.x++) \
+    for(p.z = 0; p.z < _v.z; p.z++) \
     for(p.y = 0; p.y < _v.y; p.y++) \
-    for(p.z = 0; p.z < _v.z; p.z++)
+    for(p.x = 0; p.x < _v.x; p.x++)
 
 #define VEC3_RANGE_AB(start, end) \
     Vector3I p; \
     const Vector3I& _s = start; \
     const Vector3I& _e = end; \
-    for(p.x = _s.x; p.x <= _e.x; p.x++) \
+    for(p.z = _s.z; p.z <= _e.z; p.z++) \
     for(p.y = _s.y; p.y <= _e.y; p.y++) \
-    for(p.z = _s.z; p.z <= _e.z; p.z++)
+    for(p.x = _s.x; p.x <= _e.x; p.x++)
 
 #define VEC3_RANGE_OFFSET(off, vec) \
     Vector3I p; \
     const Vector3I& _o = off; \
     const Vector3I& _v = _o + vec; \
-    for(p.x = _o.x; p.x < _v.x; p.x++) \
+    for(p.z = _o.z; p.z < _v.z; p.z++) \
     for(p.y = _o.y; p.y < _v.y; p.y++) \
-    for(p.z = _o.z; p.z < _v.z; p.z++)
+    for(p.x = _o.x; p.x < _v.x; p.x++)
 
 #define SIDES(code) \
     Vector3I s; \

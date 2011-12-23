@@ -3,6 +3,9 @@
 #include "Window.h"
 #include "Input.h"
 
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+
 int Input::mx;
 int Input::my;
 int Input::dmx;
@@ -15,7 +18,7 @@ IDirectInputDevice8W* Input::mouse;
 bool Input::locked = false;
 bool Input::directInputInitialized = false;
 
-bool Input::InitDirectInput() {
+bool Input::Init() {
     directInputInitialized = false;
     HRESULT r;
 
@@ -109,7 +112,7 @@ bool Input::KeyPressed(int key) {
 }
 
 bool Input::ReadKeyboard() {
-    if (!directInputInitialized && !InitDirectInput()) {
+    if (!directInputInitialized && !Init()) {
         return false;
     }
 
@@ -133,7 +136,7 @@ bool Input::ReadKeyboard() {
 DIMOUSESTATE mouseState;
 
 bool Input::ReadMouse() {
-    if (!directInputInitialized && !InitDirectInput()) {
+    if (!directInputInitialized && !Init()) {
         return false;
     }
 

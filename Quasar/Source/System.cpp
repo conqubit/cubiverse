@@ -3,6 +3,7 @@
 #include "System.h"
 #include "Window.h"
 #include "Game.h"
+#include "Input.h"
 
 #include "graphics/Graphics.h"
 
@@ -24,6 +25,8 @@ bool System::Init() {
 
     Window::Maximize();
     Window::Display();
+
+    Input::Init();
 
     Graphics::Init();
 
