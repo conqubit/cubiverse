@@ -15,6 +15,10 @@ void Chunk::Init(int t, const Vector3I& p) {
     Fill(t);
 }
 
+void Chunk::Shutdown() {
+    delete this;
+}
+
 void Chunk::Fill(int t) {
     memset(data, t, Chunk::SIZE);
 }

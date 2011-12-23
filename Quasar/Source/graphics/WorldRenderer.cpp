@@ -55,7 +55,7 @@ void WorldRenderer::InitGraphics() {
     }
 
     VEC3_RANGE_AB(world->cmin, world->cmax) {
-        Chunk* c = world->GetChunk(p * Chunk::DIM);
+        Chunk* c = world->GetChunk(p);
         if (visibleChunks.count(c) == 0) {
             ConstructNewVisibleChunk(c);
         }
@@ -125,7 +125,7 @@ void WorldRenderer::ReconstructChunkModelData(Chunk* c) {
 
 
 void WorldRenderer::UpdateMesh(const Vector3I& p) {
-    Chunk* c = Game::world->GetChunk(p);
+    Chunk* c = Game::world->GetChunkFromBlock(p);
     if (!c) return;
     if (visibleChunks.count(c) != 0) {
         mf.Clear();

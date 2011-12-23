@@ -14,6 +14,10 @@ public:
 
     static const Vector3I DIM_VEC;
 
+    Vector3I ToChunkCoord(const Vector3I& p) {
+        return p >> SHIFT;
+    }
+
     Vector3I pos;
     byte data[SIZE];
 
@@ -25,6 +29,8 @@ public:
     }
 
     void Init(int t, const Vector3I& p);
+    void Shutdown();
+
     void Fill(int t);
 
     Vector3I GetWorldPositionFromIndex(int i)const {

@@ -33,8 +33,8 @@ public:
     bool Intersects(const BoundingBox& bb)const;
 
     int GetBlock(const Vector3I& p)const {
-        Chunk* c = GetChunk(p);
-        return c ? GetChunk(p)->GetBlock(p) : Block::Undefined;
+        Chunk* c = GetChunkFromBlock(p);
+        return c ? c->GetBlock(p) : Block::Undefined;
     }
 
     int GetBlock(int x, int y, int z)const {
@@ -42,15 +42,18 @@ public:
     }
 
     void SetBlock(const Vector3I& p, int t) {
-        Chunk* c = GetChunk(p);
+        Chunk* c = GetChunkFromBlock(p);
         if (c) {
             c->SetBlock(p, t);
         }
     }
 
-    Chunk* GetChunk(const Vector3I& p)const {
-        if (!InBlockBounds(p)) return nullptr;
-        return level.GetChunk(p);
+    Chunk* GetChunk(const Vector3I& cp)const {
+        return level.GetChunk(cp);
+    }
+
+    Chunk* GetChunkFromBlock(const Vector3I& p)const {
+        return level.GetChunk(p >> Chunk::SHIFT);
     }
 
     void InsertChunk(Chunk* c) {
