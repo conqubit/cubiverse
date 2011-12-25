@@ -27,6 +27,9 @@ void World::Fill(int t) {
         Chunk* c = new Chunk();
         c->Init(t, p);
         InsertChunk(c);
+
+        print(p.ToString());
+        print(level.offset.ToString() + '\n');
     }
 }
 

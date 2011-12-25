@@ -152,6 +152,18 @@ struct Vector3 {
     Vector3I operator>>(int s)const {
         return Vector3I(x >> s, y >> s, z >> s);
     }
+
+    Vector3I operator&(int s)const {
+        return Vector3I(x & s, y & s, z & s);
+    }
+
+    Vector3I operator|(int s)const {
+        return Vector3I(x | s, y | s, z | s);
+    }
+
+    Vector3I operator^(int s)const {
+        return Vector3I(x ^ s, y ^ s, z ^ s);
+    }
     
     //---------------- Vector-Vector Assignment ----------------
     template <typename U>
@@ -173,6 +185,26 @@ struct Vector3 {
     template <typename U>
     Vector3<T>& operator/=(U s) {
         return x /= s, y /= s, z /= s, *this;
+    }
+
+    Vector3I& operator<<=(int s) {
+        return x <<= s, y <<= s, z <<= s, *this;
+    }
+
+    Vector3I& operator>>=(int s) {
+        return x >>= s, y >>= s, z >>= s, *this;
+    }
+
+    Vector3I& operator&=(int s) {
+        return x &= s, y &= s, z &= s, *this;
+    }
+
+    Vector3I& operator|=(int s) {
+        return x |= s, y |= s, z |= s, *this;
+    }
+
+    Vector3I& operator^=(int s) {
+        return x ^= s, y ^= s, z ^= s, *this;
     }
 
     string ToString(int prec = -1)const {

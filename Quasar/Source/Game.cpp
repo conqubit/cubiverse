@@ -95,6 +95,11 @@ void Game::Tick() {
 }
 
 void Game::Render() {
+    Graphics::ClearAll();
+    glLineWidth(4);
+    Model* m = ModelFactory::CreateWireframeDebugBox(BoundingBox(-world->level.offset.ToDouble() * Chunk::DIM, (-world->level.offset).Offset(world->level.Dim()).ToDouble() * Chunk::DIM), ColorF(1, 0, 0, 1));
+    m->Render();
+    m->Shutdown();
     Graphics::Render();
     DrawGUI();
 }

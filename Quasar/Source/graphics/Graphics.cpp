@@ -56,7 +56,6 @@ glm::mat4 Graphics::GetViewProj() {
 }
 
 void Graphics::Render() {
-    ClearAll();
     for (int i = 0; i < things.size(); i++) {
         things[i]->Render();
     }

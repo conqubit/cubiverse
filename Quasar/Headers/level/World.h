@@ -43,9 +43,13 @@ public:
 
     void SetBlock(const Vector3I& p, int t) {
         Chunk* c = GetChunkFromBlock(p);
-        if (c) {
-            c->SetBlock(p, t);
+        if (!c) {
+            c = new Chunk();
+            c->pos = p >> Chunk::SHIFT;
+            c->Fill(Block::Air);
+            InsertChunk(c);
         }
+        c->SetBlock(p, t);
     }
 
     Chunk* GetChunk(const Vector3I& cp)const {
