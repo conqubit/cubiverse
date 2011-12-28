@@ -4,11 +4,11 @@
 
 int main(int argc, char* argv[]) {
 	if (!System::Init()) {
-		return EXIT_FAILURE;
+		return 0;
 	}
 
 	System::Start();
 	System::Shutdown();
 	
-	return EXIT_SUCCESS;
+	return 0;
 }

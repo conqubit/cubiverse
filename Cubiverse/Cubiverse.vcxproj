@@ -214,7 +214,7 @@
     <ClInclude Include="Headers\System.h" />
     <ClInclude Include="Headers\Window.h" />
     <ClInclude Include="Headers\graphics\Scene.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Headers\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Config.cpp" />
@@ -233,12 +233,12 @@
     <ClCompile Include="Source\level\World.cpp" />
     <ClCompile Include="Source\player\BlockPickingOutline.cpp" />
     <ClCompile Include="Source\player\Player.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\player\Crosshair.cpp" />
     <ClCompile Include="Source\Res.cpp" />
     <ClCompile Include="Source\System.cpp" />
     <ClCompile Include="Source\Window.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

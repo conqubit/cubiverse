@@ -40,7 +40,6 @@ typedef std::uint64_t		  uint64;
 // Miscellaneous typedefs for convenience and readability.
 typedef std::string string;
 typedef sf::Keyboard::Key Key;
-typedef sf::Event::EventType EventType;
 
 // General purpose string conversion.
 template <typename T>
@@ -53,13 +52,13 @@ string str(T x, int prec = -1) {
 
 // General purpose stdout printing function.
 template <typename T>
-void print(T x) {
+void print(const T& x) {
 	std::cout << x << std::endl;
 }
 
 // General purpose stderr printing function.
 template <typename T>
-void printerr(T x) {
+void printerr(const T& x) {
 	std::cerr << x << std::endl;
 }
 

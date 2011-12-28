@@ -186,6 +186,8 @@ void Window::ToggleFullscreen() {
 	Graphics::InitGraphics();
 }
 
+typedef sf::Event::EventType EventType;
+
 sf::Event e;
 
 void Window::DoEvents() {
