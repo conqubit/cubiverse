@@ -5,47 +5,41 @@
 
 class Chunk {
 public:
-    static const int DIM = 32; // Must be a power of 2.
-    static const int SIZE = DIM * DIM * DIM;
+	static const int Dim = 32; // Must be a power of 2.
+	static const int Size = Dim * Dim * Dim;
 
-    static const int SHIFT = 5;
-    static const int SHIFT_TWICE = SHIFT * 2;
-    static const int MASK = DIM - 1;
+	static const int Shift = 5;
+	static const int ShiftTwice = Shift * 2;
+	static const int Mask = Dim - 1;
 
-    static const Vector3I DIM_VEC;
+	Vector3I pos;
+	byte data[Size];
 
-    Vector3I ToChunkCoord(const Vector3I& p) {
-        return p >> SHIFT;
-    }
+	Chunk();
+	~Chunk();
 
-    Vector3I pos;
-    byte data[SIZE];
+	Vector3I Pos()const {
+		return pos.ChunkToBlockCoords();
+	}
+	
+	void Init(int t, const Vector3I& p);
+	void Shutdown();
 
-    Chunk();
-    ~Chunk();
+	void Fill(int t);
 
-    Vector3I Pos()const {
-        return pos * DIM;
-    }
+	Vector3I GetWorldPositionFromIndex(int i)const {
+		return Pos() + Vector3I(i & Mask, (i >> Shift) & Mask, i >> ShiftTwice);
+	}
 
-    void Init(int t, const Vector3I& p);
-    void Shutdown();
+	int GetBlock(const Vector3I& p)const {
+		return data[GetIndex(p)];
+	}
 
-    void Fill(int t);
+	int SetBlock(const Vector3I& p, int t) {
+		return data[GetIndex(p)] = t;
+	}
 
-    Vector3I GetWorldPositionFromIndex(int i)const {
-        return Pos() + Vector3I(i & MASK, (i >> SHIFT) & MASK, i >> SHIFT_TWICE);
-    }
-
-    int GetBlock(const Vector3I& p)const {
-        return data[GetIndex(p)];
-    }
-
-    int SetBlock(const Vector3I& p, int t) {
-        return data[GetIndex(p)] = t;
-    }
-
-    static int GetIndex(const Vector3I& p) {
-        return (p.x & MASK) + ((p.y & MASK) << SHIFT) + ((p.z & MASK) << SHIFT_TWICE);
-    }
+	static int GetIndex(const Vector3I& p) {
+		return (p.x & Mask) | ((p.y & Mask) | (p.z & Mask) << Shift) << Shift;
+	}
 };

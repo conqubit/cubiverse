@@ -8,6 +8,6 @@ attribute vec4 color;
 varying vec4 fcolor;
 
 void main() {
-    gl_Position = worldViewProjectionMat * position;
-    fcolor = color;
+	gl_Position = worldViewProjectionMat * position;
+	fcolor = color;
 }

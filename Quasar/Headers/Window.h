@@ -4,37 +4,39 @@
 
 class Window {
 public:
-    static sf::RenderWindow sfWindow;
-    static bool             temp;
-    static bool             focus;
-    static int posX;
-    static int posY;
+	static sf::RenderWindow sfWindow;
+	static bool			 temp;
+	static bool			 focus;
+	static int posX;
+	static int posY;
 
-    static bool Init();
-    static void Shutdown();
+	static bool Init();
+	static void Shutdown();
 
-    static sf::WindowHandle SystemHandle();
+	static void SetIcon(string file);
 
-    static int Width();
-    static int Height();
-    static int PosX();
-    static int PosY();
+	static sf::WindowHandle SystemHandle();
 
-    static double AspectRatio();
+	static int Width();
+	static int Height();
+	static int PosX();
+	static int PosY();
 
-    static void DoEvents();
-    static void DoResize();
+	static double AspectRatio();
 
-    static void Maximize();
-    static void ToggleFullscreen();
+	static void DoEvents();
+	static void DoResize();
 
-    static void Focus();
-    static void Unfocus();
+	static void Maximize();
+	static void ToggleFullscreen();
+
+	static void Focus();
+	static void Unfocus();
 	
-    static bool IsMaximized();
-    static bool IsMinimized();
+	static bool IsMaximized();
+	static bool IsMinimized();
 
-    static bool IsFullScreen();
+	static bool IsFullScreen();
 
-    static void Display();
+	static void Display();
 };

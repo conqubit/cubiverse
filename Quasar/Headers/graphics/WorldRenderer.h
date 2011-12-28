@@ -9,32 +9,32 @@
 
 class WorldRenderer : public IRenderObject {
 public:
-    std::map<Chunk*, VisibleChunk*> visibleChunks;
-    World* world;
-    ModelFactory mf;
+	std::map<Chunk*, VisibleChunk*> visibleChunks;
+	World* world;
+	ModelFactory mf;
 
-    int vPos, vCol, vTex;
+	int vPos, vCol, vTex;
 
-    BlockRenderer br;
+	BlockRenderer br;
 
-    WorldRenderer();
+	WorldRenderer();
 
-    bool Init(World* w);
-    void Shutdown();
+	bool Init(World* w);
+	void Shutdown();
 
-    virtual void InitGraphics();
-    virtual void ShutdownGraphics();
+	virtual void InitGraphics();
+	virtual void ShutdownGraphics();
 
-    void ConstructChunkModelData(Chunk* c);
-    void ReconstructChunkModelData(Chunk* c);
+	void ConstructChunkModelData(Chunk* c);
+	void ReconstructChunkModelData(Chunk* c);
 
-    void ConstructNewVisibleChunk(Chunk* c);
-    void ReconstructVisibleChunk(Chunk* c);
+	void ConstructNewVisibleChunk(Chunk* c);
+	void ReconstructVisibleChunk(Chunk* c);
 
-    static void ConstructFace(int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b);
-    void ConstructBlock(const Vector3I& p);
-    void UpdateBlock(const Vector3I& p);
-    void UpdateChunk(Chunk* c, const Vector3I& p);
-    void Render();
-    void UpdateMesh(const Vector3I& p);
+	static void ConstructFace(int block, const Vector3I& side, const Vector3I& p, int x, int y, int z, int xi, int yi, int zi, double b);
+	void ConstructBlock(const Vector3I& p);
+	void UpdateBlock(const Vector3I& p);
+	void UpdateChunk(Chunk* c, const Vector3I& p);
+	void Render();
+	void UpdateMesh(const Vector3I& p);
 };

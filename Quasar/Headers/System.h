@@ -4,15 +4,15 @@
 
 class System {
 public:
-    static bool             running;
-    static FileLogger       errorLog;
+	static bool			 running;
+	static FileLogger	   errorLog;
 
-    static bool Init();
-    static void Shutdown();
+	static bool Init();
+	static void Shutdown();
 
-    static void Start();
-    static void Stop();
+	static void Start();
+	static void Stop();
 
-    static void DoTicks();
-    static void Tick();
+	static void DoTicks();
+	static void Tick();
 };

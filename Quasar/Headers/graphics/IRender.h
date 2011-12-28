@@ -2,25 +2,25 @@
 
 class IRender {
 public:
-    virtual ~IRender() {
-    }
+	virtual ~IRender() {
+	}
 
-    virtual void Render() = 0;
+	virtual void Render() = 0;
 
 protected:
-    IRender() {
-    }
+	IRender() {
+	}
 };
 
 class IRenderObject : public IRender {
 public:
-    virtual ~IRenderObject() {
-    }
+	virtual ~IRenderObject() {
+	}
 
-    virtual void InitGraphics() = 0;
-    virtual void ShutdownGraphics() = 0;
+	virtual void InitGraphics() = 0;
+	virtual void ShutdownGraphics() = 0;
 
 protected:
-    IRenderObject() {
-    }
+	IRenderObject() {
+	}
 };

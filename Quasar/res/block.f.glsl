@@ -6,5 +6,5 @@ varying vec4 fcolor;
 varying vec3 ftexcoord;
 
 void main() {
-    gl_FragColor = texture3D(textureSampler, ftexcoord) * fcolor;
+	gl_FragColor = texture3D(textureSampler, ftexcoord) * fcolor;
 }

@@ -6,64 +6,67 @@
 #include "Input.h"
 
 #include "graphics/Graphics.h"
+#include "level/Block.h"
 
-bool             System::running;
-FileLogger       System::errorLog;
+bool			 System::running;
+FileLogger	   System::errorLog;
 
 bool System::Init() {
-    errorLog.SetPath("error.txt");
-    errorLog.EnableAppend();
+	errorLog.SetPath("error.txt");
+	errorLog.EnableAppend();
 
-    errorLog.AddInput(std::cerr);
-    errorLog.AddInput(sf::Err());
+	errorLog.AddInput(std::cerr);
+	errorLog.AddInput(sf::Err());
 
-    srand((unsigned int)time(nullptr));
+	srand((unsigned int)time(nullptr));
 
-    if (!Window::Init()) {
-        return false;
-    }
+	Block::Init();
 
-    Window::Maximize();
-    Window::Display();
+	if (!Window::Init()) {
+		return false;
+	}
 
-    Input::Init();
+	Window::Maximize();
 
-    Graphics::Init();
+	Input::Init();
+	Graphics::Init();
 
-    if (!Res::Init()) {
-        return false;
-    }
+	Window::Display();
 
-    if (!Game::Init()) {
-        return false;
-    }
+	if (!Res::Init()) {
+		return false;
+	}
 
-    Window::sfWindow.ShowMouseCursor(false);
+	if (!Game::Init()) {
+		return false;
+	}
 
-    Graphics::InitGraphics();
+	Window::sfWindow.ShowMouseCursor(false);
 
-    return true;
+	Graphics::InitGraphics();
+
+	return true;
 }
 
 void System::Start() {
-    if (running) return;
-    running = true;
+	if (running) return;
+	running = true;
 
-    Game::Start();
+	Game::Start();
 
-    while(running) {
-        Game::Update();
-        Game::Render();
-        Window::Display();
-    }
+	while(running) {
+		Game::Update();
+		Game::Render();
+		Window::Display();
+	}
 }
 
 void System::Shutdown() {
-    Game::Shutdown();
-    Graphics::Shutdown();
-    Res::Shutdown();
+	Game::Shutdown();
+	Graphics::Shutdown();
+	Res::Shutdown();
 }
 
 void System::Stop() {
-    running = false;
+	running = false;
 }

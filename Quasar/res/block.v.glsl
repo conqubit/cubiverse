@@ -10,7 +10,7 @@ varying vec4 fcolor;
 varying vec3 ftexcoord;
 
 void main() {
-    gl_Position = worldViewProjectionMat * position;
-    fcolor = color;
-    ftexcoord = texcoord;
+	gl_Position = worldViewProjectionMat * position;
+	fcolor = color;
+	ftexcoord = texcoord;
 }

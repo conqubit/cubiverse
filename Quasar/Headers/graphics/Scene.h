@@ -4,8 +4,8 @@
 
 class Scene : IRender {
 public:
-    Scene();
+	Scene();
 
-    virtual void Render();
+	virtual void Render();
 
 };

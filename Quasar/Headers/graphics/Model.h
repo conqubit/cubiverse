@@ -11,37 +11,37 @@ class ModelFactory;
 
 class Model : public IRender {
 public:
-    Model();
+	Model();
 
-    bool Init(const ModelFactory& mf, int buffExtra = 0);
-    void Shutdown();
+	bool Init(const ModelFactory& mf, int buffExtra = 0);
+	void Shutdown();
 
-    virtual void Render();
+	virtual void Render();
 
-    bool Update(const ModelFactory& mf);
+	bool Update(const ModelFactory& mf);
 
-    void EnableOrtho(bool ortho = true);
+	void EnableOrtho(bool ortho = true);
 
-    void Bind();
-    void Unbind();
+	void Bind();
+	void Unbind();
 
-    byte* Map(GLenum access);
-    void Unmap();
+	byte* Map(GLenum access);
+	void Unmap();
 
-    bool orthographic;
+	bool orthographic;
 
-    glm::mat4 world;
+	glm::mat4 world;
 
-    Shader* shader;
-    Texture* texture;
+	Shader* shader;
+	Texture* texture;
 
-    int vertexCount;
-    int indexCount;
+	int vertexCount;
+	int indexCount;
 
-    int vertexBufferSize;
+	int vertexBufferSize;
 
-    GLenum topology;
-    GLuint vertexBuffer;
-    GLuint indexBuffer;
-    GLuint vertexArrayObject;
+	GLenum topology;
+	GLuint vertexBuffer;
+	GLuint indexBuffer;
+	GLuint vertexArrayObject;
 };

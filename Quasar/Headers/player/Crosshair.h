@@ -6,13 +6,13 @@ class Model;
 
 class Crosshair : IRenderObject {
 public:
-    Model* model;
+	Model* model;
 
-    Crosshair() :
-    model(nullptr) {
-    }
+	Crosshair() :
+	model(nullptr) {
+	}
 
-    virtual void Render();
-    virtual void InitGraphics();
-    virtual void ShutdownGraphics();
+	virtual void Render();
+	virtual void InitGraphics();
+	virtual void ShutdownGraphics();
 };

@@ -86,7 +86,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\sfml2\include;C:\asio-1.4.8\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;C:\sfml2\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)\Intermediate\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -166,7 +166,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -175,8 +175,15 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)res $(SolutionDir)$(Configuration)\res\ /s /y</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>copy resources</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\Config.h" />
     <ClInclude Include="Headers\entity\Entity.h" />
     <ClInclude Include="Headers\Game.h" />
     <ClInclude Include="Headers\graphics\BlockRenderer.h" />
@@ -186,6 +193,7 @@
     <ClInclude Include="Headers\graphics\ModelFactory.h" />
     <ClInclude Include="Headers\graphics\Shader.h" />
     <ClInclude Include="Headers\graphics\Texture.h" />
+    <ClInclude Include="headers\graphics\Texture.h" />
     <ClInclude Include="Headers\graphics\VisibleChunk.h" />
     <ClInclude Include="Headers\graphics\WorldRenderer.h" />
     <ClInclude Include="Headers\Input.h" />
@@ -202,18 +210,19 @@
     <ClInclude Include="Headers\player\Player.h" />
     <ClInclude Include="Headers\player\Crosshair.h" />
     <ClInclude Include="Headers\Res.h" />
-    <ClInclude Include="Headers\StaticInit.h" />
     <ClInclude Include="Headers\System.h" />
     <ClInclude Include="Headers\Window.h" />
     <ClInclude Include="Headers\graphics\Scene.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Config.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\graphics\BlockRenderer.cpp" />
     <ClCompile Include="Source\graphics\Graphics.cpp" />
     <ClCompile Include="Source\graphics\Model.cpp" />
     <ClCompile Include="Source\graphics\Shader.cpp" />
+    <ClCompile Include="Source\graphics\Texture.cpp" />
     <ClCompile Include="Source\graphics\Texture.cpp" />
     <ClCompile Include="Source\graphics\VisibleChunk.cpp" />
     <ClCompile Include="Source\graphics\WorldRenderer.cpp" />
@@ -241,18 +250,17 @@
     <None Include="res\color.v.glsl" />
     <None Include="res\block.f.glsl" />
     <None Include="res\block.v.glsl" />
-    <None Include="res\consola.ttf" />
     <None Include="res\grass.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\bullet-2.79\lib\src\BulletCollision\BulletCollision.vcxproj">
-      <Project>{2c11a8bd-3074-4701-bce5-e073b28bc301}</Project>
+    <ProjectReference Include="..\..\bullet-2.79\bin\src\BulletCollision\BulletCollision.vcxproj">
+      <Project>{0fea0e26-ca07-4e79-aeb1-422952172339}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\bullet-2.79\lib\src\BulletDynamics\BulletDynamics.vcxproj">
-      <Project>{3a7c531c-f13e-4662-afd1-f6b9121f6739}</Project>
+    <ProjectReference Include="..\..\bullet-2.79\bin\src\BulletDynamics\BulletDynamics.vcxproj">
+      <Project>{62058a72-45e0-4f97-9401-e122c3bca142}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\bullet-2.79\lib\src\LinearMath\LinearMath.vcxproj">
-      <Project>{f436ea04-8535-40b6-99cc-c0494e586380}</Project>
+    <ProjectReference Include="..\..\bullet-2.79\bin\src\LinearMath\LinearMath.vcxproj">
+      <Project>{289f86da-f197-4b69-980c-d43f0a4f29ef}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

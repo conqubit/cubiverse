@@ -7,31 +7,31 @@
 
 class VisibleChunk : IRenderObject {
 public:
-    struct VisibleBlock {
-        int location;
-        short size;
+	struct VisibleBlock {
+		int location;
+		short size;
 
-        VisibleBlock() :
-        location(), size() {
-        }
+		VisibleBlock() :
+		location(), size() {
+		}
 
-        VisibleBlock(int location, short size) :
-        location(location), size(size) {
-        }
-    };
+		VisibleBlock(int location, short size) :
+		location(location), size(size) {
+		}
+	};
 
-    std::map<ushort, VisibleBlock> visibleBlocks;
-    Model* model;
+	std::map<ushort, VisibleBlock> visibleBlocks;
+	Model* model;
 
-    VisibleChunk();
+	VisibleChunk();
 
-    void Shutdown();
+	void Shutdown();
 
-    virtual void Render();
-    virtual void InitGraphics();
-    virtual void ShutdownGraphics();
+	virtual void Render();
+	virtual void InitGraphics();
+	virtual void ShutdownGraphics();
 
-    void UpdateBlock(ushort index, ModelFactory& mf);
-    void AppendBlock(ushort index, ModelFactory& mf);
-    void UpdateModel(const ModelFactory& mf);
+	void UpdateBlock(ushort index, ModelFactory& mf);
+	void AppendBlock(ushort index, ModelFactory& mf);
+	void UpdateModel(const ModelFactory& mf);
 };

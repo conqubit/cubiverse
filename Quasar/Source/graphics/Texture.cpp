@@ -11,71 +11,71 @@ Texture::~Texture() {
 }
 
 void Texture::Shutdown() {
-    glDeleteTextures(1, &texture);
-    glDeleteSamplers(1, &sampler);
-    delete this;
+	glDeleteTextures(1, &texture);
+	glDeleteSamplers(1, &sampler);
+	delete this;
 }
 
 void Texture::Bind() {
-    glBindTexture(type, texture);
+	glBindTexture(type, texture);
 }
 
 void Texture::Unbind() {
-    glBindTexture(type, texture);
+	glBindTexture(type, texture);
 }
 
 Texture* Texture::Create2DTexture(const string& file) {
-    Texture* tex = new Texture();
-    tex->type = GL_TEXTURE_2D;
+	Texture* tex = new Texture();
+	tex->type = GL_TEXTURE_2D;
 
-    sf::Image image;
+	sf::Image image;
 
-    if (!image.LoadFromFile(file)) {
-        return false;
-    }
+	if (!image.LoadFromFile(file)) {
+		return false;
+	}
 
-    tex->width = image.GetWidth();
-    tex->height = image.GetHeight();
-    
-    glGenTextures(1, &tex->texture);
+	tex->width = image.GetWidth();
+	tex->height = image.GetHeight();
+	
+	glGenTextures(1, &tex->texture);
 
-    tex->Bind();
+	tex->Bind();
 
-    glTexImage2D(tex->type, 0, GL_RGBA8, tex->width, tex->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixelsPtr());
+	glTexImage2D(tex->type, 0, GL_RGBA8, tex->width, tex->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixelsPtr());
 
-    glGenSamplers(1, &tex->sampler);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glGenSamplers(1, &tex->sampler);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    tex->Unbind();
+	tex->Unbind();
 
-    return tex;
+	return tex;
 }
 
 Texture* Texture::Create3DTexture(int width, int height, int depth, byte* data) {
-    Texture* tex = new Texture();
+	Texture* tex = new Texture();
 
-    tex->width = width;
-    tex->height = height;
-    tex->depth = depth;
+	tex->width = width;
+	tex->height = height;
+	tex->depth = depth;
 
-    tex->type = GL_TEXTURE_3D;
+	tex->type = GL_TEXTURE_3D;
 
-    glGenTextures(1, &tex->texture);
+	glGenTextures(1, &tex->texture);
 
-    tex->Bind();
+	tex->Bind();
 
-    glTexImage3D(tex->type, 0, GL_RGBA8, width, height, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage3D(tex->type, 0, GL_RGBA8, width, height, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-    glGenSamplers(1, &tex->sampler);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glGenSamplers(1, &tex->sampler);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    tex->Unbind();
+	tex->Unbind();
 
-    return tex;
+	return tex;
 }
