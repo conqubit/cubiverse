@@ -2,5 +2,5 @@
 
 class Config {
 public:
-	static string Version;
+	static const string Version;
 };

@@ -27,8 +27,6 @@ int64 oldtime;
 int64 newtime;
 int64 freq;
 
-int tickMS = 5;
-
 sf::Font f;
 
 bool Game::Init() {
@@ -64,7 +62,7 @@ bool Game::Init() {
 }
 
 void Game::Start() {
-	tick = freq / 1000 * tickMS;
+	tick = freq / 1000 * TickMS;
 	accum = tick;
 }
 

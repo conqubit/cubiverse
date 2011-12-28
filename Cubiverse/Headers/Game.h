@@ -7,6 +7,8 @@ class WorldRenderer;
 
 class Game {
 public:
+	static const int TickMS = 5;
+
 	static Player*		  player;
 	static World*		   world;
 	static WorldRenderer*   worldRenderer;
