@@ -33,5 +33,5 @@ public:
 
 	void UpdateBlock(ushort index, ModelFactory& mf);
 	void AppendBlock(ushort index, ModelFactory& mf);
-	void UpdateModel(const ModelFactory& mf);
+	void UpdateModel(ModelFactory& mf);
 };

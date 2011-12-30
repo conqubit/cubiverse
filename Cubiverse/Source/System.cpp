@@ -29,7 +29,10 @@ bool System::Init() {
 	Window::Maximize();
 
 	Input::Init();
-	Graphics::Init();
+
+	if (!Graphics::Init()) {
+		return false;
+	}
 
 	Window::Display();
 

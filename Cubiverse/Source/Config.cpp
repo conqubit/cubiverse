@@ -2,4 +2,4 @@
 
 #include "Config.h"
 
-const string Config::Version = "0.0.1";
+const string Config::Version = "0.0.2";

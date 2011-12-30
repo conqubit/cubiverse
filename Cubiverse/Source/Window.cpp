@@ -57,16 +57,6 @@ bool Window::Init() {
 
 	SetIcon("res/icon.png");
 
-	print("OpenGL version: " + str(glGetString(GL_VERSION)));
-
-	uint majorv = Window::sfWindow.GetSettings().MajorVersion;
-	uint minorv = Window::sfWindow.GetSettings().MinorVersion;
-
-	if (majorv < 2 || (majorv == 2 && minorv < 1)) {
-		printerr("OpenGL 2.1+ is required. Version found on this computer: " + str(glGetString(GL_VERSION)));
-		return false;
-	}
-
 	return true;
 }
 

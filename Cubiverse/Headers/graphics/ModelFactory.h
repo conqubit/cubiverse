@@ -1,7 +1,7 @@
 #pragma once
 
-#include "graphics/Model.h"
-#include "graphics/Shader.h"
+class Model;
+class Shader;
 
 class ModelFactory {
 public:
@@ -10,9 +10,12 @@ public:
 		int count;
 		int offset;
 		GLenum glType;
+		GLuint shaderLoc;
 		bool normalized;
 		bool hidden;
 	};
+
+	std::vector<Attribute> attributes;
 
 private:
 	std::vector<byte> vertexData;
@@ -20,8 +23,6 @@ private:
 
 	int stride;
 	int pos;
-
-	std::vector<Attribute> attributes;
 
 	template <typename I>
 	byte* GetAttributePtr(const I& ident) {
@@ -225,15 +226,7 @@ public:
 		return (int*)indices.data();
 	}
 
-	Model* Create(int buffExtra = 0)const {
-		Model* m = new Model();
-		m->topology = topology;
-		if (!m->Init(*this, buffExtra)) {
-			delete m;
-			return nullptr;
-		}
-		return m;
-	}
+	Model* Create(int buffExtra = 0);
 
 	void Clear() {
 		vertexData.clear();

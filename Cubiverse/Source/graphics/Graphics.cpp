@@ -9,7 +9,7 @@ std::vector<IRenderObject*> Graphics::things;
 glm::mat4 Graphics::proj;
 glm::mat4 Graphics::ortho;
 
-void Graphics::Init() {
+bool Graphics::Init() {
 	glewInit(); 
 
 	glClearDepth(1.0);
@@ -24,6 +24,16 @@ void Graphics::Init() {
 	glCullFace(GL_BACK);
 
 	SetProjection();
+
+	print("OpenGL version: " + str(glGetString(GL_VERSION)));
+
+	if (!GLEW_VERSION_2_1) {
+		printerr("At least OpenGL version 2.1+ is required. Version found on this computer: " + str(glGetString(GL_VERSION)));
+		printerr("Try updating your video drivers.");
+		return false;
+	}
+
+	return true;
 }
 
 void Graphics::Shutdown() {

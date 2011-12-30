@@ -2,7 +2,6 @@
 
 #include "System.h"
 #include "graphics/Model.h"
-#include "graphics/ModelFactory.h"
 #include "graphics/Shader.h"
 
 #define BUFFER_OFFSET(i) ((void*)(i))
@@ -27,24 +26,24 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 	indexCount = mf.IndexCount();
 	vertexBufferSize = mf.VertexDataSize() + buffExtra;
 
-	glGenVertexArrays(1, &vertexArrayObject);
-
-	Bind();
+	vertexDataState.attributes = mf.attributes;
+	vertexDataState.vertexStride = mf.VertexStride();
+	vertexDataState.vertexData = nullptr;
 
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, nullptr, mf.usage);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataSize(), mf.VertexData());
 
-	for (int i = 0; i < mf.AttributeCount(); i++) {
-		const ModelFactory::Attribute& attr = mf.GetAttribute(i);
-		if (attr.hidden) continue;
-		GLuint L = glGetAttribLocation(shader->program, attr.name.c_str());
-		glEnableVertexAttribArray(L);
-		glVertexAttribPointer(L, attr.count, attr.glType, attr.normalized, mf.VertexStride(), BUFFER_OFFSET(attr.offset));
-	}
+	if ((GLEW_VERSION_3_0 || GLEW_ARB_vertex_array_object)) {
+		glGenVertexArrays(1, &vertexArrayObject);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(vertexArrayObject);
+
+		Bind(true);
+
+		glBindVertexArray(0);
+	}
 
 	if (texture) {
 		glUniform1i(glGetUniformLocation(shader->program, "textureSampler"), 0);
@@ -52,13 +51,13 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 		glBindSampler(0, texture->sampler);
 	}
 
+	Unbind();
+
 	//glGenBuffers(1, &indexBuffer);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * indexBuffer, mf.IndexData(), GL_STATIC_DRAW);
 
-	Unbind();
-
-	return vertexBuffer /*indexBuffer*/ && shader && vertexArrayObject;
+	return true;
 }
 
 void Model::Shutdown() {
@@ -86,12 +85,31 @@ bool Model::Update(const ModelFactory& mf) {
 	return false;
 }
 
-void Model::Bind() {
-	glBindVertexArray(vertexArrayObject);
+void Model::Bind(bool manualOverride) {
+	if (!manualOverride && (GLEW_VERSION_3_0 || GLEW_ARB_vertex_array_object)) {
+		glBindVertexArray(vertexArrayObject);
+	} else {
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		for (int i = 0; i < vertexDataState.attributes.size(); i++) {
+			const ModelFactory::Attribute& attr = vertexDataState.attributes[i];
+			if (attr.hidden) continue;
+			glEnableVertexAttribArray(attr.shaderLoc);
+			glVertexAttribPointer(attr.shaderLoc, attr.count, attr.glType, attr.normalized, vertexDataState.vertexStride, BUFFER_OFFSET(attr.offset));
+		}
+	}
 }
 
 void Model::Unbind() {
-	glBindVertexArray(0);
+	if ((GLEW_VERSION_3_0 || GLEW_ARB_vertex_array_object)) {
+		glBindVertexArray(0);
+	} else {
+		for (int i = 0; i < vertexDataState.attributes.size(); i++) {
+			const ModelFactory::Attribute& attr = vertexDataState.attributes[i];
+			if (attr.hidden) continue;
+			glDisableVertexAttribArray(attr.shaderLoc);
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 }
 
 byte* Model::Map(GLenum access) {
@@ -122,6 +140,6 @@ void Model::Render() {
 
 	glDrawArrays(topology, 0, vertexCount);
 
-	//Unbind();
+	Unbind();
 	shader->Unbind();
 }

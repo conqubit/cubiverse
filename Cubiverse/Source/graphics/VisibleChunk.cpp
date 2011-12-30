@@ -89,7 +89,7 @@ void VisibleChunk::AppendBlock(ushort index, ModelFactory& mf) {
 	}
 }
 
-void VisibleChunk::UpdateModel(const ModelFactory& mf) {
+void VisibleChunk::UpdateModel(ModelFactory& mf) {
 	int buffExtra = mf.VertexStride() * 6   // vertices per face
 									  * 64; // num faces to buffer
 
