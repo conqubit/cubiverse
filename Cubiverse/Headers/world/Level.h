@@ -1,6 +1,6 @@
 #pragma once
 
-#include "level/Chunk.h"
+#include "world/Chunk.h"
 
 class Level {
 private:
@@ -21,7 +21,11 @@ private:
 			return reinterpret_cast<Chunk*>(nodes[GetIndex(cp)]);
 		}
 
-		void Set(const Vector3I& cp, void* ptr) {
+		void SetNode(const Vector3I& cp, Node* ptr) {
+			nodes[GetIndex(cp)] = ptr;
+		}
+
+		void SetChunk(const Vector3I& cp, Chunk* ptr) {
 			nodes[GetIndex(cp)] = reinterpret_cast<Node*>(ptr);
 		}
 
@@ -51,7 +55,6 @@ public:
 	Node* root;
 	Vector3I offset; // Keeps the root node exactly flush in the positive octant.
 
-
 	Level() : root(nullptr) {
 	}
 
@@ -60,8 +63,10 @@ public:
 	}
 
 	void Shutdown() {
-		root->Shutdown();
-		root = nullptr;
+		if (root) {
+			root->Shutdown();
+			root = nullptr;
+		}
 	}
 
 	void InsertChunk(Chunk* c) {
@@ -78,12 +83,12 @@ public:
 			Node* nextNode = node->GetNode(cp);
 			if (!nextNode) {
 				nextNode = new Node(node->lvl - 1);
-				node->Set(cp, nextNode);
+				node->SetNode(cp, nextNode);
 				node->count++;
 			}
 			node = nextNode;
 		}
-		node->Set(cp, c);
+		node->SetChunk(cp, c);
 		node->count++;
 	}
 
@@ -99,7 +104,7 @@ public:
 		}
 	}
 
-	Chunk* GetChunk(Vector3I cp)const {
+	Chunk* GetChunk(Vector3I cp)const{
 		if (!root || !InsideRootNode(cp)) return nullptr;
 		cp += offset;
 		Node* node = root;
@@ -147,13 +152,13 @@ private:
 				Remove(nextNode, cp);
 				if (nextNode->count == 0) {
 					delete nextNode;
-					node->Set(cp, nullptr);
+					node->SetNode(cp, nullptr);
 					node->count--;
 				}
 			}
 		} else if (node->GetChunk(cp)) {
 			node->GetChunk(cp)->Shutdown();
-			node->Set(cp, nullptr);
+			node->SetChunk(cp, nullptr);
 			node->count--;
 		}
 	}

@@ -6,17 +6,18 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+IDirectInput8W* Input::directInput;
+IDirectInputDevice8W* Input::keyboard;
+IDirectInputDevice8W* Input::mouse;
+
+bool Input::directInputInitialized = false;
+
 int Input::mx;
 int Input::my;
 int Input::dmx;
 int Input::dmy;
 
-IDirectInput8W* Input::directInput;
-IDirectInputDevice8W* Input::keyboard;
-IDirectInputDevice8W* Input::mouse;
-
 bool Input::locked = false;
-bool Input::directInputInitialized = false;
 
 bool Input::Init() {
 	directInputInitialized = false;

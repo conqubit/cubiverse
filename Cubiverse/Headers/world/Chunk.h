@@ -1,7 +1,7 @@
 #pragma once
 
 #include "math/Vector.h"
-#include "level/Block.h"
+#include "world/Block.h"
 
 class Chunk {
 public:

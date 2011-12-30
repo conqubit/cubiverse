@@ -40,7 +40,7 @@ void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
 		return;
 	}
 
-	byte* bufferLocation = model->Map(GL_READ_WRITE) + b.location;
+	/*byte* bufferLocation = model->Map(GL_READ_WRITE) + b.location;
 	memmove(bufferLocation, bufferLocation + b.size, model->vertexCount * mf.VertexStride() - (b.location + b.size));
 	model->Unmap();
 	for (auto i = visibleBlocks.begin(); i != visibleBlocks.end(); ++i) {
@@ -49,7 +49,17 @@ void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
 		}
 	}
 
-	model->vertexCount -= b.size / mf.VertexStride();
+	model->vertexCount -= b.size / mf.VertexStride();*/
+
+	byte* zeros = (byte*)malloc(b.size);
+	ZeroMemory(zeros, b.size);
+
+	glBindBuffer(GL_ARRAY_BUFFER, model->vertexBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, b.location, b.size, zeros);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	free(zeros);
+
 	if (mf.VertexCount() > 0) {
 		AppendBlock(index, mf);
 	} else {

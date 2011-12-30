@@ -1,7 +1,7 @@
 #pragma once
 
-#include "level/World.h"
-#include "level/Block.h"
+#include "world/World.h"
+#include "world/Block.h"
 #include "graphics/Model.h"
 #include "graphics/ModelFactory.h"
 

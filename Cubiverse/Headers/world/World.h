@@ -1,9 +1,9 @@
 #pragma once
 
 #include "math/BoundingBox.h"
-#include "level/Chunk.h"
 
-#include "level/Level.h"
+#include "world/Chunk.h"
+#include "world/Level.h"
 
 class World {
 public:

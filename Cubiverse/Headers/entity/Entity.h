@@ -1,15 +1,16 @@
 #pragma once
 
 class Entity {
-public: 
-	Entity() {
+public:
+	int ID;
+
+	virtual ~Entity() {
 	}
 
-	const Vector3D& Pos() {
-		return Vector3D();
-	}
+	virtual Vector3D Pos() = 0;
+	virtual Vector3D Vel() = 0;
 
-	const Vector3D& Vel() {
-		return Vector3D();
+protected:
+	Entity() : ID(0) {
 	}
 };

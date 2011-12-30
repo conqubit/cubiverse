@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "level/Chunk.h"
+#include "world/Chunk.h"
 
 Chunk::Chunk() : pos() {
 }

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <SDKDDKVer.h>
+#ifdef WIN32
 #include <windows.h>
+#endif
 
 // C header files.
 #include <stdlib.h>
@@ -29,7 +30,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-// Integer typedefs for convenience and readability.
 typedef unsigned char		  byte;
 typedef unsigned short		 ushort;
 typedef unsigned int		   uint;
@@ -37,7 +37,6 @@ typedef unsigned int		   uint;
 typedef std::int64_t		   int64;
 typedef std::uint64_t		  uint64;
 
-// Miscellaneous typedefs for convenience and readability.
 typedef std::string string;
 typedef sf::Keyboard::Key Key;
 
@@ -50,13 +49,11 @@ string str(T x, int prec = -1) {
 	return ss.str();
 }
 
-// General purpose stdout printing function.
 template <typename T>
 void print(const T& x) {
 	std::cout << x << std::endl;
 }
 
-// General purpose stderr printing function.
 template <typename T>
 void printerr(const T& x) {
 	std::cerr << x << std::endl;
@@ -64,10 +61,8 @@ void printerr(const T& x) {
 
 #define ZeroStruct(s) memset(&(s), 0, sizeof(s))
 
-// Rudimentary macro to print out how much time a block of code takes to run.
 #define MEASURE(tag, code) {clock_t t=clock();{code}t=clock()-t;printf("%s: %d ms\n",tag,t);}
 
-// Rudimentary macro to print out how much time a block of code takes to run.
 #define ACCURATE_MEASURE(tag, code) {int64 _s, _e, _f; \
 									 QueryPerformanceFrequency((LARGE_INTEGER*)&_f); \
 									 QueryPerformanceCounter((LARGE_INTEGER*)&_s); \

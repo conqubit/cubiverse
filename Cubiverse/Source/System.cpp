@@ -6,7 +6,7 @@
 #include "Input.h"
 
 #include "graphics/Graphics.h"
-#include "level/Block.h"
+#include "world/Block.h"
 
 bool			 System::running;
 FileLogger	   System::errorLog;

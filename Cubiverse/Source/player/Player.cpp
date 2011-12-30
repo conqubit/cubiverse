@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "Game.h"
 #include "Input.h"
-#include "level/World.h"
+#include "world/World.h"
 #include "graphics/WorldRenderer.h"
 
 #include "player/Player.h"
@@ -16,6 +16,7 @@ double eyeOffset = 1.7 - PHI;
 
 Model* wireframe;
 
+/*
 #include <btBulletDynamicsCommon.h>
 
 btCollisionShape* blockShape;
@@ -23,7 +24,7 @@ btRigidBody::btRigidBodyConstructionInfo* blockBodyInfo;
 
 btRigidBody* body;
 btMotionState* playerMotionState;
-btDynamicsWorld* dynamicsWorld;
+btDynamicsWorld* dynamicsWorld;*/
 
 
 Crosshair crosshair;
@@ -34,7 +35,7 @@ void Player::Init() {
 	height = 1.7;
 	eyeHeight = height - eyeOffset;
 
-	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+	/*btBroadphaseInterface* broadphase = new btDbvtBroadphase();
  
 	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
 	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
@@ -54,7 +55,7 @@ void Player::Init() {
 
 	body->setAngularFactor(0);
 
-	dynamicsWorld->addRigidBody(body);
+	dynamicsWorld->addRigidBody(body);*/
 }
 
 void Player::InitGraphics() {

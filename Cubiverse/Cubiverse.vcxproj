@@ -79,16 +79,17 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\sfml2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;C:\sfml2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\sfml\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;C:\sfml\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)\Intermediate\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)x32\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\sfml2\include;C:\asio-1.4.8\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;C:\sfml2\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)Intermediate\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -150,6 +151,9 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)res $(SolutionDir)x32\$(Configuration)\res\ /s /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -158,7 +162,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>SFML_DYNAMIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_DYNAMIC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessToFile>false</PreprocessToFile>
@@ -167,7 +171,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -177,7 +181,7 @@
       </DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)res $(SolutionDir)$(Configuration)\res\ /s /y</Command>
+      <Command>xcopy $(ProjectDir)res $(SolutionDir)x64\$(Configuration)\res\ /s /y</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy resources</Message>
@@ -186,6 +190,7 @@
   <ItemGroup>
     <ClInclude Include="Headers\Config.h" />
     <ClInclude Include="Headers\entity\Entity.h" />
+    <ClInclude Include="Headers\entity\PhysicsEntity.h" />
     <ClInclude Include="Headers\Game.h" />
     <ClInclude Include="Headers\graphics\BlockRenderer.h" />
     <ClInclude Include="Headers\graphics\Graphics.h" />
@@ -198,10 +203,10 @@
     <ClInclude Include="Headers\graphics\VisibleChunk.h" />
     <ClInclude Include="Headers\graphics\WorldRenderer.h" />
     <ClInclude Include="Headers\Input.h" />
-    <ClInclude Include="Headers\level\Block.h" />
-    <ClInclude Include="Headers\level\Chunk.h" />
-    <ClInclude Include="Headers\level\Level.h" />
-    <ClInclude Include="Headers\level\World.h" />
+    <ClInclude Include="Headers\world\Block.h" />
+    <ClInclude Include="Headers\world\Chunk.h" />
+    <ClInclude Include="Headers\world\Level.h" />
+    <ClInclude Include="Headers\world\World.h" />
     <ClInclude Include="Headers\Logger.h" />
     <ClInclude Include="Headers\math\BoundingBox.h" />
     <ClInclude Include="Headers\math\Color.h" />
@@ -228,9 +233,9 @@
     <ClCompile Include="Source\graphics\VisibleChunk.cpp" />
     <ClCompile Include="Source\graphics\WorldRenderer.cpp" />
     <ClCompile Include="Source\Input.cpp" />
-    <ClCompile Include="Source\level\Block.cpp" />
-    <ClCompile Include="Source\level\Chunk.cpp" />
-    <ClCompile Include="Source\level\World.cpp" />
+    <ClCompile Include="Source\world\Block.cpp" />
+    <ClCompile Include="Source\world\Chunk.cpp" />
+    <ClCompile Include="Source\world\World.cpp" />
     <ClCompile Include="Source\player\BlockPickingOutline.cpp" />
     <ClCompile Include="Source\player\Player.cpp" />
     <ClCompile Include="Source\main.cpp" />

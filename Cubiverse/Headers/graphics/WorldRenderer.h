@@ -3,9 +3,10 @@
 #include "graphics/BlockRenderer.h"
 #include "graphics/VisibleChunk.h"
 #include "graphics/IRender.h"
-#include "level/World.h"
-#include "level/Chunk.h"
-#include "level/Block.h"
+
+#include "world/World.h"
+#include "world/Chunk.h"
+#include "world/Block.h"
 
 class WorldRenderer : public IRenderObject {
 public:

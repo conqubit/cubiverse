@@ -91,9 +91,9 @@ public:
 	}*/
 
 	glm::mat4 View() {
-		return glm::lookAt(Eye().ToGlmVec3(), //
-						   (Eye() + ToWorldSmooth(dir)).ToGlmVec3(), //
-						   ToWorldSmooth(cameraUp).ToGlmVec3());
+		return glm::lookAt(	Eye().ToGlmVec3(),
+							(Eye() + ToWorldSmooth(dir)).ToGlmVec3(),
+							ToWorldSmooth(cameraUp).ToGlmVec3());
 	}
 
 	BoundingBoxD BBox() {

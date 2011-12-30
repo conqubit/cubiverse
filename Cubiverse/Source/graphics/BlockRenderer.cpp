@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "graphics/BlockRenderer.h"
-#include "level/World.h"
+#include "world/World.h"
 #include "graphics/ModelFactory.h"
 #include "graphics/WorldRenderer.h"
 

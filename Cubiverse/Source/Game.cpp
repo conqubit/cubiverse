@@ -6,7 +6,7 @@
 #include "Config.h"
 
 #include "player/Player.h"
-#include "level/World.h"
+#include "world/World.h"
 #include "graphics/WorldRenderer.h"
 
 Player*		  Game::player;
