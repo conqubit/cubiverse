@@ -127,7 +127,7 @@ void WorldRenderer::ReconstructChunkModelData(Chunk* c) {
 void WorldRenderer::UpdateMesh(const Vector3I& p) {
 	Chunk* c = Game::world->GetChunkFromBlock(p);
 	if (!c) return;
-	if (visibleChunks.count(c) != 0) {
+	if (visibleChunks.count(c) == 1) {
 		mf.Clear();
 		br.ConstructBlock(p);
 		visibleChunks[c]->UpdateBlock(Chunk::GetIndex(p), mf);

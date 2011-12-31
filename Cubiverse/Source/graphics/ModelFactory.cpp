@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "graphics/ModelFactory.h"
-
 #include "graphics/Model.h"
+#include "graphics/Shader.h"
 
 Model* ModelFactory::Create(int buffExtra) {
 
@@ -12,10 +12,9 @@ Model* ModelFactory::Create(int buffExtra) {
 	}
 
 	Model* m = new Model();
-	m->topology = topology;
 	if (!m->Init(*this, buffExtra)) {
 		delete m;
-		return nullptr;
+		m = nullptr;
 	}
 	return m;
 }

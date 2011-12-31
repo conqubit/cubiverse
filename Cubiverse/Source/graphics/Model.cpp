@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
 #include "System.h"
+
+#include "graphics/Graphics.h"
 #include "graphics/Model.h"
 #include "graphics/Shader.h"
 
@@ -19,9 +21,17 @@ vertexBufferSize(),
 topology(GL_TRIANGLES) {
 }
 
+static inline bool CanUseVAO() {
+	return GLEW_VERSION_3_0 || GLEW_ARB_vertex_array_object;
+}
+
 bool Model::Init(const ModelFactory& mf, int buffExtra) {
+	if (!mf.shader) {
+		return false;
+	}
 	shader = mf.shader;
 	texture = mf.texture;
+	topology = mf.topology;
 	vertexCount = mf.VertexCount();
 	indexCount = mf.IndexCount();
 	vertexBufferSize = mf.VertexDataSize() + buffExtra;
@@ -31,17 +41,25 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 	vertexDataState.vertexData = nullptr;
 
 	glGenBuffers(1, &vertexBuffer);
+
+	if (!vertexBuffer) {
+		return false;
+	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, nullptr, mf.usage);
+
 	glBufferSubData(GL_ARRAY_BUFFER, 0, mf.VertexDataSize(), mf.VertexData());
 
-	if ((GLEW_VERSION_3_0 || GLEW_ARB_vertex_array_object)) {
+	if (CanUseVAO()) {
 		glGenVertexArrays(1, &vertexArrayObject);
 
+		if (!vertexArrayObject) {
+			return false;
+		}
+
 		glBindVertexArray(vertexArrayObject);
-
-		Bind(true);
-
+		ManualBind();
 		glBindVertexArray(0);
 	}
 
@@ -51,7 +69,7 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 		glBindSampler(0, texture->sampler);
 	}
 
-	Unbind();
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//glGenBuffers(1, &indexBuffer);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -85,31 +103,39 @@ bool Model::Update(const ModelFactory& mf) {
 	return false;
 }
 
-void Model::Bind(bool manualOverride) {
-	if (!manualOverride && (GLEW_VERSION_3_0 || GLEW_ARB_vertex_array_object)) {
+void Model::Bind() {
+	if (CanUseVAO()) {
 		glBindVertexArray(vertexArrayObject);
 	} else {
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		for (int i = 0; i < vertexDataState.attributes.size(); i++) {
-			const ModelFactory::Attribute& attr = vertexDataState.attributes[i];
-			if (attr.hidden) continue;
-			glEnableVertexAttribArray(attr.shaderLoc);
-			glVertexAttribPointer(attr.shaderLoc, attr.count, attr.glType, attr.normalized, vertexDataState.vertexStride, BUFFER_OFFSET(attr.offset));
-		}
+		ManualBind();
 	}
 }
 
 void Model::Unbind() {
-	if ((GLEW_VERSION_3_0 || GLEW_ARB_vertex_array_object)) {
+	if (CanUseVAO()) {
 		glBindVertexArray(0);
 	} else {
-		for (int i = 0; i < vertexDataState.attributes.size(); i++) {
-			const ModelFactory::Attribute& attr = vertexDataState.attributes[i];
-			if (attr.hidden) continue;
-			glDisableVertexAttribArray(attr.shaderLoc);
-		}
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		ManualUnbind();
 	}
+}
+
+void Model::ManualBind() {
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	for (int i = 0; i < vertexDataState.attributes.size(); i++) {
+		const ModelFactory::Attribute& attr = vertexDataState.attributes[i];
+		if (attr.hidden) continue;
+		glEnableVertexAttribArray(attr.shaderLoc);
+		glVertexAttribPointer(attr.shaderLoc, attr.count, attr.glType, attr.normalized, vertexDataState.vertexStride, BUFFER_OFFSET(attr.offset));
+	}
+}
+
+void Model::ManualUnbind() {
+	for (int i = 0; i < vertexDataState.attributes.size(); i++) {
+		const ModelFactory::Attribute& attr = vertexDataState.attributes[i];
+		if (attr.hidden) continue;
+		glDisableVertexAttribArray(attr.shaderLoc);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 byte* Model::Map(GLenum access) {

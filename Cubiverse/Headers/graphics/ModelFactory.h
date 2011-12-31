@@ -194,10 +194,7 @@ public:
 	}
 
 	int VertexCount()const {
-		if (sizeOverride != -1) {
-			return sizeOverride / stride;
-		}
-		return (int)vertexData.size() / stride;
+		return VertexDataSize() / stride;
 	}
 
 	int VertexStride()const {

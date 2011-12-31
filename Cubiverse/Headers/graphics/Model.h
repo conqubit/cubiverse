@@ -1,23 +1,16 @@
 #pragma once
 
-#include "graphics/Graphics.h"
 #include "graphics/Texture.h"
 #include "graphics/ModelFactory.h"
 
 #include "math/Math.h"
 #include "graphics/IRender.h"
-#include "graphics/Shader.h"
 
+class Shader;
 class ModelFactory;
 
 class Model : public IRender {
 public:
-	struct VertexData {
-		std::vector<ModelFactory::Attribute> attributes;
-		byte* vertexData;
-		int vertexStride;
-	};
-
 	Model();
 
 	bool Init(const ModelFactory& mf, int buffExtra = 0);
@@ -29,28 +22,39 @@ public:
 
 	void EnableOrtho(bool ortho = true);
 
-	void Bind(bool manualOverride = false);
+	void Bind();
 	void Unbind();
 
 	byte* Map(GLenum access);
 	void Unmap();
 
-	VertexData vertexDataState;
-
-	bool orthographic;
-
 	glm::mat4 world;
-
-	Shader* shader;
-	Texture* texture;
 
 	int vertexCount;
 	int indexCount;
 
-	int vertexBufferSize;
-
-	GLenum topology;
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
+
+	int vertexBufferSize;
+
+private:
+	void ManualBind();
+	void ManualUnbind();
+
+	struct VertexData {
+		std::vector<ModelFactory::Attribute> attributes;
+		byte* vertexData;
+		int vertexStride;
+	};
+
+	VertexData vertexDataState;
+
+	bool orthographic;
+
+	Shader* shader;
+	Texture* texture;
+
+	GLenum topology;
 	GLuint vertexArrayObject;
 };
