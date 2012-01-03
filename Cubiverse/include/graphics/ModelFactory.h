@@ -48,8 +48,8 @@ public:
 	texture(nullptr),
 	dataOverride(nullptr),
 	sizeOverride(-1),
-	topology(GL_TRIANGLES),
-	usage(GL_STATIC_DRAW) {
+	usage(GL_STATIC_DRAW),
+	topology(GL_TRIANGLES) {
 	}
 
 	~ModelFactory() {
@@ -233,7 +233,7 @@ public:
 		sizeOverride = -1;
 	}
 
-	static Model* CreateWireframeDebugBox(const BoundingBoxD b, const ColorF& color) {
+	static Model* CreateWireframeDebugBox(const BoundingBoxD& b, const ColorF& color) {
 		ModelFactory mf;
 		mf.shader = Res::GetShader("color");
 		mf.topology = GL_LINES;

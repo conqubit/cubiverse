@@ -1,9 +1,5 @@
 #pragma once
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 // C header files.
 #include <stdlib.h>
 #include <stdio.h>
@@ -30,12 +26,16 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-typedef unsigned char		  byte;
-typedef unsigned short		 ushort;
-typedef unsigned int		   uint;
+#ifdef SFML_SYSTEM_WINDOWS
+#include <windows.h>
+#endif
 
-typedef std::int64_t		   int64;
-typedef std::uint64_t		  uint64;
+typedef unsigned char	byte;
+typedef unsigned short	ushort;
+typedef unsigned int	uint;
+
+typedef std::int64_t	int64;
+typedef std::uint64_t	uint64;
 
 typedef std::string string;
 typedef sf::Keyboard::Key Key;
@@ -73,3 +73,4 @@ void printerr(const T& x) {
 // Common.
 #include "math/Math.h"
 #include "Res.h"
+#include "Config.h"

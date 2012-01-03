@@ -128,7 +128,7 @@ void Player::DoOrient() {
 	}
 
 	Vector3D newSmoothUp = Game::world->GetUpSmooth(pos);
-	double angle = smoothUp.InsideAngle(newSmoothUp) / PI * 180.0;
+	double angle = smoothUp.DegreesTo(newSmoothUp);
 	if (abs(angle) > 0.001) {
 		//glm::dmat4 oldOrientation = smoothOrientation;
 

@@ -97,7 +97,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>SFML_DYNAMIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_DYNAMIC;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -115,7 +115,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>SFML_DYNAMIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_DYNAMIC;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -135,8 +135,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>SFML_DYNAMIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SFML_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -163,8 +163,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>SFML_DYNAMIC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Headers\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SFML_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\;C:\Users\Conrad\Desktop\bullet-2.79\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -190,63 +190,63 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Config.h" />
-    <ClInclude Include="Headers\entity\Entity.h" />
-    <ClInclude Include="Headers\entity\PhysicsEntity.h" />
-    <ClInclude Include="Headers\Game.h" />
-    <ClInclude Include="Headers\graphics\BlockRenderer.h" />
-    <ClInclude Include="Headers\graphics\Graphics.h" />
-    <ClInclude Include="Headers\graphics\IRender.h" />
-    <ClInclude Include="Headers\graphics\Model.h" />
-    <ClInclude Include="Headers\graphics\ModelFactory.h" />
-    <ClInclude Include="Headers\graphics\Shader.h" />
-    <ClInclude Include="Headers\graphics\Texture.h" />
+    <ClInclude Include="include\Config.h" />
+    <ClInclude Include="include\entity\Entity.h" />
+    <ClInclude Include="include\entity\PhysicsEntity.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\graphics\BlockRenderer.h" />
+    <ClInclude Include="include\graphics\Graphics.h" />
+    <ClInclude Include="include\graphics\IRender.h" />
+    <ClInclude Include="include\graphics\Model.h" />
+    <ClInclude Include="include\graphics\ModelFactory.h" />
+    <ClInclude Include="include\graphics\Shader.h" />
+    <ClInclude Include="include\graphics\Texture.h" />
     <ClInclude Include="headers\graphics\Texture.h" />
-    <ClInclude Include="Headers\graphics\VisibleChunk.h" />
-    <ClInclude Include="Headers\graphics\WorldRenderer.h" />
-    <ClInclude Include="Headers\Input.h" />
-    <ClInclude Include="Headers\world\Block.h" />
-    <ClInclude Include="Headers\world\Chunk.h" />
-    <ClInclude Include="Headers\world\Level.h" />
-    <ClInclude Include="Headers\world\World.h" />
-    <ClInclude Include="Headers\Logger.h" />
-    <ClInclude Include="Headers\math\BoundingBox.h" />
-    <ClInclude Include="Headers\math\Color.h" />
-    <ClInclude Include="Headers\math\Math.h" />
-    <ClInclude Include="Headers\math\Vector.h" />
-    <ClInclude Include="Headers\player\BlockPickingOutline.h" />
-    <ClInclude Include="Headers\player\Player.h" />
-    <ClInclude Include="Headers\player\Crosshair.h" />
-    <ClInclude Include="Headers\Res.h" />
-    <ClInclude Include="Headers\System.h" />
-    <ClInclude Include="Headers\Window.h" />
-    <ClInclude Include="Headers\graphics\Scene.h" />
-    <ClInclude Include="Headers\stdafx.h" />
+    <ClInclude Include="include\graphics\VisibleChunk.h" />
+    <ClInclude Include="include\graphics\WorldRenderer.h" />
+    <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\world\Block.h" />
+    <ClInclude Include="include\world\Chunk.h" />
+    <ClInclude Include="include\world\Level.h" />
+    <ClInclude Include="include\world\World.h" />
+    <ClInclude Include="include\Logger.h" />
+    <ClInclude Include="include\math\BoundingBox.h" />
+    <ClInclude Include="include\math\Color.h" />
+    <ClInclude Include="include\math\Math.h" />
+    <ClInclude Include="include\math\Vector.h" />
+    <ClInclude Include="include\player\BlockPickingOutline.h" />
+    <ClInclude Include="include\player\Player.h" />
+    <ClInclude Include="include\player\Crosshair.h" />
+    <ClInclude Include="include\Res.h" />
+    <ClInclude Include="include\System.h" />
+    <ClInclude Include="include\Window.h" />
+    <ClInclude Include="include\graphics\Scene.h" />
+    <ClInclude Include="include\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Config.cpp" />
-    <ClCompile Include="Source\Game.cpp" />
-    <ClCompile Include="Source\graphics\BlockRenderer.cpp" />
-    <ClCompile Include="Source\graphics\Graphics.cpp" />
-    <ClCompile Include="Source\graphics\Model.cpp" />
-    <ClCompile Include="Source\graphics\ModelFactory.cpp" />
-    <ClCompile Include="Source\graphics\Shader.cpp" />
+    <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\graphics\BlockRenderer.cpp" />
+    <ClCompile Include="src\graphics\Graphics.cpp" />
+    <ClCompile Include="src\graphics\Model.cpp" />
+    <ClCompile Include="src\graphics\ModelFactory.cpp" />
+    <ClCompile Include="src\graphics\Shader.cpp" />
+    <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="Source\graphics\Texture.cpp" />
-    <ClCompile Include="Source\graphics\Texture.cpp" />
-    <ClCompile Include="Source\graphics\VisibleChunk.cpp" />
-    <ClCompile Include="Source\graphics\WorldRenderer.cpp" />
-    <ClCompile Include="Source\Input.cpp" />
-    <ClCompile Include="Source\world\Block.cpp" />
-    <ClCompile Include="Source\world\Chunk.cpp" />
-    <ClCompile Include="Source\world\World.cpp" />
-    <ClCompile Include="Source\player\BlockPickingOutline.cpp" />
-    <ClCompile Include="Source\player\Player.cpp" />
-    <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\player\Crosshair.cpp" />
-    <ClCompile Include="Source\Res.cpp" />
-    <ClCompile Include="Source\System.cpp" />
-    <ClCompile Include="Source\Window.cpp" />
-    <ClCompile Include="Source\stdafx.cpp">
+    <ClCompile Include="src\graphics\VisibleChunk.cpp" />
+    <ClCompile Include="src\graphics\WorldRenderer.cpp" />
+    <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\world\Block.cpp" />
+    <ClCompile Include="src\world\Chunk.cpp" />
+    <ClCompile Include="src\world\World.cpp" />
+    <ClCompile Include="src\player\BlockPickingOutline.cpp" />
+    <ClCompile Include="src\player\Player.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\player\Crosshair.cpp" />
+    <ClCompile Include="src\Res.cpp" />
+    <ClCompile Include="src\System.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

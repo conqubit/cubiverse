@@ -10,7 +10,15 @@ glm::mat4 Graphics::proj;
 glm::mat4 Graphics::ortho;
 
 bool Graphics::Init() {
-	glewInit(); 
+	glewInit();
+
+	print("OpenGL version: " + str(glGetString(GL_VERSION)));
+
+	if (!GLEW_VERSION_2_1) {
+		printerr("At least OpenGL version 2.1+ is required. Version found on this computer: " + str(glGetString(GL_VERSION)));
+		printerr("Try updating your video drivers.");
+		return false;
+	}
 
 	glClearDepth(1.0);
 	glClearColor(0.5f, 0.7f, 0.9f, 1.0f);
@@ -24,14 +32,6 @@ bool Graphics::Init() {
 	glCullFace(GL_BACK);
 
 	SetProjection();
-
-	print("OpenGL version: " + str(glGetString(GL_VERSION)));
-
-	if (!GLEW_VERSION_2_1) {
-		printerr("At least OpenGL version 2.1+ is required. Version found on this computer: " + str(glGetString(GL_VERSION)));
-		printerr("Try updating your video drivers.");
-		return false;
-	}
 
 	return true;
 }

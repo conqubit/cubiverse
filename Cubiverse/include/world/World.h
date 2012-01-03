@@ -45,7 +45,7 @@ public:
 		Chunk* c = GetChunkFromBlock(p);
 		if (!c) {
 			c = new Chunk();
-			c->pos = p.ToChunkCoords();
+			c->cpos = p.ToChunkCoords();
 			c->Fill(Block::Air);
 			InsertChunk(c);
 		}
@@ -63,14 +63,14 @@ public:
 	void InsertChunk(Chunk* c) {
 		level.InsertChunk(c);
 
-		if (c->pos.x < cmin.x) cmin.x = c->pos.x;
-		else if (c->pos.x > cmax.x) cmax.x = c->pos.x;
+		if (c->cpos.x < cmin.x) cmin.x = c->cpos.x;
+		else if (c->cpos.x > cmax.x) cmax.x = c->cpos.x;
 
-		if (c->pos.y < cmin.y) cmin.y = c->pos.y;
-		else if (c->pos.y > cmax.y) cmax.y = c->pos.y;
+		if (c->cpos.y < cmin.y) cmin.y = c->cpos.y;
+		else if (c->cpos.y > cmax.y) cmax.y = c->cpos.y;
 
-		if (c->pos.z < cmin.z) cmin.z = c->pos.z;
-		else if (c->pos.z > cmax.z) cmax.z = c->pos.z;
+		if (c->cpos.z < cmin.z) cmin.z = c->cpos.z;
+		else if (c->cpos.z > cmax.z) cmax.z = c->cpos.z;
 	}
 
 	bool InBlockBounds(const Vector3I& p)const {

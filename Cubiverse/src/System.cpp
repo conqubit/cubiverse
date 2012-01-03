@@ -26,13 +26,13 @@ bool System::Init() {
 		return false;
 	}
 
-	Window::Maximize();
-
-	Input::Init();
-
 	if (!Graphics::Init()) {
 		return false;
 	}
+
+	Window::Maximize();
+
+	Input::Init();
 
 	Window::Display();
 

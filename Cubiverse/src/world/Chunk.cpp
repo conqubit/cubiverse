@@ -2,14 +2,8 @@
 
 #include "world/Chunk.h"
 
-Chunk::Chunk() : pos() {
-}
-
-Chunk::~Chunk() {
-}
-
 void Chunk::Init(int t, const Vector3I& p) {
-	pos = p;
+	cpos = p;
 	Fill(t);
 }
 

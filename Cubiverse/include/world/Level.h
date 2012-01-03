@@ -72,10 +72,10 @@ public:
 	void InsertChunk(Chunk* c) {
 		if (!root) {
 			root = new Node(0);
-			offset = -(c->pos & ~1);
+			offset = -(c->cpos & ~1);
 		}
 
-		Vector3I cp = c->pos + offset;
+		Vector3I cp = c->cpos + offset;
 		Expand(cp);
 
 		Node* node = root;

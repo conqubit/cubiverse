@@ -12,14 +12,14 @@ public:
 	static const int ShiftTwice = Shift * 2;
 	static const int Mask = Dim - 1;
 
-	Vector3I pos;
+	Vector3I cpos;
 	byte data[Size];
 
-	Chunk();
-	~Chunk();
+	Chunk() {
+	}
 
 	Vector3I Pos()const {
-		return pos.ChunkToBlockCoords();
+		return cpos.ToBlockCoords();
 	}
 	
 	void Init(int t, const Vector3I& p);

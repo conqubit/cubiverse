@@ -140,8 +140,9 @@ void Model::ManualUnbind() {
 
 byte* Model::Map(GLenum access) {
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	return (byte*)glMapBuffer(GL_ARRAY_BUFFER, access);
+	byte* ret = (byte*)glMapBuffer(GL_ARRAY_BUFFER, access);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	return ret;
 }
 
 void Model::Unmap() {

@@ -120,13 +120,17 @@ struct Vector3 {
 		return const_cast<T*>(&x)[i];
 	}
 	
-	//---------------- Unitary ----------------
+	//---------------- Unary ----------------
 	Vector3<T> operator+()const {
-		return Vector3<T>(x, y, z);
+		return *this;
 	}
 
 	Vector3<T> operator-()const {
 		return Vector3<T>(-x, -y, -z);
+	}
+
+	Vector3I operator~()const {
+		return Vector3I(~x, ~y, ~z);
 	}
 	
 	//---------------- Vector-Vector Arithmetic ----------------
@@ -139,6 +143,8 @@ struct Vector3 {
 	}
 	
 	//---------------- Vector-Scalar Arithmetic ----------------
+
+	// Arithmetical
 	template <typename U>
 	Vector3<T> operator*(U s)const {
 		return Vector3<T>(x * s, y * s, z * s);
@@ -149,6 +155,12 @@ struct Vector3 {
 		return Vector3<T>(x / s, y / s, z / s);
 	}
 
+	template <typename U>
+	Vector3<T> operator%(U s)const {
+		return Vector3<T>(x % s, y % s, z % s);
+	}
+
+	// Logical
 	Vector3I operator<<(int s)const {
 		return Vector3I(x << s, y << s, z << s);
 	}
@@ -181,6 +193,8 @@ struct Vector3 {
 	}
 	
 	//---------------- Vector-Scalar Assignment ----------------
+
+	// Arithmetical
 	template <typename U>
 	Vector3<T>& operator*=(U s) {
 		return x *= s, y *= s, z *= s, *this;
@@ -191,6 +205,12 @@ struct Vector3 {
 		return x /= s, y /= s, z /= s, *this;
 	}
 
+	template <typename U>
+	Vector3<T>& operator%=(U s) {
+		return x %= s, y %= s, z %= s, *this;
+	}
+
+	// Logical
 	Vector3I& operator<<=(int s) {
 		return x <<= s, y <<= s, z <<= s, *this;
 	}
@@ -216,16 +236,23 @@ struct Vector3 {
 	}
 
 	//---------------- Utilities ----------------
-	double InsideAngle(Vector3<T> v)const {
+	double AngleTo(const Vector3<T>& v)const {
+		if (IsZero() || v.IsZero()) {
+			return 0.0;
+		}
 		return acos(Dot(v) / (Length() * v.Length()));
 	}
 
-	Vector3I ToChunkCoords()const {
-		return *this >> Chunk::Shift;
+	double DegreesTo(const Vector3<T>& v)const {
+		return AngleTo(v) / PI * 180.0;
 	}
 
-	Vector3I ChunkToBlockCoords()const {
-		return *this << Chunk::Shift;
+	Vector3<T> ToChunkCoords()const {
+		return *this / Chunk::Dim;
+	}
+
+	Vector3<T> ToBlockCoords()const {
+		return *this * Chunk::Dim;
 	}
 
 	template <typename U>
@@ -287,25 +314,25 @@ const Vector3<T> Vector3<T>::Axis[3] = { Vector3<T>::AxisX,
 #define VEC3_RANGE(vec) \
 	Vector3I p; \
 	const Vector3I& _v = vec; \
-	for(p.z = 0; p.z < _v.z; p.z++) \
-	for(p.y = 0; p.y < _v.y; p.y++) \
-	for(p.x = 0; p.x < _v.x; p.x++)
+	for (p.z = 0; p.z < _v.z; p.z++) \
+	for (p.y = 0; p.y < _v.y; p.y++) \
+	for (p.x = 0; p.x < _v.x; p.x++)
 
 #define VEC3_RANGE_AB(start, end) \
 	Vector3I p; \
 	const Vector3I& _s = start; \
 	const Vector3I& _e = end; \
-	for(p.z = _s.z; p.z <= _e.z; p.z++) \
-	for(p.y = _s.y; p.y <= _e.y; p.y++) \
-	for(p.x = _s.x; p.x <= _e.x; p.x++)
+	for (p.z = _s.z; p.z <= _e.z; p.z++) \
+	for (p.y = _s.y; p.y <= _e.y; p.y++) \
+	for (p.x = _s.x; p.x <= _e.x; p.x++)
 
 #define VEC3_RANGE_OFFSET(off, vec) \
 	Vector3I p; \
 	const Vector3I& _o = off; \
 	const Vector3I& _v = _o + vec; \
-	for(p.z = _o.z; p.z < _v.z; p.z++) \
-	for(p.y = _o.y; p.y < _v.y; p.y++) \
-	for(p.x = _o.x; p.x < _v.x; p.x++)
+	for (p.z = _o.z; p.z < _v.z; p.z++) \
+	for (p.y = _o.y; p.y < _v.y; p.y++) \
+	for (p.x = _o.x; p.x < _v.x; p.x++)
 
 #define SIDES(code) \
 	Vector3I s; \
