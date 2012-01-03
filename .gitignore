@@ -1,0 +1,9 @@
+/obj
+/x64
+/x32
+/resdev
+*.sdf
+*.opensdf
+*.suo
+*.zip
+*.dll

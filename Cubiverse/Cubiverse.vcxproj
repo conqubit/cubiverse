@@ -81,14 +81,14 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\sfml\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;C:\sfml\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)\Intermediate\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)obj\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)x32\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\sfml2\include;C:\asio-1.4.8\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;C:\sfml2\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)obj\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -183,7 +183,7 @@
       </DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)res $(SolutionDir)x64\$(Configuration)\res\ /s /y</Command>
+      <Command>xcopy $(ProjectDir)res $(SolutionDir)x64\$(Configuration)\res\ /s /y /q</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy resources</Message>
@@ -201,7 +201,6 @@
     <ClInclude Include="include\graphics\ModelFactory.h" />
     <ClInclude Include="include\graphics\Shader.h" />
     <ClInclude Include="include\graphics\Texture.h" />
-    <ClInclude Include="headers\graphics\Texture.h" />
     <ClInclude Include="include\graphics\VisibleChunk.h" />
     <ClInclude Include="include\graphics\WorldRenderer.h" />
     <ClInclude Include="include\Input.h" />
@@ -232,7 +231,6 @@
     <ClCompile Include="src\graphics\ModelFactory.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\Texture.cpp" />
-    <ClCompile Include="Source\graphics\Texture.cpp" />
     <ClCompile Include="src\graphics\VisibleChunk.cpp" />
     <ClCompile Include="src\graphics\WorldRenderer.cpp" />
     <ClCompile Include="src\Input.cpp" />
