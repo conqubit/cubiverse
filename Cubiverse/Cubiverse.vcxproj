@@ -83,7 +83,7 @@
     <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\sfml\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;C:\sfml\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)obj\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)x32\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -154,7 +154,7 @@
       </DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)res $(SolutionDir)x32\$(Configuration)\res\ /s /y</Command>
+      <Command>xcopy $(ProjectDir)out\* $(SolutionDir)$(Platform)\$(Configuration) /s /y /q</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -184,7 +184,7 @@
       </DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)res $(SolutionDir)x64\$(Configuration)\res\ /s /y /q</Command>
+      <Command>xcopy $(ProjectDir)out\* $(SolutionDir)$(Platform)\$(Configuration) /s /y /q</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy resources</Message>
