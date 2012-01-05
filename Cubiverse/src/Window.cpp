@@ -49,6 +49,12 @@ bool Window::Init() {
 
 	style = sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize;
 
+	anti = Config::Graphics::MultiSampling;
+
+	vsync = Config::Graphics::VSync;
+
+	limitFrameRate = Config::Graphics::FrameRateLimit;
+
 	contextSettings = sf::ContextSettings(depth, stencil, anti, major, minor);
 
 	sfWindow.Create(videoMode, title, style, contextSettings);

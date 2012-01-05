@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Game.h"
 #include "Input.h"
+#include "Config.h"
 
 #include "graphics/Graphics.h"
 #include "world/Block.h"
@@ -21,6 +22,8 @@ bool System::Init() {
 	srand((unsigned int)time(nullptr));
 
 	Block::Init();
+
+	Config::LoadConfigFile();
 
 	if (!Window::Init()) {
 		return false;

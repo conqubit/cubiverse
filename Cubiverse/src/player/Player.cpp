@@ -295,7 +295,7 @@ double maxPitch =  PI_2;
 
 void Player::DoInput() {
 	yaw += Input::DeltaMx() / 300.0;
-	pitch -= Input::DeltaMy() / 300.0;
+	pitch -= Input::DeltaMy() / 300.0 * (Config::Controls::InvertMouse ? -1 : 1);
 
 	if (pitch < minPitch) {
 		pitch = minPitch;
