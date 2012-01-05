@@ -66,7 +66,6 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 	if (texture) {
 		glUniform1i(glGetUniformLocation(shader->program, "textureSampler"), 0);
 		texture->Bind();
-		glBindSampler(0, texture->sampler);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -81,7 +80,9 @@ bool Model::Init(const ModelFactory& mf, int buffExtra) {
 void Model::Shutdown() {
 	//glDeleteBuffers(1, &indexBuffer);
 	glDeleteBuffers(1, &vertexBuffer);
-	glDeleteVertexArrays(1, &vertexArrayObject);
+	if (CanUseVAO()) {
+		glDeleteVertexArrays(1, &vertexArrayObject);
+	}
 	delete this;
 }
 

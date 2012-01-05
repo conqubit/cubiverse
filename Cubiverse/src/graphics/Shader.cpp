@@ -45,17 +45,14 @@ void Shader::ShowInfoLog(GLuint object, PFNGLGETSHADERIVPROC glGetiv, PFNGLGETSH
 GLuint Shader::MakeShader(GLenum type, const string& filename) {
 	GLuint shader = 0;
 
-	FILE* f = fopen(filename.c_str(), "rb");
-	fseek(f, 0, SEEK_END);
-	int length = ftell(f);
+	std::ifstream file(filename, std::ifstream::in | std::ifstream::binary);
+	file.seekg(0, std::ios::end);
+	int length = file.tellg();
+	file.seekg(0, std::ios::beg);
+
 	char* contents = (char*)malloc(length);
-	if (!contents) {
-		fclose(f);
-		return 0;
-	}
-	rewind(f);
-	fread(contents, 1, length, f);
-	fclose(f);
+	file.read(contents, length);
+	file.close();
 
 	shader = glCreateShader(type);
 	glShaderSource(shader, 1, (const GLchar**)&contents, (GLint*)&length);
@@ -84,7 +81,7 @@ GLuint Shader::MakeProgram(GLuint vertexShader, GLuint fragmentShader) {
 
 	glGetProgramiv(program, GL_LINK_STATUS, &programOk);
 	if (!programOk) {
-		printf("Failed to link shader program:\n");
+		printerr("Failed to link shader program:\n");
 		ShowInfoLog(program, glGetProgramiv, glGetProgramInfoLog);
 		glDeleteProgram(program);
 		return 0;

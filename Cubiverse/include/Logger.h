@@ -69,6 +69,7 @@ protected:
 		if (!output) SetOutput(file);
 
 		output->put(c);
+		output->flush();
 		return c;
 	}
 

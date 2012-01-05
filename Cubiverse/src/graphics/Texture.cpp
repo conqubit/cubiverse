@@ -4,7 +4,7 @@
 
 Texture::Texture() :
 width(), height(), depth(),
-type(), sampler(), texture() {
+type(), texture() {
 }
 
 Texture::~Texture() {
@@ -12,7 +12,6 @@ Texture::~Texture() {
 
 void Texture::Shutdown() {
 	glDeleteTextures(1, &texture);
-	glDeleteSamplers(1, &sampler);
 	delete this;
 }
 
@@ -43,11 +42,10 @@ Texture* Texture::Create2DTexture(const string& file) {
 
 	glTexImage2D(tex->type, 0, GL_RGBA8, tex->width, tex->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixelsPtr());
 
-	glGenSamplers(1, &tex->sampler);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(tex->type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(tex->type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(tex->type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(tex->type, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	tex->Unbind();
 
@@ -55,6 +53,9 @@ Texture* Texture::Create2DTexture(const string& file) {
 }
 
 Texture* Texture::Create3DTexture(int width, int height, int depth, byte* data) {
+
+	int i = 0;
+
 	Texture* tex = new Texture();
 
 	tex->width = width;
@@ -69,11 +70,10 @@ Texture* Texture::Create3DTexture(int width, int height, int depth, byte* data) 
 
 	glTexImage3D(tex->type, 0, GL_RGBA8, width, height, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-	glGenSamplers(1, &tex->sampler);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glSamplerParameteri(tex->sampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(tex->type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(tex->type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(tex->type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(tex->type, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	tex->Unbind();
 
