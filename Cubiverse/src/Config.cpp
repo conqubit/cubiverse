@@ -5,7 +5,7 @@
 // Defaults should be defined here.
 
 const string Config::Version = "0.0.3";
-const string Config::File = "cubiverse.cfg";
+const string Config::Filename = "settings.txt";
 
 bool Config::Controls::InvertMouse = false;
 
@@ -42,12 +42,15 @@ static T GetValue(const string& str) {
 
 template <>
 static bool GetValue(const string& str) {
-	if (str == "false" || str == "disabled") {
+	if (Util::String::EqualsIgnoreCase(str, "false") ||
+		Util::String::EqualsIgnoreCase(str, "disabled") ) {
 		return false;
 	}
-	if (str == "true" || str == "enabled") {
+	if (Util::String::EqualsIgnoreCase(str, "true") ||
+		Util::String::EqualsIgnoreCase(str, "enabled") ) {
 		return true;
 	}
+	return false;
 }
 
 
@@ -58,13 +61,11 @@ static void SetVariable(T& variable, const string& val) {
 
 template <typename T>
 static void SetProperty(const string& name, T& variable) {
-	if (props.count(name) == 1) {
-		SetVariable(variable, props[name]);
+	string s = Util::String::ToLowerCopy(name);
+	if (props.count(s) == 1) {
+		SetVariable(variable, props[s]);
 	} else {
-		//if (file.peek() != '\n') {
-		//	file << std::endl;
-		//}
-		file << name << '=' << GetString(variable) << std::endl;
+		file << name << " = " << GetString(variable) << '\n';
 	}
 }
 
@@ -80,33 +81,27 @@ static bool ReadNextProperty(Config::Property& prop) {
 	prop.Reset();
 	int state = ReadingName;
 
-	bool escape = false;
-
 	char c;
-	while (file.get(c), !file.eof()) {
-		if (c == '#' || c == '\n') {
-			// shoot to the end of line or file if comment
-			if (c == '#') {
-				while (file.get(c), file.good() && c != '\n');
-			}
-			if (state == ReadingValue) {
-				return true;
-			} else if (file.good()) {
+	while (file.get(c), file.good()) {
+		// shoot to the end of line or file if comment
+		if (c == '#') {
+			while (file.get(c), file.good() && c != '\n');
+		}
+		if (c == '\n') {
+			switch (state) {
+			case ReadingName:
 				prop.Reset();
-				state = ReadingName;
 				continue;
-			} else {
-				return false;
+			case ReadingValue:
+				return true;
 			}
 		}
 		switch (state) {
 		case ReadingName:
-			if (!isspace(c)) {
-				if (c == '=') {
-					state = ReadingValue;
-				} else {
-					prop.name += tolower(c);
-				}
+			if (c == '=') {
+				state = ReadingValue;
+			} else {
+				prop.name += c;
 			}
 			break;
 		case ReadingValue:
@@ -115,36 +110,49 @@ static bool ReadNextProperty(Config::Property& prop) {
 		}
 	}
 
-	if (state == ReadingValue) {
-		return true;
-	} else {
+	switch (state) {
+	case ReadingName:
 		return false;
+	case ReadingValue:
+		return true;
 	}
 }
 
 void Config::LoadConfigFile() {
-	file.open(File, std::fstream::in | std::fstream::out | std::fstream::app);
+	file.open(Filename, std::ios::in | std::ios::out | std::ios::app | std::ios::ate);
 
-	file.seekg(0, std::fstream::end);  
 	if ((int)file.tellg() == 0) {
-		file << "# Cubiverse configuration file" << std::endl << std::endl;
+		file << "# Cubiverse configuration file\n";
+		file << '\n';
 	}
-	file.seekg(0, std::fstream::beg);  
+
+	file.seekg(0);
 
 	Config::Property prop;
 	while (ReadNextProperty(prop)) {
+		Util::String::ToLower(prop.name);
+		Util::String::Trim(prop.name);
+		Util::String::Trim(prop.value);
 		if (prop.name.size() == 0) continue;
 		props.insert(std::make_pair(prop.name, prop.value));
 	}
 
-	file.close();
-	file.open(File, std::fstream::in | std::fstream::out | std::fstream::app);
+	file.clear();
 
-	SetProperty("controls.invertmouse", Controls::InvertMouse);
-	SetProperty("graphics.multisampling", Graphics::MultiSampling);
-	SetProperty("graphics.frameratelimit", Graphics::FrameRateLimit);
-	SetProperty("graphics.vsync", Graphics::VSync);
+	file.seekg(-1, std::ios::end);
+	char lastChar = file.peek();
+	file.seekp(0);
+
+	if (lastChar != '\n') {
+		file.put('\n');
+	}
+
+	SetProperty("Controls.InvertMouse", Controls::InvertMouse);
+	SetProperty("Graphics.MultiSampling", Graphics::MultiSampling);
+	SetProperty("Graphics.FrameRateLimit", Graphics::FrameRateLimit);
+	SetProperty("Graphics.VSync", Graphics::VSync);
+
+	file.close();
 
 	props.clear();
-	file.close();
 }

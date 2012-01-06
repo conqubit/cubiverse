@@ -13,12 +13,12 @@ bool Res::Init() {
 
 	// Block shader.
 	shader = new Shader();
-	if (!shader->Init("res/block.v.glsl", "res/block.f.glsl")) return false;
+	if (!shader->Init("res/block.vert", "res/block.frag")) return false;
 	AddShader("block", shader);
 
 	// Simpler color shader.
 	shader = new Shader();
-	if (!shader->Init("res/color.v.glsl", "res/color.f.glsl")) return false;
+	if (!shader->Init("res/color.vert", "res/color.frag")) return false;
 	AddShader("color", shader);
 
 	// Block textures.

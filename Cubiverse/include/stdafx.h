@@ -74,3 +74,4 @@ void printerr(const T& x) {
 #include "math/Math.h"
 #include "Res.h"
 #include "Config.h"
+#include "util/String.h"

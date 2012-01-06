@@ -2,7 +2,7 @@
 
 struct Config {
 	static const string Version;
-	static const string File;
+	static const string Filename;
 
 	struct Controls {
 		static bool InvertMouse;

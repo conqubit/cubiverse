@@ -205,6 +205,7 @@
     <ClInclude Include="include\graphics\VisibleChunk.h" />
     <ClInclude Include="include\graphics\WorldRenderer.h" />
     <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\util\String.h" />
     <ClInclude Include="include\world\Block.h" />
     <ClInclude Include="include\world\Chunk.h" />
     <ClInclude Include="include\world\Level.h" />

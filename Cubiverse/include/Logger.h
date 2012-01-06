@@ -69,7 +69,11 @@ protected:
 		if (!output) SetOutput(file);
 
 		output->put(c);
-		output->flush();
+
+		if (c == '\n') {
+			output->flush();
+		}
+
 		return c;
 	}
 
