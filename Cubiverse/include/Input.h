@@ -18,8 +18,9 @@ public:
 	static bool ReadMouse();
 	static void Lock();
 	static void Unlock();
-
-	static int mx, my;
+	static bool IsLocked();
+	static int DirectMx();
+	static int DirectMy();
 	static int dmx, dmy;
 	static bool locked;
 

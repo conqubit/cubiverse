@@ -16,22 +16,18 @@ Player*		  Game::player;
 World*		   Game::world;
 WorldRenderer*   Game::worldRenderer;
 
-int tick;
-int accum;
-int delta;
+double tick;
+double accum;
+double delta;
 
-int64 fpsTicks;
+/*double fpsTicks;
 int fpsCount;
-int currentFPS;
+int currentFPS;*/
 
-int64 oldtime;
-int64 newtime;
-int64 freq;
+double oldTime;
+double newTime;
 
 bool Game::Init() {
-	QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
-	QueryPerformanceCounter((LARGE_INTEGER*)&oldtime);
-
 	world = new World();
 	world->Init(4, 4, 4);
 	world->Fill(Block::Air);
@@ -56,12 +52,16 @@ bool Game::Init() {
 	Graphics::things.push_back(player);
 
 	//f.LoadFromFile("res/consola.ttf");
+	
+	Input::Unlock();
+
+	oldTime = glfwGetTime();
 
 	return true;
 }
 
 void Game::Start() {
-	tick = freq / 1000 * TickMS;
+	tick = TickMS / 1000.0;
 	accum = tick;
 }
 
@@ -72,19 +72,20 @@ void Game::Shutdown() {
 }
 
 void Game::Update() {
-	QueryPerformanceCounter((LARGE_INTEGER*)&newtime);
+	newTime = glfwGetTime();
 
-	delta = (newtime - oldtime);
-	fpsTicks += delta;
-	fpsCount++;
-
+	delta = newTime - oldTime;
 	accum += delta;
+
+	//fpsTicks += delta;
+	//fpsCount++;
+
 	while (accum >= tick) {
 		Tick();
 		accum -= tick;
 	}
 
-	oldtime = newtime;
+	oldTime = newTime;
 }
 
 void Game::Tick() {
@@ -106,26 +107,19 @@ void Game::DrawGUI() {
 	Graphics::ClearDepth();
 	player->DrawGUI();
 
-	/*
-	Window::sfWindow.SaveGLStates();
+	/*Window::sfWindow.SaveGLStates();
 
 	double factor = (double)Window::Height() / 800.0;
 
 	Vector3D p = Game::player->pos - Game::world->width.ToDouble() / 2.0;
 	sf::Text text("Position: " + p.ToString(2), f, 20 * factor);
 	text.SetPosition(5 * factor, 0);
-	Window::sfWindow.Draw(text);
+	Window::sfWindow.Draw(text);*/
 
-	if (fpsTicks >= freq / 2) {
+	/*if (fpsTicks >= freq / 2) {
 		currentFPS = fpsCount;
 		fpsTicks = 0;
 		fpsCount = 0;
-	}
-
-	text.SetString("FPS: " + str(currentFPS * 2));
-	text.SetPosition(5 * factor, 30 * factor);
-	Window::sfWindow.Draw(text);
-
-	Window::sfWindow.RestoreGLStates();
-	*/
+		glfwSetWindowTitle(("Cubiverse " + Config::Version + " FPS: " + str(currentFPS * 2)).c_str());
+	}*/
 }

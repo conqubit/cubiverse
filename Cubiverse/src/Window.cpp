@@ -7,9 +7,7 @@
 #include "System.h"
 #include "Config.h"
 
-bool Window::temp = false;
-
-bool Window::focus = true;
+bool Window::focusBeforeEvents = true;
 
 int anti = 0;
 int depth = 24;
@@ -22,24 +20,20 @@ int limitFrameRate = 240;
 
 bool vsync = false;
 
-bool resize = false;
-
 GLFWvidmode desktopMode;
+GLFWvidmode fullscreenMode2[100];
 GLFWvidmode fullscreenMode;
 string title;
-int style;
 
 bool fs = false;
 
 struct WindowState {
 	bool maximized;
-	int posX;
-	int posY;
+	int width, height;
+	int x, y;
 };
 
-WindowState stateBeforeFullscreen;
-
-
+WindowState desktopModeState;
 
 void GLFWCALL Window::KeyCallback(int key, int action) {
 	switch (action) {
@@ -49,6 +43,9 @@ void GLFWCALL Window::KeyCallback(int key, int action) {
 			glfwEnable(GLFW_MOUSE_CURSOR);
 			Input::Lock();
 			break;
+		case GLFW_KEY_F11:
+			ToggleFullscreen();
+			break;
 		}
 		break;
 	case GLFW_RELEASE:
@@ -56,27 +53,64 @@ void GLFWCALL Window::KeyCallback(int key, int action) {
 	}
 }
 
+void GLFWCALL Window::CharCallback(int character, int action) {
+	switch (action) {
+	case GLFW_PRESS:
+		switch (character) {
+		case 'z':
+			Game::player->noclip = !Game::player->noclip;
+			break;
+		}
+		break;
+	case GLFW_RELEASE:
+		break;
+	}
+}
+
+void GLFWCALL Window::MouseButtonCallback(int button, int action) {
+	switch (action) {
+	case GLFW_PRESS:
+		Input::Unlock();
+		//switch (button) {
+		//}
+		break;
+	case GLFW_RELEASE:
+		//switch (button) {
+		//}
+		break;
+	}
+}
+
+void GLFWCALL Window::MousePositionCallback(int x, int y) {
+	//print(str(x) + ' ' + str(y));
+}
+
 
 int GLFWCALL Window::CloseCallback() {
+	ClearCallbacks();
 	System::Stop();
-	return GL_TRUE;
+	return GL_FALSE;
 }
 
 
 void GLFWCALL Window::ResizeCallback(int width, int height) {
+	if (!IsMaximized() && !fs) {
+		desktopModeState.width = width;
+		desktopModeState.height = height;
+	}
 	glViewport(0, 0, width, height);
 	Graphics::SetProjection();
 	System::Update();
 }
 
 
-
 bool Window::Init() {
 	glfwGetDesktopMode(&desktopMode);
-	glfwGetVideoModes(&fullscreenMode, 1);
 
-	desktopMode.Width;
-	desktopMode.Height;
+	desktopModeState.width = desktopMode.Width / PHI;
+	desktopModeState.height = desktopMode.Height / PHI;
+	desktopModeState.x = (desktopMode.Width - desktopModeState.width) / 2;
+	desktopModeState.y = (desktopMode.Height - desktopModeState.height) / 2;
 
 	title = "Cubiverse " + Config::Version;
 	//style = sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize;
@@ -85,9 +119,12 @@ bool Window::Init() {
 	limitFrameRate = Config::Graphics::FrameRateLimit;
 	//contextSettings = sf::ContextSettings(depth, stencil, anti, major, minor);
 
-	glfwOpenWindow(desktopMode.Width / PHI, desktopMode.Height / PHI, 8, 8, 8, 8, 24, 8, GLFW_WINDOW);
-	glfwSetWindowPos(desktopMode.Width * (1 - 1 / PHI) / 2, desktopMode.Height * (1 - 1 / PHI) / 2);
+	glfwOpenWindow(desktopModeState.width, desktopModeState.height, 8, 8, 8, 8, depth, stencil, GLFW_WINDOW);
+	glfwSetWindowPos(desktopModeState.x, desktopModeState.y);
 	glfwSetWindowTitle(("Cubiverse " + Config::Version).c_str());
+
+	glfwSwapInterval(0);
+	glfwDisable(GLFW_AUTO_POLL_EVENTS);
 
 	//sfWindow.SetFramerateLimit(limitFrameRate);
 	//sfWindow.EnableVerticalSync(vsync);
@@ -101,13 +138,19 @@ bool Window::Init() {
 void Window::SetCallbacks() {
 	glfwSetWindowSizeCallback(ResizeCallback);
 	glfwSetKeyCallback(KeyCallback);
+	glfwSetCharCallback(CharCallback);
 	glfwSetWindowCloseCallback(CloseCallback);
+	glfwSetMouseButtonCallback(MouseButtonCallback);
+	glfwSetMousePosCallback(MousePositionCallback);
 }
 
 void Window::ClearCallbacks() {
 	glfwSetWindowSizeCallback(nullptr);
 	glfwSetKeyCallback(nullptr);
+	glfwSetCharCallback(nullptr);
 	glfwSetWindowCloseCallback(nullptr);
+	glfwSetMouseButtonCallback(nullptr);
+	glfwSetMousePosCallback(nullptr);
 }
 
 void Window::SetIcon(string file) {
@@ -121,20 +164,12 @@ bool Window::HasFocus() {
 	return glfwGetWindowParam(GLFW_ACTIVE);
 }
 
-void Window::Focus() {
-	focus = true;
-}
-
-void Window::Unfocus() {
-	focus = false;
-}
-
 void Window::Maximize() {
 	ShowWindow(SystemHandle(), SW_MAXIMIZE);
 }
 
 bool Window::IsMaximized() {
-	return IsZoomed(SystemHandle()) != 0;
+	return IsZoomed(SystemHandle());
 }
 
 bool Window::IsMinimized() {
@@ -151,24 +186,24 @@ HWND Window::SystemHandle() {
 }
 
 int Window::Width() {
-	int width, height;
-	glfwGetWindowSize(&width, &height);
+	int width;
+	glfwGetWindowSize(&width, nullptr);
 	return width;
 }
 
 int Window::Height() {
-	int width, height;
-	glfwGetWindowSize(&width, &height);
+	int height;
+	glfwGetWindowSize(nullptr, &height);
 	return height;
 }
 
-int Window::PosX() {
+int Window::X() {
 	RECT r;
 	GetWindowRect(SystemHandle(), &r);
 	return r.left;
 }
 
-int Window::PosY() {
+int Window::Y() {
 	RECT r;
 	GetWindowRect(SystemHandle(), &r);
 	return r.top;
@@ -184,126 +219,56 @@ extern int currentFPS;
 
 extern int64 freq;
 
-void Window::DoResize() {
-	if (resize) {
-		// Update OpenGL viewport.
-		glViewport(0, 0, Width(), Height());
-		// Adjust projection matrix, for potential changes in aspect ratio.
-		Graphics::SetProjection();
-		// For SFML draw calls. Otherwise SFML drawing will be to a stretched surface.
-		//sfWindow.SetView((sf::View(sf::FloatRect(0, 0, Width(), Height()))));
-		resize = false;
-	}
-}
-
 void Window::ToggleFullscreen() {
-	/*fs = !fs;
+	fs = !fs;
+
+	ClearCallbacks();
 
 	Graphics::ShutdownGraphics();
 
 	Input::Shutdown();
 	Res::Shutdown();
 
-	resize = true;
-
 	if (fs) {
-		stateBeforeFullscreen.maximized = IsMaximized();
-		stateBeforeFullscreen.posX = PosX();
-		stateBeforeFullscreen.posY = PosY();
-		sfWindow.Create(sf::VideoMode::GetFullscreenModes()[0], title, sf::Style::Fullscreen, contextSettings);
+		desktopModeState.maximized = IsMaximized();
+		desktopModeState.x = X();
+		desktopModeState.y = Y();
+		glfwCloseWindow();
+		glfwOpenWindow(desktopMode.Width, desktopMode.Height, 8, 8, 8, 8, depth, stencil, GLFW_FULLSCREEN);
 	} else {
-		sfWindow.Create(videoMode, title, style, contextSettings);
-		if (stateBeforeFullscreen.maximized) {
+		glfwCloseWindow();
+		glfwOpenWindow(desktopModeState.width, desktopModeState.height, 8, 8, 8, 8, depth, stencil, GLFW_WINDOW);
+		glfwSetWindowTitle(("Cubiverse " + Config::Version).c_str());
+		if (desktopModeState.maximized) {
 			Maximize();
 		} else {
-			sfWindow.SetPosition(stateBeforeFullscreen.posX, stateBeforeFullscreen.posY);
+			glfwSetWindowPos(desktopModeState.x, desktopModeState.y);
 		}
 	}
 
-	sfWindow.Display();
-
-	sfWindow.SetFramerateLimit(limitFrameRate);
-	sfWindow.EnableVerticalSync(vsync);
-
-	SetIcon("res/icon.png");
-
-	sfWindow.ShowMouseCursor(Input::locked);
+	Display();
 
 	Graphics::Init();
 	Res::Init();
 	Input::Init();
 
-	Graphics::InitGraphics();*/
+	Graphics::InitGraphics();
+
+	SetCallbacks();
 }
 
 void Window::DoEvents() {
 
+	bool oldHasFocus = HasFocus();
+
 	glfwPollEvents();
 
-	if (!Input::locked) {
-		Input::SetMousePosition(Width() / 2, Height() / 2);
+	if (HasFocus() && !oldHasFocus) {
+		Input::Lock();
 	}
 
 	Input::ReadKeyboard();
 	Input::ReadMouse();
-
-	/*while (sfWindow.PollEvent(e)) {
-		switch (e.Type) {
-		case EventType::Resized:
-			resize = true;
-			if (!IsMaximized() && !IsFullScreen()) {
-				desktopMode.Width = Width();
-				desktopMode.Height = Height();
-			}
-			break;
-		case EventType::Closed:
-			System::Stop();
-			return;
-		case EventType::KeyPressed:
-			switch (e.Key.Code) {
-			case Key::Escape:
-				sfWindow.ShowMouseCursor(true);
-				Input::Lock();
-				break;
-			case Key::F11:
-				ToggleFullscreen();
-				break;
-			case Key::Z:
-				Game::player->noclip = !Game::player->noclip;
-				break;
-			}
-			break;
-		case EventType::MouseButtonPressed:
-			if (!focus) {
-				temp = true;
-			} else {
-				temp = false;
-			}
-			sfWindow.ShowMouseCursor(false);
-			Input::Unlock();
-			break;
-		case EventType::LostFocus:
-			Unfocus();
-			Input::Lock();
-			sfWindow.ShowMouseCursor(true);
-			break;
-		case EventType::GainedFocus:
-			Focus();
-			break;
-		case EventType::MouseLeft:
-			break;
-		case EventType::MouseMoved:
-			Input::mx = e.MouseMove.X;
-			Input::my = e.MouseMove.Y;
-			break;
-		}
-	}
-	if (!Input::locked) {
-		Input::SetMousePosition(Width() / 2, Height() / 2);
-	}
-	Input::ReadKeyboard();
-	Input::ReadMouse();
-	Window::DoResize();*/
 }
 
 void Window::Display() {

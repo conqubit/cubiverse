@@ -12,8 +12,6 @@ IDirectInputDevice8W* Input::mouse;
 
 bool Input::directInputInitialized = false;
 
-int Input::mx;
-int Input::my;
 int Input::dmx;
 int Input::dmy;
 
@@ -65,11 +63,17 @@ void Input::Shutdown() {
 	directInputInitialized = false;
 }
 
+bool Input::IsLocked() {
+	return locked || !Window::HasFocus();
+}
+
 void Input::Lock() {
+	glfwEnable(GLFW_MOUSE_CURSOR);
 	locked = true;
 }
 
 void Input::Unlock() {
+	glfwDisable(GLFW_MOUSE_CURSOR);
 	locked = false;
 }
 
@@ -98,11 +102,15 @@ bool Input::MouseRight() {
 }
 
 int Input::Mx() {
-	return mx;
+	int x;
+	glfwGetMousePos(&x, nullptr);
+	return x;
 }
 
 int Input::My() {
-	return my;
+	int y;
+	glfwGetMousePos(nullptr, &y);
+	return y;
 }
 
 int Input::DeltaMx() {
@@ -120,7 +128,6 @@ byte keyState[256];
 bool Input::KeyPressed(int key) {
 	if (locked) return false;
 	return (keyState[key] & 0x80) == 0x80;
-	//return sf::Keyboard::IsKeyPressed(key);
 }
 
 bool Input::ReadKeyboard() {

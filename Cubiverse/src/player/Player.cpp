@@ -163,7 +163,7 @@ void Player::UpdateVelocity() {
 void Player::DoBlockPicking() {
 	PickBlock();
 
-	if (!Window::focus || Window::temp) {
+	if (!Window::HasFocus()) {
 		return;
 	}
 

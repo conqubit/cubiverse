@@ -4,8 +4,7 @@
 
 class Window {
 public:
-	static bool			 temp;
-	static bool			 focus;
+	static bool focusBeforeEvents;
 	static int posX;
 	static int posY;
 
@@ -18,22 +17,18 @@ public:
 
 	static int Width();
 	static int Height();
-	static int PosX();
-	static int PosY();
+	static int X();
+	static int Y();
 
 	static double AspectRatio();
 
 	static void DoEvents();
-	static void DoResize();
 
 	static void Maximize();
 	static void ToggleFullscreen();
 
 	static bool HasFocus();
 
-	static void Focus();
-	static void Unfocus();
-	
 	static bool IsMaximized();
 	static bool IsMinimized();
 
@@ -47,4 +42,7 @@ private:
 	static void GLFWCALL KeyCallback(int key, int action);
 	static int GLFWCALL CloseCallback();
 	static void GLFWCALL ResizeCallback(int width, int height);
+	static void GLFWCALL MouseButtonCallback(int button, int action);
+	static void GLFWCALL CharCallback(int character, int action);
+	static void GLFWCALL MousePositionCallback(int x, int y);
 };

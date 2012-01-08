@@ -4,7 +4,7 @@
 
 // Defaults should be defined here.
 
-const string Config::Version = "0.0.3";
+const string Config::Version = "0.0.4";
 const string Config::Filename = "settings.txt";
 
 bool Config::Controls::InvertMouse = false;

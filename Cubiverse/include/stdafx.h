@@ -56,14 +56,7 @@ void printerr(const T& x) {
 
 #define ZeroStruct(s) memset(&(s), 0, sizeof(s))
 
-#define MEASURE(tag, code) {clock_t t=clock();{code}t=clock()-t;printf("%s: %d ms\n",tag,t);}
-
-#define ACCURATE_MEASURE(tag, code) {int64 _s, _e, _f; \
-									 QueryPerformanceFrequency((LARGE_INTEGER*)&_f); \
-									 QueryPerformanceCounter((LARGE_INTEGER*)&_s); \
-									 {code} \
-									 QueryPerformanceCounter((LARGE_INTEGER*)&_e); \
-									 printf("%s: %f ms\n", tag, (double)(_e-_s)/_f*1000);}
+#define MEASURE(tag, code) {double t=glfwGetTime();{code}t=glfwGetTime()-t;printf("%s: %f ms\n",tag,t/1000);}
 
 // Common.
 #include "math/Math.h"

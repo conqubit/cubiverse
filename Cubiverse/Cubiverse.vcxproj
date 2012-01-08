@@ -223,6 +223,7 @@
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\graphics\Scene.h" />
     <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Config.cpp" />
@@ -256,6 +257,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Cubiverse.vcxproj" />
+    <None Include="icon.ico" />
+    <None Include="icon1.ico" />
+    <None Include="out\res\icon.png" />
     <None Include="res\color.f.glsl" />
     <None Include="res\color.v.glsl" />
     <None Include="res\block.f.glsl" />
@@ -272,6 +276,9 @@
     <ProjectReference Include="..\..\bullet-2.79\bin\src\LinearMath\LinearMath.vcxproj">
       <Project>{289f86da-f197-4b69-980c-d43f0a4f29ef}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Cubiverse.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

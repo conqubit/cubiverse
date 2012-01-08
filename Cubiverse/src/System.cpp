@@ -9,8 +9,8 @@
 #include "graphics/Graphics.h"
 #include "world/Block.h"
 
-bool			 System::running;
-FileLogger	   System::errorLog;
+bool System::running;
+FileLogger System::errorLog;
 
 bool System::Init() {
 	errorLog.SetPath("error.txt");
