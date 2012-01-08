@@ -16,14 +16,15 @@ bool System::Init() {
 	errorLog.SetPath("error.txt");
 	errorLog.EnableAppend();
 
-	errorLog.AddInput(std::cerr);
-	errorLog.AddInput(sf::Err());
-
 	srand((unsigned int)time(nullptr));
 
 	Block::Init();
 
 	Config::LoadConfigFile();
+
+	if (!glfwInit()) {
+		return false;
+	}
 
 	if (!Window::Init()) {
 		return false;
@@ -33,11 +34,11 @@ bool System::Init() {
 		return false;
 	}
 
-	Window::Maximize();
+	//Window::Maximize();
 
 	Input::Init();
 
-	Window::Display();
+	//Window::Display();
 
 	if (!Res::Init()) {
 		return false;
@@ -47,7 +48,7 @@ bool System::Init() {
 		return false;
 	}
 
-	Window::sfWindow.ShowMouseCursor(false);
+	//Window::sfWindow.ShowMouseCursor(false);
 
 	Graphics::InitGraphics();
 
@@ -59,18 +60,24 @@ void System::Start() {
 	running = true;
 
 	Game::Start();
+	Window::SetCallbacks();
 
 	while(running) {
-		Game::Update();
-		Game::Render();
-		Window::Display();
+		Update();
 	}
+}
+
+void System::Update() {
+	Game::Update();
+	Game::Render();
+	Window::Display();
 }
 
 void System::Shutdown() {
 	Game::Shutdown();
 	Graphics::Shutdown();
 	Res::Shutdown();
+	glfwTerminate();
 }
 
 void System::Stop() {

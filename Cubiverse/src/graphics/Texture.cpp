@@ -24,7 +24,7 @@ void Texture::Unbind() {
 }
 
 Texture* Texture::Create2DTexture(const string& file) {
-	Texture* tex = new Texture();
+	/*Texture* tex = new Texture();
 	tex->type = GL_TEXTURE_2D;
 
 	sf::Image image;
@@ -49,13 +49,10 @@ Texture* Texture::Create2DTexture(const string& file) {
 
 	tex->Unbind();
 
-	return tex;
+	return tex;*/
 }
 
 Texture* Texture::Create3DTexture(int width, int height, int depth, byte* data) {
-
-	int i = 0;
-
 	Texture* tex = new Texture();
 
 	tex->width = width;

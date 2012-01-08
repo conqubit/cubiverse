@@ -4,6 +4,7 @@
 #include "System.h"
 #include "Window.h"
 #include "Config.h"
+#include "Input.h"
 
 #include "player/Player.h"
 #include "world/World.h"
@@ -14,8 +15,6 @@
 Player*		  Game::player;
 World*		   Game::world;
 WorldRenderer*   Game::worldRenderer;
-
-int oldTime;
 
 int tick;
 int accum;
@@ -28,8 +27,6 @@ int currentFPS;
 int64 oldtime;
 int64 newtime;
 int64 freq;
-
-sf::Font f;
 
 bool Game::Init() {
 	QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
@@ -58,7 +55,7 @@ bool Game::Init() {
 	Graphics::things.push_back(worldRenderer);
 	Graphics::things.push_back(player);
 
-	f.LoadFromFile("res/consola.ttf");
+	//f.LoadFromFile("res/consola.ttf");
 
 	return true;
 }
@@ -109,6 +106,7 @@ void Game::DrawGUI() {
 	Graphics::ClearDepth();
 	player->DrawGUI();
 
+	/*
 	Window::sfWindow.SaveGLStates();
 
 	double factor = (double)Window::Height() / 800.0;
@@ -129,4 +127,5 @@ void Game::DrawGUI() {
 	Window::sfWindow.Draw(text);
 
 	Window::sfWindow.RestoreGLStates();
+	*/
 }

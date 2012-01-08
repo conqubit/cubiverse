@@ -20,25 +20,20 @@
 #include <map>
 
 #include <GL/glew.h>
+#include <GL/glfw.h>
 
-// SFML header files.
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
+#include <lodepng.h>
 
-#ifdef SFML_SYSTEM_WINDOWS
 #include <windows.h>
-#endif
 
 typedef unsigned char	byte;
 typedef unsigned short	ushort;
 typedef unsigned int	uint;
 
-typedef std::int64_t	int64;
 typedef std::uint64_t	uint64;
+typedef std::int64_t	int64;
 
 typedef std::string string;
-typedef sf::Keyboard::Key Key;
 
 // General purpose string conversion.
 template <typename T>

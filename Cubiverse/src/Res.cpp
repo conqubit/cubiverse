@@ -21,11 +21,15 @@ bool Res::Init() {
 	if (!shader->Init("res/color.vert", "res/color.frag")) return false;
 	AddShader("color", shader);
 
-	// Block textures.
-	sf::Image image;
-	if (!image.LoadFromFile("res/blocks.png")) return false;
-	int dim = image.GetWidth();
-	texture = Texture::Create3DTexture(dim, dim, image.GetHeight() / dim, (byte*)image.GetPixelsPtr());
+
+	std::vector<byte> buffer, image;
+	LodePNG::loadFile(buffer, "res/blocks.png"); //load the image file with given filename
+	LodePNG::Decoder decoder;
+	decoder.decode(image, buffer); //decode the png
+
+	int dim = decoder.getWidth();
+
+	texture = Texture::Create3DTexture(dim, dim, decoder.getHeight() / dim, image.data());
 	AddTexture("blocks", texture);
 
 	return true;

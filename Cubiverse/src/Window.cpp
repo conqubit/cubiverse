@@ -7,7 +7,6 @@
 #include "System.h"
 #include "Config.h"
 
-sf::RenderWindow Window::sfWindow;
 bool Window::temp = false;
 
 bool Window::focus = true;
@@ -25,10 +24,10 @@ bool vsync = false;
 
 bool resize = false;
 
-sf::VideoMode videoMode;
+GLFWvidmode desktopMode;
+GLFWvidmode fullscreenMode;
 string title;
 int style;
-sf::ContextSettings contextSettings;
 
 bool fs = false;
 
@@ -40,36 +39,86 @@ struct WindowState {
 
 WindowState stateBeforeFullscreen;
 
-bool Window::Init() {
-	sf::VideoMode d = sf::VideoMode::GetDesktopMode();
 
-	videoMode = sf::VideoMode((double)d.Width / PHI, (double)d.Height / PHI, 24);
+
+void GLFWCALL Window::KeyCallback(int key, int action) {
+	switch (action) {
+	case GLFW_PRESS:
+		switch (key) {
+		case GLFW_KEY_ESC:
+			glfwEnable(GLFW_MOUSE_CURSOR);
+			Input::Lock();
+			break;
+		}
+		break;
+	case GLFW_RELEASE:
+		break;
+	}
+}
+
+
+int GLFWCALL Window::CloseCallback() {
+	System::Stop();
+	return GL_TRUE;
+}
+
+
+void GLFWCALL Window::ResizeCallback(int width, int height) {
+	glViewport(0, 0, width, height);
+	Graphics::SetProjection();
+	System::Update();
+}
+
+
+
+bool Window::Init() {
+	glfwGetDesktopMode(&desktopMode);
+	glfwGetVideoModes(&fullscreenMode, 1);
+
+	desktopMode.Width;
+	desktopMode.Height;
 
 	title = "Cubiverse " + Config::Version;
-
-	style = sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize;
-
+	//style = sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize;
 	anti = Config::Graphics::MultiSampling;
-
 	vsync = Config::Graphics::VSync;
-
 	limitFrameRate = Config::Graphics::FrameRateLimit;
+	//contextSettings = sf::ContextSettings(depth, stencil, anti, major, minor);
 
-	contextSettings = sf::ContextSettings(depth, stencil, anti, major, minor);
+	glfwOpenWindow(desktopMode.Width / PHI, desktopMode.Height / PHI, 8, 8, 8, 8, 24, 8, GLFW_WINDOW);
+	glfwSetWindowPos(desktopMode.Width * (1 - 1 / PHI) / 2, desktopMode.Height * (1 - 1 / PHI) / 2);
+	glfwSetWindowTitle(("Cubiverse " + Config::Version).c_str());
 
-	sfWindow.Create(videoMode, title, style, contextSettings);
-	sfWindow.SetFramerateLimit(limitFrameRate);
-	sfWindow.EnableVerticalSync(vsync);
+	//sfWindow.SetFramerateLimit(limitFrameRate);
+	//sfWindow.EnableVerticalSync(vsync);
 
-	SetIcon("res/icon.png");
+	//SetIcon("res/icon.png");
+
 
 	return true;
 }
 
+void Window::SetCallbacks() {
+	glfwSetWindowSizeCallback(ResizeCallback);
+	glfwSetKeyCallback(KeyCallback);
+	glfwSetWindowCloseCallback(CloseCallback);
+}
+
+void Window::ClearCallbacks() {
+	glfwSetWindowSizeCallback(nullptr);
+	glfwSetKeyCallback(nullptr);
+	glfwSetWindowCloseCallback(nullptr);
+}
+
 void Window::SetIcon(string file) {
-	sf::Image image;
-	image.LoadFromFile(file);
-	sfWindow.SetIcon(image.GetWidth(), image.GetHeight(), image.GetPixelsPtr());
+	return; //
+	//sf::Image image;
+	//image.LoadFromFile(file);
+	//sfWindow.SetIcon(image.GetWidth(), image.GetHeight(), image.GetPixelsPtr());
+}
+
+bool Window::HasFocus() {
+	return glfwGetWindowParam(GLFW_ACTIVE);
 }
 
 void Window::Focus() {
@@ -89,23 +138,28 @@ bool Window::IsMaximized() {
 }
 
 bool Window::IsMinimized() {
-	return IsIconic(SystemHandle()) != 0;
+	return glfwGetWindowParam(GLFW_ICONIFIED);
 }
 
 bool Window::IsFullScreen() {
 	return fs;
 }
 
-sf::WindowHandle Window::SystemHandle() {
-	return sfWindow.GetSystemHandle();
+HWND Window::SystemHandle() {
+	return GetActiveWindow();
+	//return sfWindow.GetSystemHandle();
 }
 
 int Window::Width() {
-	return sfWindow.GetWidth();
+	int width, height;
+	glfwGetWindowSize(&width, &height);
+	return width;
 }
 
 int Window::Height() {
-	return sfWindow.GetHeight();
+	int width, height;
+	glfwGetWindowSize(&width, &height);
+	return height;
 }
 
 int Window::PosX() {
@@ -137,13 +191,13 @@ void Window::DoResize() {
 		// Adjust projection matrix, for potential changes in aspect ratio.
 		Graphics::SetProjection();
 		// For SFML draw calls. Otherwise SFML drawing will be to a stretched surface.
-		sfWindow.SetView((sf::View(sf::FloatRect(0, 0, Width(), Height()))));
+		//sfWindow.SetView((sf::View(sf::FloatRect(0, 0, Width(), Height()))));
 		resize = false;
 	}
 }
 
 void Window::ToggleFullscreen() {
-	fs = !fs;
+	/*fs = !fs;
 
 	Graphics::ShutdownGraphics();
 
@@ -179,21 +233,27 @@ void Window::ToggleFullscreen() {
 	Res::Init();
 	Input::Init();
 
-	Graphics::InitGraphics();
+	Graphics::InitGraphics();*/
 }
 
-typedef sf::Event::EventType EventType;
-
-sf::Event e;
-
 void Window::DoEvents() {
-	while (sfWindow.PollEvent(e)) {
+
+	glfwPollEvents();
+
+	if (!Input::locked) {
+		Input::SetMousePosition(Width() / 2, Height() / 2);
+	}
+
+	Input::ReadKeyboard();
+	Input::ReadMouse();
+
+	/*while (sfWindow.PollEvent(e)) {
 		switch (e.Type) {
 		case EventType::Resized:
 			resize = true;
 			if (!IsMaximized() && !IsFullScreen()) {
-				videoMode.Width = Width();
-				videoMode.Height = Height();
+				desktopMode.Width = Width();
+				desktopMode.Height = Height();
 			}
 			break;
 		case EventType::Closed:
@@ -243,9 +303,9 @@ void Window::DoEvents() {
 	}
 	Input::ReadKeyboard();
 	Input::ReadMouse();
-	Window::DoResize();
+	Window::DoResize();*/
 }
 
 void Window::Display() {
-	sfWindow.Display();
+	glfwSwapBuffers();
 }

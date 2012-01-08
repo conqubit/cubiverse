@@ -74,16 +74,27 @@ void Input::Unlock() {
 }
 
 void Input::SetMousePosition(int x, int y) {
-	sf::Mouse::SetPosition(sf::Vector2i(x, y), Window::sfWindow);
+	glfwSetMousePos(x, y);
 }
 
 bool Input::MouseLeft() {
 	if (locked) return false;
-	return sf::Mouse::IsButtonPressed(sf::Mouse::Button::Left);
+	switch (glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT)) {
+	case GLFW_PRESS:
+		return true;
+	case GLFW_RELEASE:
+		return false;
+	}
 }
 
 bool Input::MouseRight() {
-	return sf::Mouse::IsButtonPressed(sf::Mouse::Button::Right);
+	if (locked) return false;
+	switch (glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT)) {
+	case GLFW_PRESS:
+		return true;
+	case GLFW_RELEASE:
+		return false;
+	}
 }
 
 int Input::Mx() {

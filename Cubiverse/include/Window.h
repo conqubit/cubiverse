@@ -4,7 +4,6 @@
 
 class Window {
 public:
-	static sf::RenderWindow sfWindow;
 	static bool			 temp;
 	static bool			 focus;
 	static int posX;
@@ -15,7 +14,7 @@ public:
 
 	static void SetIcon(string file);
 
-	static sf::WindowHandle SystemHandle();
+	static HWND SystemHandle();
 
 	static int Width();
 	static int Height();
@@ -30,6 +29,8 @@ public:
 	static void Maximize();
 	static void ToggleFullscreen();
 
+	static bool HasFocus();
+
 	static void Focus();
 	static void Unfocus();
 	
@@ -39,4 +40,11 @@ public:
 	static bool IsFullScreen();
 
 	static void Display();
+	static void SetCallbacks();
+	static void ClearCallbacks();
+
+private:
+	static void GLFWCALL KeyCallback(int key, int action);
+	static int GLFWCALL CloseCallback();
+	static void GLFWCALL ResizeCallback(int width, int height);
 };
