@@ -7,7 +7,6 @@
 #pragma comment(lib, "dxguid.lib")
 
 IDirectInput8W* Input::directInput;
-IDirectInputDevice8W* Input::keyboard;
 IDirectInputDevice8W* Input::mouse;
 
 bool Input::directInputInitialized = false;
@@ -25,19 +24,6 @@ bool Input::Init() {
 	if (FAILED(r)) return false;
 
 
-	r = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
-	if (FAILED(r)) return false;
-
-	r = keyboard->SetDataFormat(&c_dfDIKeyboard);
-	if (FAILED(r)) return false;
-
-	r = keyboard->SetCooperativeLevel(Window::SystemHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-	if (FAILED(r)) return false;
-
-	r = keyboard->Acquire();
-	if (FAILED(r)) return false;
-
-
 	r = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
 	if (FAILED(r)) return false;
 
@@ -52,6 +38,7 @@ bool Input::Init() {
 
 
 	directInputInitialized = true;
+
 	return true;
 }
 
@@ -67,6 +54,7 @@ bool Input::IsLocked() {
 	return locked || !Window::HasFocus();
 }
 
+// Lock realtime input. Event based input is still used.
 void Input::Lock() {
 	glfwEnable(GLFW_MOUSE_CURSOR);
 	locked = true;
@@ -83,22 +71,12 @@ void Input::SetMousePosition(int x, int y) {
 
 bool Input::MouseLeft() {
 	if (locked) return false;
-	switch (glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT)) {
-	case GLFW_PRESS:
-		return true;
-	case GLFW_RELEASE:
-		return false;
-	}
+	return glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 }
 
 bool Input::MouseRight() {
 	if (locked) return false;
-	switch (glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT)) {
-	case GLFW_PRESS:
-		return true;
-	case GLFW_RELEASE:
-		return false;
-	}
+	return glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 }
 
 int Input::Mx() {
@@ -123,33 +101,12 @@ int Input::DeltaMy() {
 	return dmy;
 }
 
-byte keyState[256];
-
+// Character literals must be uppercase.
 bool Input::KeyPressed(int key) {
-	if (locked) return false;
-	return (keyState[key] & 0x80) == 0x80;
-}
-
-bool Input::ReadKeyboard() {
-	if (!directInputInitialized && !Init()) {
+	if (IsLocked()) {
 		return false;
 	}
-
-	HRESULT r;
-
-	r = keyboard->GetDeviceState(sizeof(keyState), (void*)&keyState);
-	if (FAILED(r)) {
-		if (r == DIERR_INPUTLOST || r == DIERR_NOTACQUIRED) {
-			r = keyboard->Acquire();
-			if (FAILED(r)) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-
-	return true;
+	return glfwGetKey(key) == GLFW_PRESS;
 }
 
 DIMOUSESTATE mouseState;

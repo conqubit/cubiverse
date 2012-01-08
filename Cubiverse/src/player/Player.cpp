@@ -226,7 +226,7 @@ void Player::PickBlock() {
 
 void Player::DoJump() {
 	if (noclip) return;
-	if (!inAir && Input::KeyPressed(DIK_SPACE)) {
+	if (!inAir && Input::KeyPressed(GLFW_KEY_SPACE)) {
 		vel += ToWorldSmooth(Vector3D(0, 0, .05));
 		inAir = true;
 	}
@@ -312,14 +312,14 @@ void Player::DoInput() {
 
 	cameraUp = right.Cross(dir);
 
-	kvec = kdir * (Input::KeyPressed(DIK_W) - Input::KeyPressed(DIK_S))
-		   + right * (Input::KeyPressed(DIK_D) - Input::KeyPressed(DIK_A));
+	kvec = kdir * (Input::KeyPressed('W') - Input::KeyPressed('S'))
+		   + right * (Input::KeyPressed('D') - Input::KeyPressed('A'));
 
 	if (noclip) {
-		kvec += Vector3D::AxisZ * ((Input::KeyPressed(DIK_Q) || Input::KeyPressed(DIK_SPACE)) - Input::KeyPressed(DIK_E));
+		kvec += Vector3D::AxisZ * ((Input::KeyPressed('Q') || Input::KeyPressed(GLFW_KEY_SPACE)) - Input::KeyPressed('E'));
 	}
 
-	kvec = kvec.Normalize(1.0 / (Input::KeyPressed(DIK_LCONTROL) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(DIK_LSHIFT) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
+	kvec = kvec.Normalize(1.0 / (Input::KeyPressed(GLFW_KEY_LCTRL) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(GLFW_KEY_LSHIFT) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
 }
 
 Vector3D Player::Eye() {

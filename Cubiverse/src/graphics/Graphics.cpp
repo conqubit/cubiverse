@@ -12,8 +12,6 @@ glm::mat4 Graphics::ortho;
 bool Graphics::Init() {
 	glewInit();
 
-	print("OpenGL version: " + str(glGetString(GL_VERSION)));
-
 	if (!GLEW_VERSION_2_1) {
 		printerr("At least OpenGL version 2.1+ is required. Version found on this computer: " + str(glGetString(GL_VERSION)));
 		printerr("Try updating your video drivers.");

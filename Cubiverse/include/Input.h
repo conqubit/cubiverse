@@ -19,14 +19,11 @@ public:
 	static void Lock();
 	static void Unlock();
 	static bool IsLocked();
-	static int DirectMx();
-	static int DirectMy();
 	static int dmx, dmy;
 	static bool locked;
 
+private:
 	static bool directInputInitialized;
-
 	static IDirectInput8W* directInput;
-	static IDirectInputDevice8W* keyboard;
 	static IDirectInputDevice8W* mouse;
 };

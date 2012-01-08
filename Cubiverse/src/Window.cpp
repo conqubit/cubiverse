@@ -56,8 +56,8 @@ void GLFWCALL Window::KeyCallback(int key, int action) {
 void GLFWCALL Window::CharCallback(int character, int action) {
 	switch (action) {
 	case GLFW_PRESS:
-		switch (character) {
-		case 'z':
+		switch (toupper(character)) {
+		case 'Z':
 			Game::player->noclip = !Game::player->noclip;
 			break;
 		}
@@ -246,7 +246,11 @@ void Window::ToggleFullscreen() {
 		}
 	}
 
-	Display();
+	if (Input::locked) {
+		Input::Lock();
+	} else {
+		Input::Unlock();
+	}
 
 	Graphics::Init();
 	Res::Init();
@@ -265,9 +269,9 @@ void Window::DoEvents() {
 
 	if (HasFocus() && !oldHasFocus) {
 		Input::Lock();
+		print("locking");
 	}
 
-	Input::ReadKeyboard();
 	Input::ReadMouse();
 }
 
