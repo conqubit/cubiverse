@@ -8,6 +8,16 @@ struct Config {
 		static bool InvertMouse;
 	};
 
+	struct Key {
+		static char Forward;
+		static char Backward;
+		static char Left;
+		static char Right;
+		static char NoClip;
+		static char Up;
+		static char Down;
+	};
+
 	struct Graphics {
 		static int MultiSampling;
 		static int FrameRateLimit;

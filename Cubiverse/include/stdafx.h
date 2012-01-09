@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/thread.hpp>
+
 // C header files.
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,6 +27,10 @@
 #include <lodepng.h>
 
 #include <windows.h>
+
+#ifdef _WIN32
+#define SYSTEM_WINDOWS
+#endif
 
 typedef unsigned char	byte;
 typedef unsigned short	ushort;

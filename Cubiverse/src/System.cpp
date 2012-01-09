@@ -18,13 +18,13 @@ bool System::Init() {
 
 	srand((unsigned int)time(nullptr));
 
-	Block::Init();
-
-	Config::LoadConfigFile();
-
 	if (!glfwInit()) {
 		return false;
 	}
+
+	Block::Init();
+
+	Config::LoadConfigFile();
 
 	if (!Window::Init()) {
 		return false;
@@ -82,4 +82,12 @@ void System::Shutdown() {
 
 void System::Stop() {
 	running = false;
+}
+
+void System::SleepSeconds(double seconds) {
+	boost::this_thread::sleep(boost::posix_time::microsec(seconds * 1000000.0));
+}
+
+void System::SleepMillis(int millisecs) {
+	boost::this_thread::sleep(boost::posix_time::millisec(millisecs));
 }

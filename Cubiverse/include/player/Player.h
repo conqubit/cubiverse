@@ -28,8 +28,7 @@ public:
 	Model* selectedBlock;
 	bool picked;
 
-	int counter;
-	bool inAir, mouseStateLastTick;
+	bool inAir;
 
 	Player() :
 	noclip(),
@@ -39,8 +38,7 @@ public:
 	selectedBlock(),
 	picked(),
 
-	counter(),
-	inAir(), mouseStateLastTick() {
+	inAir() {
 	}
 
 	void Init();

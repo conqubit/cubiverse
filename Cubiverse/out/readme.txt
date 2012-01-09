@@ -18,11 +18,13 @@ Controls:
 	-Q & E to move up and down in noclip mode
 	-F11 for fullscreen
 
+Edit 'settings.txt' to change various settings and key bindings.
+(You must restart the game if you do)
+
 Cubiverse is in its very early stages of development.
 Currently there is very little to do in-game, and boundaries of the
 planet are a bit buggy (especially when digging underground).
-Lots of things planned, and lots of work to do. We'll see where things go!
-
+Lots of things planned, and lots of work to do; we'll see where things go!
 
 
 

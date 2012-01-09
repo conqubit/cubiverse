@@ -7,13 +7,19 @@
 const string Config::Version = "0.0.4";
 const string Config::Filename = "settings.txt";
 
-bool Config::Controls::InvertMouse = false;
-
 int Config::Graphics::MultiSampling = 0;
 int Config::Graphics::FrameRateLimit = 240;
 bool Config::Graphics::VSync = false;
 
+bool Config::Controls::InvertMouse = false;
 
+char Config::Key::Forward = 'W';
+char Config::Key::Backward = 'S';
+char Config::Key::Left = 'A';
+char Config::Key::Right = 'D';
+char Config::Key::Up = 'Q';
+char Config::Key::Down = 'E';
+char Config::Key::NoClip = 'Z';
 
 static std::fstream file;
 static std::map<string, string> props;
@@ -53,6 +59,10 @@ static bool GetValue(const string& str) {
 	return false;
 }
 
+template <>
+static char GetValue(const string& str) {
+	return toupper(str[0]);
+}
 
 template <typename T>
 static void SetVariable(T& variable, const string& val) {
@@ -147,10 +157,19 @@ void Config::LoadConfigFile() {
 		file.put('\n');
 	}
 
-	SetProperty("Controls.InvertMouse", Controls::InvertMouse);
 	SetProperty("Graphics.MultiSampling", Graphics::MultiSampling);
 	SetProperty("Graphics.FrameRateLimit", Graphics::FrameRateLimit);
 	SetProperty("Graphics.VSync", Graphics::VSync);
+
+	SetProperty("Controls.InvertMouse", Controls::InvertMouse);
+
+	SetProperty("Key.Forward", Key::Forward);
+	SetProperty("Key.Left", Key::Left);
+	SetProperty("Key.Backward", Key::Backward);
+	SetProperty("Key.Right", Key::Right);
+	SetProperty("Key.Up", Key::Up);
+	SetProperty("Key.Down", Key::Down);
+	SetProperty("Key.NoClip", Key::NoClip);
 
 	file.close();
 

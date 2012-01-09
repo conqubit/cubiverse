@@ -16,16 +16,9 @@ Player*		  Game::player;
 World*		   Game::world;
 WorldRenderer*   Game::worldRenderer;
 
-double tick;
-double accum;
-double delta;
-
 /*double fpsTicks;
 int fpsCount;
 int currentFPS;*/
-
-double oldTime;
-double newTime;
 
 bool Game::Init() {
 	world = new World();
@@ -55,14 +48,10 @@ bool Game::Init() {
 	
 	Input::Unlock();
 
-	oldTime = glfwGetTime();
-
 	return true;
 }
 
 void Game::Start() {
-	tick = TickMS / 1000.0;
-	accum = tick;
 }
 
 void Game::Shutdown() {
@@ -72,9 +61,14 @@ void Game::Shutdown() {
 }
 
 void Game::Update() {
+	static double oldTime = glfwGetTime();
+	static double newTime;
+	static double tick = TickMS / 1000.0;
+	static double accum = tick;
+
 	newTime = glfwGetTime();
 
-	delta = newTime - oldTime;
+	double delta = newTime - oldTime;
 	accum += delta;
 
 	//fpsTicks += delta;

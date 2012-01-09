@@ -105,8 +105,6 @@ void Player::Tick() {
 	DoOrient();
 
 	DoBlockPicking();
-
-	counter += 1;
 }
 
 void Player::DoOrient() {
@@ -161,6 +159,9 @@ void Player::UpdateVelocity() {
 }
 
 void Player::DoBlockPicking() {
+	static int counter = 0;
+	static bool mouseStateLastTick = false;
+
 	PickBlock();
 
 	if (!Window::HasFocus()) {
@@ -186,9 +187,11 @@ void Player::DoBlockPicking() {
 
 	mouseStateLastTick = Input::MouseLeft() || Input::MouseRight();
 
-	if (counter > 50) {
+	if (counter > 250) {
 		mouseStateLastTick = false;
 	}
+
+	counter += Game::TickMS;
 }
 
 void Player::PickBlock() {
@@ -234,7 +237,7 @@ void Player::DoJump() {
 
 void Player::DoCollision() {
 	if (noclip) return;
-	Vector3I up = playerUp;//System::world->GetUp(pos);
+	Vector3I up = playerUp;
 	bool X, Y, Z;
 	X = Y = Z = true;
 
@@ -290,10 +293,10 @@ void Player::DoCollision() {
 	this->vel = ToWorld(vel);
 }
 
-double minPitch = -PI_2;
-double maxPitch =  PI_2;
-
 void Player::DoInput() {
+	static double minPitch = -PI_2;
+	static double maxPitch =  PI_2;
+
 	yaw += Input::DeltaMx() / 300.0;
 	pitch -= Input::DeltaMy() / 300.0 * (Config::Controls::InvertMouse ? -1 : 1);
 
@@ -312,11 +315,11 @@ void Player::DoInput() {
 
 	cameraUp = right.Cross(dir);
 
-	kvec = kdir * (Input::KeyPressed('W') - Input::KeyPressed('S'))
-		   + right * (Input::KeyPressed('D') - Input::KeyPressed('A'));
+	kvec = kdir * (Input::KeyPressed(Config::Key::Forward) - Input::KeyPressed(Config::Key::Backward))
+		   + right * (Input::KeyPressed(Config::Key::Right) - Input::KeyPressed(Config::Key::Left));
 
 	if (noclip) {
-		kvec += Vector3D::AxisZ * ((Input::KeyPressed('Q') || Input::KeyPressed(GLFW_KEY_SPACE)) - Input::KeyPressed('E'));
+		kvec += Vector3D::AxisZ * ((Input::KeyPressed(Config::Key::Up) || Input::KeyPressed(GLFW_KEY_SPACE)) - Input::KeyPressed(Config::Key::Down));
 	}
 
 	kvec = kvec.Normalize(1.0 / (Input::KeyPressed(GLFW_KEY_LCTRL) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(GLFW_KEY_LSHIFT) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));

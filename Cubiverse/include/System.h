@@ -16,4 +16,6 @@ public:
 
 	static void DoTicks();
 	static void Tick();
+	static void SleepSeconds(double seconds);
+	static void SleepMillis(int millisec);
 };
