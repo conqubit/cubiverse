@@ -52,7 +52,7 @@ void Graphics::ShutdownGraphics() {
 
 void Graphics::SetProjection() {
 	double aspect = Window::AspectRatio();
-	proj = glm::perspective(80.0f, (float)aspect, 0.05f, 250.0f);
+	proj = glm::perspective((float)Config::Graphics::FOV, (float)aspect, 0.05f, 250.0f);
 	ortho = glm::ortho(-aspect, aspect, -1.0, 1.0, 1.0, -1.0);
 }
 

@@ -8,8 +8,9 @@ const string Config::Filename = "settings.txt";
 // Default values should be defined here.
 
 int Config::Graphics::MultiSampling = 0;
-int Config::Graphics::FrameRateLimit = 240;
 bool Config::Graphics::VSync = false;
+double Config::Graphics::FOV = 80.0;
+int Config::Graphics::FrameRateLimit = 240;
 
 bool Config::Controls::InvertMouse = false;
 

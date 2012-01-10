@@ -10,6 +10,13 @@ struct Config {
 		static bool InvertMouse;
 	};
 
+	struct Graphics {
+		static int MultiSampling;
+		static bool VSync;
+		static double FOV;
+		static int FrameRateLimit;
+	};
+
 	struct Key {
 		static int Forward;
 		static int Backward;
@@ -21,11 +28,5 @@ struct Config {
 		static int Run;
 		static int Walk;
 		static int Jump;
-	};
-
-	struct Graphics {
-		static int MultiSampling;
-		static int FrameRateLimit;
-		static bool VSync;
 	};
 };

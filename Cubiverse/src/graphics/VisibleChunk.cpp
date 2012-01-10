@@ -2,8 +2,7 @@
 
 #include "graphics/VisibleChunk.h"
 
-VisibleChunk::VisibleChunk() :
-model(nullptr) {
+VisibleChunk::VisibleChunk() : model(nullptr) {
 }
 
 inline void VisibleChunk::Render() {
@@ -50,17 +49,6 @@ void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		return;
 	}
-
-	/*byte* bufferLocation = model->Map(GL_READ_WRITE) + b.location;
-	memmove(bufferLocation, bufferLocation + b.size, model->vertexCount * mf.VertexStride() - (b.location + b.size));
-	model->Unmap();
-	for (auto i = visibleBlocks.begin(); i != visibleBlocks.end(); ++i) {
-		if (i->second.location > b.location) {
-			i->second.location -= b.size;
-		}
-	}
-
-	model->vertexCount -= b.size / mf.VertexStride();*/
 
 	if (mf.VertexCount() > 0) {
 		AppendBlock(index, mf);

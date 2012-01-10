@@ -17,7 +17,7 @@ static std::map<string, string> props;
 
 template <typename T>
 static string EncodeDefault(T val) {
-	return str(val);
+	return str(val, 1);
 }
 
 template <typename T>
@@ -197,7 +197,8 @@ void Config::LoadConfigFile() {
 
 	ProcessProperty("Graphics.MultiSampling", Graphics::MultiSampling, DecodeUnsignedInt);
 	ProcessProperty("Graphics.VSync", Graphics::VSync, DecodeBool, EncodeBool);
-	Comment("\n# Set to 0 for no limiting\n");
+	ProcessProperty("Graphics.FOV", Graphics::FOV);
+	Comment("\n# Set to 0 to disable\n");
 	ProcessProperty("Graphics.FrameRateLimit", Graphics::FrameRateLimit, DecodeUnsignedInt);
 
 	Comment("\n");
