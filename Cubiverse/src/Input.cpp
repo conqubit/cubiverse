@@ -54,7 +54,7 @@ bool Input::IsLocked() {
 	return locked || !Window::HasFocus();
 }
 
-// Lock realtime input. Event based input is still used.
+// lock realtime input, event based input is still used
 void Input::Lock() {
 	glfwEnable(GLFW_MOUSE_CURSOR);
 	locked = true;

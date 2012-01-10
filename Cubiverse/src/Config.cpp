@@ -5,7 +5,7 @@
 const string Config::Version = "0.0.4";
 const string Config::Filename = "settings.txt";
 
-// Default values should be defined here.
+// default values should be defined here
 
 int Config::Graphics::MultiSampling = 0;
 bool Config::Graphics::VSync = false;

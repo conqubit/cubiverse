@@ -25,7 +25,7 @@ void VisibleChunk::ShutdownGraphics() {
 }
 
 void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
-	if (visibleBlocks.count(index) == 0 && mf.VertexCount() > 0) {
+	if (visibleBlocks.count(index) == 0 && mf.VertexDataSize() > 0) {
 		AppendBlock(index, mf);
 		return;
 	}
@@ -43,17 +43,14 @@ void VisibleChunk::UpdateBlock(ushort index, ModelFactory& mf) {
 		free(zeros);
 	}
 
-	if (mf.VertexDataSize() > 0 && mf.VertexDataSize() <= b.size) {
+	if (mf.VertexDataSize() == 0) {
+		visibleBlocks.erase(index);
+	} else if (mf.VertexDataSize() <= b.size) {
 		glBindBuffer(GL_ARRAY_BUFFER, model->vertexBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, b.location, mf.VertexDataSize(), mf.VertexData());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		return;
-	}
-
-	if (mf.VertexCount() > 0) {
-		AppendBlock(index, mf);
 	} else {
-		visibleBlocks.erase(index);
+		AppendBlock(index, mf);
 	}
 }
 
@@ -70,7 +67,7 @@ void VisibleChunk::AppendBlock(ushort index, ModelFactory& mf) {
 		glBufferSubData(GL_ARRAY_BUFFER, b.location, b.size, mf.VertexData());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	} else {
-		// Big enough assuming no consolidation. May not actually write to the end of it.
+		// big enough assuming no consolidation, may not actually write to the end
 		byte* buffer = (byte*)malloc(oldSize + b.size);
 		int buffOffset = 0;
 
@@ -100,7 +97,6 @@ void VisibleChunk::AppendBlock(ushort index, ModelFactory& mf) {
 void VisibleChunk::UpdateModel(ModelFactory& mf) {
 	int buffExtra = mf.VertexStride() * 6   // vertices per face
 									  * 64; // num faces to buffer
-
 	if (!model) {
 		model = mf.Create(buffExtra);
 	}

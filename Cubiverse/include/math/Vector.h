@@ -310,7 +310,7 @@ const Vector3<T> Vector3<T>::Axis[3] = { Vector3<T>::AxisX,
 										 Vector3<T>::AxisY,
 										 Vector3<T>::AxisZ };
 
-// Vector3I looping macros for convenience and readability.
+// Vector3I looping macros
 #define VEC3_RANGE(vec) \
 	Vector3I p; \
 	const Vector3I& _v = vec; \

@@ -11,21 +11,21 @@ bool Res::Init() {
 	Shader* shader = nullptr;
 	Texture* texture = nullptr;
 
-	// Block shader.
+	// block shader
 	shader = new Shader();
 	if (!shader->Init("res/block.vert", "res/block.frag")) return false;
 	AddShader("block", shader);
 
-	// Simpler color shader.
+	// simpler color shader
 	shader = new Shader();
 	if (!shader->Init("res/color.vert", "res/color.frag")) return false;
 	AddShader("color", shader);
 
 
 	std::vector<byte> buffer, image;
-	LodePNG::loadFile(buffer, "res/blocks.png"); //load the image file with given filename
+	LodePNG::loadFile(buffer, "res/blocks.png");
 	LodePNG::Decoder decoder;
-	decoder.decode(image, buffer); //decode the png
+	decoder.decode(image, buffer);
 
 	int dim = decoder.getWidth();
 

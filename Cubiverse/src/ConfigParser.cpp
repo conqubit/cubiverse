@@ -198,6 +198,7 @@ void Config::LoadConfigFile() {
 	ProcessProperty("Graphics.MultiSampling", Graphics::MultiSampling, DecodeUnsignedInt);
 	ProcessProperty("Graphics.VSync", Graphics::VSync, DecodeBool, EncodeBool);
 	ProcessProperty("Graphics.FOV", Graphics::FOV);
+
 	Comment("\n# Set to 0 to disable\n");
 	ProcessProperty("Graphics.FrameRateLimit", Graphics::FrameRateLimit, DecodeUnsignedInt);
 

@@ -5,12 +5,11 @@
 class Level {
 private:
 	struct Node {
-		short lvl; // Value of 0 indicates leaf node.
-		short count; // Ranges from 0 to 8.
-		Node* nodes[8]; // Represents an array of Chunk pointers if leaf node.
+		int lvl;
+		int count;
+		Node* nodes[8]; // represents Chunk* array if leaf node
 
-		Node(int lvl) : lvl(lvl), count(0) {
-			ZeroStruct(nodes);
+		Node(int lvl) : lvl(lvl), count(0), nodes() {
 		}
 
 		Node* GetNode(const Vector3I& cp) {
@@ -33,8 +32,12 @@ private:
 			return	cp.x >> lvl & 1 | (cp.y >> lvl & 1) << 1 | (cp.z >> lvl & 1) << 2;
 		}
 
+		bool IsLeaf() {
+			return lvl == 0;
+		}
+
 		void Shutdown() {
-			if (lvl == 0) {
+			if (IsLeaf()) {
 				for (int i = 0; i < 8; i++) {
 					if (nodes[i]) {
 						reinterpret_cast<Chunk*>(nodes[i])->Shutdown();
@@ -53,7 +56,7 @@ private:
 
 public:
 	Node* root;
-	Vector3I offset; // Keeps the root node exactly flush in the positive octant.
+	Vector3I offset; // keeps the root node exactly flush in the positive octant
 
 	Level() : root(nullptr) {
 	}
@@ -79,7 +82,7 @@ public:
 		Expand(cp);
 
 		Node* node = root;
-		while (node->lvl != 0) {
+		while (!node->IsLeaf()) {
 			Node* nextNode = node->GetNode(cp);
 			if (!nextNode) {
 				nextNode = new Node(node->lvl - 1);
@@ -109,7 +112,7 @@ public:
 		cp += offset;
 		Node* node = root;
 		do {
-			if (node->lvl == 0) {
+			if (node->IsLeaf()) {
 				return node->GetChunk(cp);
 			}
 		} while (node = node->GetNode(cp));
@@ -120,19 +123,21 @@ private:
 	void Expand(Vector3I& cp) {
 		while (!InsideRootNode(cp)) {
 			Vector3I cpo = cp.Offset(-(1 << root->lvl));
-			Vector3I offsetOffset = Vector3I(cpo.x < 0, cpo.y < 0, cpo.z < 0);
+			cpo.x = cpo.x < 0;
+			cpo.y = cpo.y < 0;
+			cpo.z = cpo.z < 0;
 			Node* newRoot = new Node(root->lvl + 1);
-			newRoot->nodes[offsetOffset.x | (offsetOffset.y << 1) | (offsetOffset.z << 2)] = root;
+			newRoot->nodes[cpo.x | (cpo.y << 1) | (cpo.z << 2)] = root;
 			newRoot->count = 1;
-			offsetOffset <<= newRoot->lvl;
-			offset += offsetOffset;
-			cp += offsetOffset;
+			cpo <<= newRoot->lvl;
+			offset += cpo;
+			cp += cpo;
 			root = newRoot;
 		}
 	}
 
 	void Contract() {
-		while (root->count == 1 && root->lvl != 0) {
+		while (root->count == 1 && !root->IsLeaf()) {
 			for (int i = 0; i < 8; i++) {
 				if (root->nodes[i]) {
 					Node* newRoot = root->nodes[i];
@@ -146,7 +151,7 @@ private:
 	}
 
 	void Remove(Node* node, const Vector3I& cp) {
-		if (node->lvl != 0) {
+		if (!node->IsLeaf()) {
 			Node* nextNode = node->GetNode(cp);
 			if (nextNode) {
 				Remove(nextNode, cp);
