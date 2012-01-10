@@ -85,7 +85,7 @@ void WorldRenderer::ConstructNewVisibleChunk(Chunk* c) {
 
 
 void WorldRenderer::ReconstructVisibleChunk(Chunk* c) {
-	if (!c) return;
+	if (visibleChunks.count(c) == 0) return;
 	ReconstructChunkModelData(c);
 	if (mf.VertexCount() > 0) {
 		visibleChunks[c]->UpdateModel(mf);
@@ -96,6 +96,7 @@ void WorldRenderer::ReconstructVisibleChunk(Chunk* c) {
 
 
 void WorldRenderer::ConstructChunkModelData(Chunk* c) {
+	if (visibleChunks.count(c) == 0) return;
 	mf.Clear();
 	VisibleChunk* vc = visibleChunks[c];
 	VEC3_RANGE_OFFSET(c->Pos(), Vector3I(Chunk::Dim)) {
@@ -110,7 +111,6 @@ void WorldRenderer::ConstructChunkModelData(Chunk* c) {
 
 
 void WorldRenderer::ReconstructChunkModelData(Chunk* c) {
-	if (!c) return;
 	VisibleChunk* vc = visibleChunks[c];
 	mf.Clear();
 	for (auto i = vc->visibleBlocks.begin(); i != vc->visibleBlocks.end(); ++i) {
@@ -131,6 +131,9 @@ void WorldRenderer::UpdateMesh(const Vector3I& p) {
 		mf.Clear();
 		br.ConstructBlock(p);
 		visibleChunks[c]->UpdateBlock(Chunk::GetIndex(p), mf);
+		if (visibleChunks[c]->visibleBlocks.size() == 0) {
+			visibleChunks.erase(c);
+		}
 	} else {
 		ConstructNewVisibleChunk(c);
 	}
@@ -148,8 +151,8 @@ void WorldRenderer::UpdateBlock(const Vector3I& p) {
 
 
 void WorldRenderer::UpdateChunk(Chunk* c, const Vector3I& p) {
-	if (c == nullptr) return;
-	if (visibleChunks.count(c) != 0) {
+	if (!c) return;
+	if (visibleChunks.count(c) == 1) {
 		ConstructChunkModelData(c);
 		visibleChunks[c]->UpdateModel(mf);
 	} else {

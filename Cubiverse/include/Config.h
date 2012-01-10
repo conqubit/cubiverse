@@ -4,6 +4,8 @@ struct Config {
 	static const string Version;
 	static const string Filename;
 
+	static void LoadConfigFile();
+
 	struct Controls {
 		static bool InvertMouse;
 	};
@@ -26,16 +28,4 @@ struct Config {
 		static int FrameRateLimit;
 		static bool VSync;
 	};
-
-	struct Property {
-		string name;
-		string value;
-		
-		void Reset() {
-			name.clear();
-			value.clear();
-		}
-	};
-
-	static void LoadConfigFile();
 };
