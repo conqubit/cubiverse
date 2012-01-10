@@ -22,4 +22,5 @@ public:
 
 	static void Render();
 	static void DrawGUI();
+	static void KeyCallback(int key, int action);
 };

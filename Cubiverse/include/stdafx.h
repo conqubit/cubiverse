@@ -5,6 +5,7 @@
 // C header files.
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <time.h>
 #include <malloc.h>
 #include <memory.h>
@@ -14,7 +15,6 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include <cstdint>
 
 #include <vector>
 #include <stack>
@@ -32,12 +32,10 @@
 #define SYSTEM_WINDOWS
 #endif
 
-typedef unsigned char	byte;
+typedef uint8_t			byte;
+
 typedef unsigned short	ushort;
 typedef unsigned int	uint;
-
-typedef std::uint64_t	uint64;
-typedef std::int64_t	int64;
 
 typedef std::string string;
 

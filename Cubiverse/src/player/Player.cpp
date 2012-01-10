@@ -229,7 +229,7 @@ void Player::PickBlock() {
 
 void Player::DoJump() {
 	if (noclip) return;
-	if (!inAir && Input::KeyPressed(GLFW_KEY_SPACE)) {
+	if (!inAir && Input::KeyPressed(Config::Key::Jump)) {
 		vel += ToWorldSmooth(Vector3D(0, 0, .05));
 		inAir = true;
 	}
@@ -319,10 +319,10 @@ void Player::DoInput() {
 		   + right * (Input::KeyPressed(Config::Key::Right) - Input::KeyPressed(Config::Key::Left));
 
 	if (noclip) {
-		kvec += Vector3D::AxisZ * ((Input::KeyPressed(Config::Key::Up) || Input::KeyPressed(GLFW_KEY_SPACE)) - Input::KeyPressed(Config::Key::Down));
+		kvec += Vector3D::AxisZ * ((Input::KeyPressed(Config::Key::Up) || Input::KeyPressed(Config::Key::Jump)) - Input::KeyPressed(Config::Key::Down));
 	}
 
-	kvec = kvec.Normalize(1.0 / (Input::KeyPressed(GLFW_KEY_LCTRL) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(GLFW_KEY_LSHIFT) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
+	kvec = kvec.Normalize(1.0 / (Input::KeyPressed(Config::Key::Walk) ? (noclip ? 300.0 : 200.0) : (Input::KeyPressed(Config::Key::Run) ? (noclip ? 5.0 : 25.0) : (noclip ? 35.0 : 50.0))));
 }
 
 Vector3D Player::Eye() {

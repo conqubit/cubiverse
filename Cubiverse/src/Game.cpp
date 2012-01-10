@@ -60,6 +60,12 @@ void Game::Shutdown() {
 	world->Shutdown();
 }
 
+void Game::KeyCallback(int key, int action) {
+	if (key == Config::Key::NoClip) {
+		Game::player->noclip = !Game::player->noclip;
+	}
+}
+
 void Game::Update() {
 	static double oldTime = glfwGetTime();
 	static double newTime;

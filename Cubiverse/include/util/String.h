@@ -28,6 +28,18 @@ namespace Util {
 			return ret;
 		}
 
+		static void ToUpper(string& s) {
+			for (int i = 0; i < s.size(); i++) {
+				s[i] = toupper(s[i]);
+			}
+		}
+
+		static string ToUpperCopy(const string& s) {
+			string ret = string(s);
+			ToUpper(ret);
+			return ret;
+		}
+
 		static bool EqualsIgnoreCase(const string& a, const string& b) {
 			if (a.size() != b.size()) {
 				return false;

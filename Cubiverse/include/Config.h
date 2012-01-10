@@ -9,13 +9,16 @@ struct Config {
 	};
 
 	struct Key {
-		static char Forward;
-		static char Backward;
-		static char Left;
-		static char Right;
-		static char NoClip;
-		static char Up;
-		static char Down;
+		static int Forward;
+		static int Backward;
+		static int Left;
+		static int Right;
+		static int NoClip;
+		static int Up;
+		static int Down;
+		static int Run;
+		static int Walk;
+		static int Jump;
 	};
 
 	struct Graphics {

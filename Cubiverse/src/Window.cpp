@@ -137,12 +137,6 @@ double Window::AspectRatio() {
 	return (double)Width() / (Height() > 1 ? Height() : 1);
 }
 
-extern int64 fpsTicks;
-extern int fpsCount;
-extern int currentFPS;
-
-extern int64 freq;
-
 void Window::ToggleFullscreen() {
 	fs = !fs;
 
@@ -227,6 +221,8 @@ void Window::DoEvents() {
 /******** CALLBACKS ********/
 
 void GLFWCALL Window::KeyCallback(int key, int action) {
+	Game::KeyCallback(key, action);
+
 	switch (action) {
 	case GLFW_PRESS:
 		switch (key) {
@@ -245,13 +241,10 @@ void GLFWCALL Window::KeyCallback(int key, int action) {
 }
 
 void GLFWCALL Window::CharCallback(int character, int action) {
+	Game::KeyCallback(toupper(character), action);
+
 	switch (action) {
 	case GLFW_PRESS:
-		switch (toupper(character)) {
-		case 'Z':
-			Game::player->noclip = !Game::player->noclip;
-			break;
-		}
 		break;
 	case GLFW_RELEASE:
 		break;
